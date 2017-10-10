@@ -1,0 +1,7 @@
+werkzeug
+flask
+flask-restful
+sqlalchemy
+setuptools
+wheel
+twine

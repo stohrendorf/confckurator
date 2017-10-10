@@ -1,0 +1,24 @@
+{
+  "name": "confckurator-frontend",
+  "version": "0.0.1",
+  "author": "Steffen Ohrendorf",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-inject": "^4.3.0",
+    "gulp-print": "^2.0.1",
+    "gulp-angular-filesort": "^1.1.1",
+    "gulp-uglify": "^3.0.0",
+    "gulp-typescript": "^3.2.2",
+    "typescript": "^2.5.3",
+    "bower": "^1.8.2",
+    "@types/angular": "^1.6.32",
+    "@types/angular-ui-bootstrap": "^0.13.46"
+  },
+  "scripts": {
+    "postinstall": "bower install && gulp"
+  }
+}

@@ -1,0 +1,33 @@
+<div class="list-group" data-ng-controller="TemplateController as templateController">
+    <div class="list-group-item" data-ng-repeat="template in templateController.templates">
+        <h4 class="list-group-item-heading">
+            [#{{ template.id }}] {{ template.name }}
+        </h4>
+        <div class="list-group-item-text">
+            <div class="alert alert-info">
+                <strong>Tags</strong>
+                <span data-ng-show="template.tags && template.tags.length > 0"
+                      data-ng-repeat="tag in template.tags">{{ tag.name }}<span
+                        data-ng-hide="$last">, </span></span>
+                <span data-ng-show="!template.tags || template.tags.length <= 0"><em>None</em></span>
+            </div>
+            <h4>Variables</h4>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr data-ng-repeat="variable in template.variables">
+                    <td>{{ variable.id }}</td>
+                    <td>{{ variable.name }}</td>
+                    <td>{{ variable.description }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

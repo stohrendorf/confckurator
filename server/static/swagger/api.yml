@@ -1,0 +1,385 @@
+swagger: "2.0"
+info:
+  description: "Confckurator Client/Server API"
+  version: "1.0.0"
+  title: "Confckurator"
+basePath: "/api"
+tags:
+- name: "packs"
+  description: "Everything about Packs"
+- name: "templates"
+  description: "Everything about Templates"
+- name: "environments"
+  description: "Everything about Environments"
+paths:
+  /template:
+    get:
+      tags:
+      - "templates"
+      summary: "List all templates"
+      description: ""
+      operationId: "getTemplates"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/TemplateList"
+    post:
+      tags:
+      - "templates"
+      summary: "Create a new template"
+      operationId: "postTemplates"
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: postTemplatesBody
+          description: Template creation properties.
+          schema:
+            $ref: "#/definitions/NewTemplate"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/IdResponse"
+  /template/{templateId}:
+    parameters:
+      - in: path
+        name: templateId
+        required: true
+        type: integer
+        minimum: 0
+        description: "The template ID."
+    get:
+      tags:
+      - "templates"
+      summary: "Get details about a template"
+      description: ""
+      operationId: "getTemplate"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Template"
+    delete:
+      tags:
+      - "templates"
+      summary: "Delete a template"
+      description: ""
+      operationId: "deleteTemplate"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
+  /pack:
+    get:
+      tags:
+      - "packs"
+      summary: "List all packs"
+      description: ""
+      operationId: "getPacks"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/PackList"
+    post:
+      tags:
+      - "packs"
+      summary: "Create a new pack"
+      operationId: "postPacks"
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: postPacksBody
+          description: Pack creation properties.
+          schema:
+            $ref: "#/definitions/NewPack"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/IdResponse"
+  /pack/{packId}:
+    parameters:
+      - in: path
+        name: packId
+        required: true
+        type: integer
+        minimum: 0
+        description: "The pack ID."
+    get:
+      tags:
+      - "packs"
+      summary: "Get details about a pack"
+      description: ""
+      operationId: "getPack"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Pack"
+    delete:
+      tags:
+      - "packs"
+      summary: "Delete a pack"
+      description: ""
+      operationId: "deletePack"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
+  /environment:
+    get:
+      tags:
+      - "environments"
+      summary: "List all environments"
+      description: ""
+      operationId: "getEnvironments"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/EnvironmentList"
+    post:
+      tags:
+      - "environments"
+      summary: "Create a new environment"
+      operationId: "postEnvironment"
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: postEnvironmentsBody
+          description: Environment creation properties.
+          schema:
+            $ref: "#/definitions/NewEnvironment"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/IdResponse"
+  /environment/{environmentId}:
+    parameters:
+      - in: path
+        name: environmentId
+        required: true
+        type: integer
+        minimum: 0
+        description: "The environment ID."
+    get:
+      tags:
+      - "environments"
+      summary: "Get details about an environment"
+      description: ""
+      operationId: "getEnvironment"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Environment"
+    delete:
+      tags:
+      - "environments"
+      summary: "Delete an environment"
+      description: ""
+      operationId: "deleteEnvironment"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
+definitions:
+  IdResponse:
+    type: "object"
+    required:
+      - id
+    properties:
+      id:
+        type: "integer"
+        description: An entity ID, the referenced entity type depends on the request context.
+  PackList:
+    type: "array"
+    items:
+      $ref: "#/definitions/Pack"
+  TemplateList:
+    type: "array"
+    items:
+      $ref: "#/definitions/Template"
+  EnvironmentList:
+    type: "array"
+    items:
+      $ref: "#/definitions/Environment"
+  Pack:
+    type: "object"
+    required:
+      - id
+      - name
+      - values
+    properties:
+      id:
+        type: "integer"
+        format: "integer"
+      name:
+        type: "string"
+        minLength: 1
+        maxLength: 255
+      values:
+        type: "array"
+        items:
+          $ref: "#/definitions/Value"
+  NewPack:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        description: Unique name of the pack.
+        minLength: 1
+        maxLength: 255
+  NewTemplate:
+    type: object
+    required:
+      - name
+      - text
+    properties:
+      name:
+        type: string
+        description: Unique name of the template.
+        minLength: 1
+        maxLength: 255
+      text:
+        type: string
+        description: Template text.
+  NewEnvironment:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        description: Unique name of the environment.
+        minLength: 1
+        maxLength: 255
+  Template:
+    type: "object"
+    required:
+      - id
+      - name
+      - tags
+      - variables
+    properties:
+      id:
+        type: "integer"
+        format: "integer"
+      name:
+        type: "string"
+        minLength: 1
+        maxLength: 255
+      tags:
+        type: "array"
+        description: Associated template tags.
+        items:
+          $ref: "#/definitions/Tag"
+      variables:
+        type: "array"
+        items:
+          $ref: "#/definitions/Variable"
+  Environment:
+    type: "object"
+    required:
+      - id
+      - name
+      - values
+    properties:
+      id:
+        type: "integer"
+        format: "integer"
+      name:
+        type: "string"
+        minLength: 1
+        maxLength: 255
+      values:
+        type: "array"
+        description: Associated values.
+        items:
+          $ref: "#/definitions/Value"
+  Tag:
+    type: "object"
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: "integer"
+        description: Tag ID
+      name:
+        type: "string"
+        minLength: 1
+        maxLength: 255
+        description: Unique tag name.
+  Variable:
+    type: "object"
+    required:
+      - id
+      - name
+      - description
+    properties:
+      id:
+        type: "integer"
+        description: Tag ID
+      name:
+        type: "string"
+        minLength: 1
+        maxLength: 255
+        description: Unique tag name.
+      description:
+        type: "string"
+        description: Description of this variable (i.e. constraints).
+  Value:
+    type: "object"
+    required:
+      - variable_id
+      - environment_id
+      - pack_id
+    properties:
+      variable_id:
+        type: "integer"
+        description: "Variable ID"
+      environment_id:
+        type: "integer"
+        description: "Environment ID"
+      pack_id:
+        type: "integer"
+        description: "Pack ID"
+      data:
+        type: "string"
+        description: "Value data"
