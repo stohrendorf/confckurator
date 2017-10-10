@@ -9,10 +9,12 @@ module app.templates {
             api.getTemplates().then(d => {
                 console.debug(d);
                 this.templates = d.data;
+                this.templates.forEach(value => this.templatesVisible[value.id] = false);
             });
         }
 
         public templates: Array<Template>;
+        public templatesVisible: boolean[] = [];
     }
 
     confckurator

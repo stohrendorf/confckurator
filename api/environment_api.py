@@ -24,7 +24,7 @@ class EnvironmentResource(Resource):
         with make_session() as session:
             data = session.query(Environment).filter(Environment.id == environment_id).all()  # type: list[Environment]
             if len(data) != 1:
-                return {'error': "Requested environment does not exist"}, werkzeug.exceptions.Gone.code
+                return {'error': "Requested environment does not exist"}, werkzeug.exceptions.NotFound.code
 
             return marshal(data[0], environment_fields)
 
@@ -32,7 +32,7 @@ class EnvironmentResource(Resource):
         with make_session() as session:
             data = session.query(Environment).filter(Environment.id == environment_id).all()  # type: list[Environment]
             if len(data) != 1:
-                return {'error': "Requested environment does not exist"}, werkzeug.exceptions.Gone.code
+                return {'error': "Requested environment does not exist"}, werkzeug.exceptions.NotFound.code
 
             session.delete(data[0])
             return {}

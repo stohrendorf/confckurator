@@ -18,7 +18,7 @@ class PackResource(Resource):
         with make_session() as session:
             data = session.query(Pack).filter(Pack.id == pack_id).all()  # type: list[Pack]
             if len(data) != 1:
-                return {'error': "Requested pack does not exist"}, werkzeug.exceptions.Gone.code
+                return {'error': "Requested pack does not exist"}, werkzeug.exceptions.NotFound.code
 
             return marshal(data[0], pack_fields)
 
@@ -26,7 +26,7 @@ class PackResource(Resource):
         with make_session() as session:
             data = session.query(Pack).filter(Pack.id == pack_id).all()  # type: list[Pack]
             if len(data) != 1:
-                return {'error': "Requested pack does not exist"}, werkzeug.exceptions.Gone.code
+                return {'error': "Requested pack does not exist"}, werkzeug.exceptions.NotFound.code
 
             session.delete(data[0])
             return {}

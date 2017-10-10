@@ -137,6 +137,38 @@ var API;
                 return this.$http(httpRequestParams);
             };
             /**
+             * Delete a variable
+             *
+             * @param templateId The template ID.
+             * @param variableId The variable ID.
+             */
+            TemplatesApi.prototype.deleteTemplateVariables = function (templateId, variableId, extraHttpRequestParams) {
+                var localVarPath = this.basePath + '/template/{templateId}/variable/{variableId}'
+                    .replace('{' + 'templateId' + '}', String(templateId))
+                    .replace('{' + 'variableId' + '}', String(variableId));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'templateId' is not null or undefined
+                if (templateId === null || templateId === undefined) {
+                    throw new Error('Required parameter templateId was null or undefined when calling deleteTemplateVariables.');
+                }
+                // verify required parameter 'variableId' is not null or undefined
+                if (variableId === null || variableId === undefined) {
+                    throw new Error('Required parameter variableId was null or undefined when calling deleteTemplateVariables.');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: localVarPath,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
              * Get details about a template
              *
              * @param templateId The template ID.
@@ -163,6 +195,32 @@ var API;
                 return this.$http(httpRequestParams);
             };
             /**
+             * List all variables of a template
+             *
+             * @param templateId The template ID.
+             */
+            TemplatesApi.prototype.getTemplateVariables = function (templateId, extraHttpRequestParams) {
+                var localVarPath = this.basePath + '/template/{templateId}/variable'
+                    .replace('{' + 'templateId' + '}', String(templateId));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'templateId' is not null or undefined
+                if (templateId === null || templateId === undefined) {
+                    throw new Error('Required parameter templateId was null or undefined when calling getTemplateVariables.');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: localVarPath,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
              * List all templates
              *
              */
@@ -174,6 +232,34 @@ var API;
                     method: 'GET',
                     url: localVarPath,
                     json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             * Create a new variable
+             *
+             * @param templateId The template ID.
+             * @param postTemplateVariablesBody Variable creation properties.
+             */
+            TemplatesApi.prototype.postTemplateVariables = function (templateId, postTemplateVariablesBody, extraHttpRequestParams) {
+                var localVarPath = this.basePath + '/template/{templateId}/variable'
+                    .replace('{' + 'templateId' + '}', String(templateId));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'templateId' is not null or undefined
+                if (templateId === null || templateId === undefined) {
+                    throw new Error('Required parameter templateId was null or undefined when calling postTemplateVariables.');
+                }
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: localVarPath,
+                    json: true,
+                    data: postTemplateVariablesBody,
                     params: queryParameters,
                     headers: headerParams
                 };
@@ -453,6 +539,38 @@ var API;
             return PacksApi;
         }());
         Client.PacksApi = PacksApi;
+    })(Client = API.Client || (API.Client = {}));
+})(API || (API = {}));
+
+/**
+ * Confckurator
+ * Confckurator Client/Server API
+ *
+ * OpenAPI spec version: 1.0.0
+ *
+ *
+ * NOTE: This class is auto generated by the swagger code generator program.
+ * https://github.com/swagger-api/swagger-codegen.git
+ * Do not edit the class manually.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/// <reference path="api.d.ts" />
+var API;
+(function (API) {
+    var Client;
+    (function (Client) {
+        'use strict';
     })(Client = API.Client || (API.Client = {}));
 })(API || (API = {}));
 

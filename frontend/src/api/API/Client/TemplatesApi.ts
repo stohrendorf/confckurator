@@ -80,6 +80,41 @@ namespace API.Client {
             return this.$http(httpRequestParams);
         }
         /**
+         * Delete a variable
+         * 
+         * @param templateId The template ID.
+         * @param variableId The variable ID.
+         */
+        public deleteTemplateVariables (templateId: number, variableId: number, extraHttpRequestParams?: any ) : ng.IHttpPromise<any> {
+            const localVarPath = this.basePath + '/template/{templateId}/variable/{variableId}'
+                .replace('{' + 'templateId' + '}', String(templateId))
+                .replace('{' + 'variableId' + '}', String(variableId));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'templateId' is not null or undefined
+            if (templateId === null || templateId === undefined) {
+                throw new Error('Required parameter templateId was null or undefined when calling deleteTemplateVariables.');
+            }
+            // verify required parameter 'variableId' is not null or undefined
+            if (variableId === null || variableId === undefined) {
+                throw new Error('Required parameter variableId was null or undefined when calling deleteTemplateVariables.');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: localVarPath,
+                json: true,
+                                                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
          * Get details about a template
          * 
          * @param templateId The template ID.

@@ -11,23 +11,31 @@
                         data-ng-hide="$last">, </span></span>
                 <span data-ng-show="!template.tags || template.tags.length <= 0"><em>None</em></span>
             </div>
-            <h4>Variables</h4>
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr data-ng-repeat="variable in template.variables">
-                    <td>{{ variable.id }}</td>
-                    <td>{{ variable.name }}</td>
-                    <td>{{ variable.description }}</td>
-                </tr>
-                </tbody>
-            </table>
+            <a href="#" data-toggle="collapse" data-target="#template-{{template.id}}-variables" data-ng-click="templateController.templatesVisible[template.id] = !templateController.templatesVisible[template.id]">
+                <h4>
+                    <span class="fa"
+                          data-ng-class="{'fa-plus-square': !templateController.templatesVisible[template.id], 'fa-minus-square': templateController.templatesVisible[template.id]}"></span>
+                    Variables
+                </h4>
+            </a>
+            <div id="template-{{template.id}}-variables" class="collapse">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr data-ng-repeat="variable in template.variables">
+                        <td>{{ variable.id }}</td>
+                        <td>{{ variable.name }}</td>
+                        <td>{{ variable.description }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

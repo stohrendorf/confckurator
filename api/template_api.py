@@ -1,6 +1,7 @@
 import werkzeug.exceptions
 from flask.blueprints import Blueprint
 from flask_restful import Resource, Api, reqparse, fields, marshal
+from sqlalchemy import and_
 
 from db import make_session, Template, Variable
 
@@ -29,7 +30,7 @@ class TemplateResource(Resource):
         with make_session() as session:
             data = session.query(Template).filter(Template.id == template_id).all()  # type: list[Template]
             if len(data) != 1:
-                return {'error': "Requested template does not exist"}, werkzeug.exceptions.Gone.code
+                return {'error': "Requested template does not exist"}, werkzeug.exceptions.NotFound.code
 
             return marshal(data[0], template_fields)
 
@@ -37,7 +38,7 @@ class TemplateResource(Resource):
         with make_session() as session:
             data = session.query(Template).filter(Template.id == template_id).all()  # type: list[Template]
             if len(data) != 1:
-                return {'error': "Requested template does not exist"}, werkzeug.exceptions.Gone.code
+                return {'error': "Requested template does not exist"}, werkzeug.exceptions.NotFound.code
 
             session.delete(data[0])
             return {}
@@ -78,14 +79,30 @@ class TemplateVariableList(Resource):
         parser.add_argument('description')
         args = parser.parse_args()
 
-        variable = Variable(template_id=template_id, name=args['name'], description=args['description'])
         with make_session() as session:
+            template = session.query(Template).filter(Template.id == template_id).first()
+            variable = Variable(template=template, name=args['name'], description=args['description'])
             session.add(variable)
             session.commit()
             return {'id': variable.id}
 
 
 template_api.add_resource(TemplateVariableList, '/template/<int:template_id>/variable')
+
+
+class TemplateVariable(Resource):
+    def delete(self, template_id, variable_id):
+        with make_session() as session:
+            data = session.query(Variable).filter(
+                and_(Variable.template_id == template_id, Variable.id == variable_id)).first()  # type: list[Variable]
+            if data is None:
+                return {'error': "Requested variable does not exist in template"}, werkzeug.exceptions.NotFound.code
+
+            session.delete(data)
+            return {}
+
+
+template_api.add_resource(TemplateVariable, '/template/<int:template_id>/variable/<int:variable_id>')
 
 
 def get_template_api_blueprint():
