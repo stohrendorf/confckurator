@@ -356,32 +356,6 @@ var API;
                 return objA;
             };
             /**
-             * Delete an environment
-             *
-             * @param environmentId The environment ID.
-             */
-            PacksApi.prototype.deleteEnvironment = function (environmentId, extraHttpRequestParams) {
-                var localVarPath = this.basePath + '/environment/{environmentId}'
-                    .replace('{' + 'environmentId' + '}', String(environmentId));
-                var queryParameters = {};
-                var headerParams = this.extendObj({}, this.defaultHeaders);
-                // verify required parameter 'environmentId' is not null or undefined
-                if (environmentId === null || environmentId === undefined) {
-                    throw new Error('Required parameter environmentId was null or undefined when calling deleteEnvironment.');
-                }
-                var httpRequestParams = {
-                    method: 'DELETE',
-                    url: localVarPath,
-                    json: true,
-                    params: queryParameters,
-                    headers: headerParams
-                };
-                if (extraHttpRequestParams) {
-                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
-                }
-                return this.$http(httpRequestParams);
-            };
-            /**
              * Delete a pack
              *
              * @param packId The pack ID.
@@ -397,52 +371,6 @@ var API;
                 }
                 var httpRequestParams = {
                     method: 'DELETE',
-                    url: localVarPath,
-                    json: true,
-                    params: queryParameters,
-                    headers: headerParams
-                };
-                if (extraHttpRequestParams) {
-                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
-                }
-                return this.$http(httpRequestParams);
-            };
-            /**
-             * Get details about an environment
-             *
-             * @param environmentId The environment ID.
-             */
-            PacksApi.prototype.getEnvironment = function (environmentId, extraHttpRequestParams) {
-                var localVarPath = this.basePath + '/environment/{environmentId}'
-                    .replace('{' + 'environmentId' + '}', String(environmentId));
-                var queryParameters = {};
-                var headerParams = this.extendObj({}, this.defaultHeaders);
-                // verify required parameter 'environmentId' is not null or undefined
-                if (environmentId === null || environmentId === undefined) {
-                    throw new Error('Required parameter environmentId was null or undefined when calling getEnvironment.');
-                }
-                var httpRequestParams = {
-                    method: 'GET',
-                    url: localVarPath,
-                    json: true,
-                    params: queryParameters,
-                    headers: headerParams
-                };
-                if (extraHttpRequestParams) {
-                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
-                }
-                return this.$http(httpRequestParams);
-            };
-            /**
-             * List all environments
-             *
-             */
-            PacksApi.prototype.getEnvironments = function (extraHttpRequestParams) {
-                var localVarPath = this.basePath + '/environment';
-                var queryParameters = {};
-                var headerParams = this.extendObj({}, this.defaultHeaders);
-                var httpRequestParams = {
-                    method: 'GET',
                     url: localVarPath,
                     json: true,
                     params: queryParameters,
@@ -491,28 +419,6 @@ var API;
                     method: 'GET',
                     url: localVarPath,
                     json: true,
-                    params: queryParameters,
-                    headers: headerParams
-                };
-                if (extraHttpRequestParams) {
-                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
-                }
-                return this.$http(httpRequestParams);
-            };
-            /**
-             * Create a new environment
-             *
-             * @param postEnvironmentsBody Environment creation properties.
-             */
-            PacksApi.prototype.postEnvironment = function (postEnvironmentsBody, extraHttpRequestParams) {
-                var localVarPath = this.basePath + '/environment';
-                var queryParameters = {};
-                var headerParams = this.extendObj({}, this.defaultHeaders);
-                var httpRequestParams = {
-                    method: 'POST',
-                    url: localVarPath,
-                    json: true,
-                    data: postEnvironmentsBody,
                     params: queryParameters,
                     headers: headerParams
                 };
@@ -739,6 +645,155 @@ var API;
     var Client;
     (function (Client) {
         'use strict';
+    })(Client = API.Client || (API.Client = {}));
+})(API || (API = {}));
+
+/**
+ * Confckurator
+ * Confckurator Client/Server API
+ *
+ * OpenAPI spec version: 1.0.0
+ *
+ *
+ * NOTE: This class is auto generated by the swagger code generator program.
+ * https://github.com/swagger-api/swagger-codegen.git
+ * Do not edit the class manually.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/// <reference path="api.d.ts" />
+/* tslint:disable:no-unused-variable member-ordering */
+var API;
+(function (API) {
+    var Client;
+    (function (Client) {
+        'use strict';
+        var EnvironmentsApi = /** @class */ (function () {
+            function EnvironmentsApi($http, $httpParamSerializer, basePath) {
+                this.$http = $http;
+                this.$httpParamSerializer = $httpParamSerializer;
+                this.basePath = 'https://localhost/api';
+                this.defaultHeaders = {};
+                if (basePath !== undefined) {
+                    this.basePath = basePath;
+                }
+            }
+            EnvironmentsApi.prototype.extendObj = function (objA, objB) {
+                for (var key in objB) {
+                    if (objB.hasOwnProperty(key)) {
+                        objA[key] = objB[key];
+                    }
+                }
+                return objA;
+            };
+            /**
+             * Delete an environment
+             *
+             * @param environmentId The environment ID.
+             */
+            EnvironmentsApi.prototype.deleteEnvironment = function (environmentId, extraHttpRequestParams) {
+                var localVarPath = this.basePath + '/environment/{environmentId}'
+                    .replace('{' + 'environmentId' + '}', String(environmentId));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'environmentId' is not null or undefined
+                if (environmentId === null || environmentId === undefined) {
+                    throw new Error('Required parameter environmentId was null or undefined when calling deleteEnvironment.');
+                }
+                var httpRequestParams = {
+                    method: 'DELETE',
+                    url: localVarPath,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             * Get details about an environment
+             *
+             * @param environmentId The environment ID.
+             */
+            EnvironmentsApi.prototype.getEnvironment = function (environmentId, extraHttpRequestParams) {
+                var localVarPath = this.basePath + '/environment/{environmentId}'
+                    .replace('{' + 'environmentId' + '}', String(environmentId));
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                // verify required parameter 'environmentId' is not null or undefined
+                if (environmentId === null || environmentId === undefined) {
+                    throw new Error('Required parameter environmentId was null or undefined when calling getEnvironment.');
+                }
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: localVarPath,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             * List all environments
+             *
+             */
+            EnvironmentsApi.prototype.getEnvironments = function (extraHttpRequestParams) {
+                var localVarPath = this.basePath + '/environment';
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                var httpRequestParams = {
+                    method: 'GET',
+                    url: localVarPath,
+                    json: true,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            /**
+             * Create a new environment
+             *
+             * @param postEnvironmentsBody Environment creation properties.
+             */
+            EnvironmentsApi.prototype.postEnvironment = function (postEnvironmentsBody, extraHttpRequestParams) {
+                var localVarPath = this.basePath + '/environment';
+                var queryParameters = {};
+                var headerParams = this.extendObj({}, this.defaultHeaders);
+                var httpRequestParams = {
+                    method: 'POST',
+                    url: localVarPath,
+                    json: true,
+                    data: postEnvironmentsBody,
+                    params: queryParameters,
+                    headers: headerParams
+                };
+                if (extraHttpRequestParams) {
+                    httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+                }
+                return this.$http(httpRequestParams);
+            };
+            EnvironmentsApi.$inject = ['$http', '$httpParamSerializer', 'basePath'];
+            return EnvironmentsApi;
+        }());
+        Client.EnvironmentsApi = EnvironmentsApi;
     })(Client = API.Client || (API.Client = {}));
 })(API || (API = {}));
 

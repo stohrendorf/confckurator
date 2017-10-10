@@ -33,8 +33,6 @@
 
     <script type="text/javascript">
         $(function () {
-            var url = "/static/swagger/api.yml";
-
             hljs.configure({
                 highlightSizeThreshold: 5000
             });
@@ -44,7 +42,7 @@
                 window.SwaggerTranslator.translate();
             }
             window.swaggerUi = new SwaggerUi({
-                url: url,
+                url: "/static/swagger/api.yml",
                 dom_id: "swagger-ui-container",
                 supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
                 onComplete: function (swaggerApi, swaggerUi) {

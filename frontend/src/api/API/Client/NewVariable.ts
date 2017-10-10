@@ -27,11 +27,17 @@
 namespace API.Client {
     'use strict';
 
-    export interface Environment {
+    export interface NewVariable {
 
-        "id": number;
-
+        /**
+         * Unique name of the variable.
+         */
         "name": string;
+
+        /**
+         * Variable description (e.g. constraints).
+         */
+        "description": string;
     }
 
 }

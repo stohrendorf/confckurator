@@ -80,6 +80,47 @@ paths:
           description: "successful operation"
           schema:
             type: "object"
+  /template/{templateId}/variable:
+    parameters:
+      - in: path
+        name: templateId
+        required: true
+        type: integer
+        minimum: 0
+        description: "The template ID."
+    get:
+      tags:
+      - "templates"
+      summary: "List all variables of a template"
+      description: ""
+      operationId: "getTemplateVariables"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Variable"
+    post:
+      tags:
+      - "templates"
+      summary: "Create a new variable"
+      operationId: "postTemplateVariables"
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: postTemplateVariablesBody
+          description: Variable creation properties.
+          schema:
+            $ref: "#/definitions/NewVariable"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/IdResponse"
   /pack:
     get:
       tags:
@@ -279,6 +320,20 @@ definitions:
       text:
         type: string
         description: Template text.
+  NewVariable:
+    type: object
+    required:
+      - name
+      - description
+    properties:
+      name:
+        type: string
+        description: Unique name of the variable.
+        minLength: 1
+        maxLength: 255
+      description:
+        type: string
+        description: Variable description (e.g. constraints).
   NewEnvironment:
     type: object
     required:
@@ -318,7 +373,6 @@ definitions:
     required:
       - id
       - name
-      - values
     properties:
       id:
         type: "integer"
@@ -327,11 +381,6 @@ definitions:
         type: "string"
         minLength: 1
         maxLength: 255
-      values:
-        type: "array"
-        description: Associated values.
-        items:
-          $ref: "#/definitions/Value"
   Tag:
     type: "object"
     required:

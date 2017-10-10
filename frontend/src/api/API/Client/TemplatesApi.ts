@@ -109,6 +109,35 @@ namespace API.Client {
             return this.$http(httpRequestParams);
         }
         /**
+         * List all variables of a template
+         * 
+         * @param templateId The template ID.
+         */
+        public getTemplateVariables (templateId: number, extraHttpRequestParams?: any ) : ng.IHttpPromise<Variable> {
+            const localVarPath = this.basePath + '/template/{templateId}/variable'
+                .replace('{' + 'templateId' + '}', String(templateId));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'templateId' is not null or undefined
+            if (templateId === null || templateId === undefined) {
+                throw new Error('Required parameter templateId was null or undefined when calling getTemplateVariables.');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: localVarPath,
+                json: true,
+                                                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
          * List all templates
          * 
          */
@@ -122,6 +151,37 @@ namespace API.Client {
                 url: localVarPath,
                 json: true,
                                                 params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * Create a new variable
+         * 
+         * @param templateId The template ID.
+         * @param postTemplateVariablesBody Variable creation properties.
+         */
+        public postTemplateVariables (templateId: number, postTemplateVariablesBody?: NewVariable, extraHttpRequestParams?: any ) : ng.IHttpPromise<IdResponse> {
+            const localVarPath = this.basePath + '/template/{templateId}/variable'
+                .replace('{' + 'templateId' + '}', String(templateId));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'templateId' is not null or undefined
+            if (templateId === null || templateId === undefined) {
+                throw new Error('Required parameter templateId was null or undefined when calling postTemplateVariables.');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: localVarPath,
+                json: true,
+                data: postTemplateVariablesBody,
+                                params: queryParameters,
                 headers: headerParams
             };
 

@@ -9,12 +9,7 @@ pack_api = Api(pack_blueprint)
 
 pack_fields = {
     'id': fields.Integer,
-    'name': fields.String,
-    'values': fields.List(fields.Nested({
-        'variable_id': fields.Integer,
-        'environment_id': fields.Integer,
-        'pack_id': fields.Integer
-    }))
+    'name': fields.String
 }
 
 

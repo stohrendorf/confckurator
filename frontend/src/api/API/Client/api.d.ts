@@ -4,6 +4,7 @@
 /// <reference path="NewEnvironment.ts" />
 /// <reference path="NewPack.ts" />
 /// <reference path="NewTemplate.ts" />
+/// <reference path="NewVariable.ts" />
 /// <reference path="Pack.ts" />
 /// <reference path="PackList.ts" />
 /// <reference path="Tag.ts" />
