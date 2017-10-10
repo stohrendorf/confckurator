@@ -11,6 +11,9 @@ are made up.
 It's not usable at all, as major points (like a fully implemented API, the frontend and the template retrieval) are not
 implemented at all.
 
+**If you're a frontend developer experienced with node.js and typescript, drop me a note (or even better, a pull request),
+and improve the workflow ;)**
+
 ### Dev Setup
 
 First, grab and set up a node.js environment with `npm`. Then...
