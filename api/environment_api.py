@@ -48,7 +48,7 @@ class EnvironmentList(Resource):
     def post():
         parser = reqparse.RequestParser()
         parser.add_argument('name', required=True, trim=True)
-        args = parser.parse_args()
+        args = parser.parse_args(strict=True)
 
         environment = Environment(name=args['name'], text=args['text'])
         with make_session() as session:

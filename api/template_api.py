@@ -49,7 +49,7 @@ class TemplateList(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('name', required=True, trim=True)
         parser.add_argument('text', required=True)
-        args = parser.parse_args()
+        args = parser.parse_args(strict=True)
 
         template = Template(name=args['name'], text=args['text'])
         with make_session() as session:
@@ -73,7 +73,7 @@ class TemplateVariableList(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('name', required=True, trim=True)
         parser.add_argument('description', required=False, trim=True, default='')
-        args = parser.parse_args()
+        args = parser.parse_args(strict=True)
 
         with make_session() as session:
             template = session.query(Template).filter(Template.id == template_id).first()

@@ -80,6 +80,43 @@ namespace API.Client {
             return this.$http(httpRequestParams);
         }
         /**
+         * Delete a variable&#39;s value
+         * 
+         * @param packId The pack ID.
+         * @param variableId The variable ID.
+         * @param setVariableValue Variable value.
+         */
+        public deleteValue (packId: number, variableId: number, setVariableValue?: DeleteVariableValue, extraHttpRequestParams?: any ) : ng.IHttpPromise<any> {
+            const localVarPath = this.basePath + '/pack/{packId}/variable/{variableId}'
+                .replace('{' + 'packId' + '}', String(packId))
+                .replace('{' + 'variableId' + '}', String(variableId));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'packId' is not null or undefined
+            if (packId === null || packId === undefined) {
+                throw new Error('Required parameter packId was null or undefined when calling deleteValue.');
+            }
+            // verify required parameter 'variableId' is not null or undefined
+            if (variableId === null || variableId === undefined) {
+                throw new Error('Required parameter variableId was null or undefined when calling deleteValue.');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: localVarPath,
+                json: true,
+                data: setVariableValue,
+                                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
          * Get details about a pack
          * 
          * @param packId The pack ID.
@@ -146,6 +183,43 @@ namespace API.Client {
                 url: localVarPath,
                 json: true,
                 data: postPacksBody,
+                                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * Set a variable&#39;s value
+         * 
+         * @param packId The pack ID.
+         * @param variableId The variable ID.
+         * @param setVariableValue Variable value.
+         */
+        public setValue (packId: number, variableId: number, setVariableValue?: VariableValueUpdate, extraHttpRequestParams?: any ) : ng.IHttpPromise<IdResponse> {
+            const localVarPath = this.basePath + '/pack/{packId}/variable/{variableId}'
+                .replace('{' + 'packId' + '}', String(packId))
+                .replace('{' + 'variableId' + '}', String(variableId));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'packId' is not null or undefined
+            if (packId === null || packId === undefined) {
+                throw new Error('Required parameter packId was null or undefined when calling setValue.');
+            }
+            // verify required parameter 'variableId' is not null or undefined
+            if (variableId === null || variableId === undefined) {
+                throw new Error('Required parameter variableId was null or undefined when calling setValue.');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: localVarPath,
+                json: true,
+                data: setVariableValue,
                                 params: queryParameters,
                 headers: headerParams
             };

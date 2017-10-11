@@ -1,3 +1,4 @@
+/// <reference path="DeleteVariableValue.ts" />
 /// <reference path="Environment.ts" />
 /// <reference path="EnvironmentList.ts" />
 /// <reference path="IdResponse.ts" />
@@ -12,6 +13,7 @@
 /// <reference path="TemplateList.ts" />
 /// <reference path="Value.ts" />
 /// <reference path="Variable.ts" />
+/// <reference path="VariableValueUpdate.ts" />
 
 /// <reference path="EnvironmentsApi.ts" />
 /// <reference path="PacksApi.ts" />
