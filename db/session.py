@@ -15,7 +15,7 @@ def boot_database(app: Flask):
     if connection is not None:
         return
 
-    connection = create_engine(app.config['database'], echo=app.debug or app.testing)
+    connection = create_engine(app.config['database'], echo=app.debug)
     Schema.metadata.create_all(connection)
 
 

@@ -2,8 +2,9 @@ from typing import List
 
 import werkzeug.exceptions
 from flask.blueprints import Blueprint
-from flask_restful import Resource, Api, reqparse, marshal
+from flask_restful import Resource, reqparse, marshal, Api
 from sqlalchemy import and_
+from sqlalchemy.exc import IntegrityError
 
 from api.common import make_id_response, make_empty_response
 from api.marshalling import template_fields, variable_fields
@@ -52,10 +53,13 @@ class TemplateList(Resource):
         args = parser.parse_args(strict=True)
 
         template = Template(name=args['name'], text=args['text'])
-        with make_session() as session:
-            session.add(template)
-            session.commit()
-            return make_id_response(template.id)
+        try:
+            with make_session() as session:
+                session.add(template)
+                session.commit()
+                return make_id_response(template.id)
+        except IntegrityError as e:
+            return {'error': "Could not create the requested template"}, werkzeug.exceptions.InternalServerError.code
 
 
 # noinspection PyTypeChecker

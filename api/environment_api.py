@@ -2,7 +2,7 @@ from typing import List
 
 import werkzeug.exceptions
 from flask.blueprints import Blueprint
-from flask_restful import Resource, Api, reqparse, marshal
+from flask_restful import Resource, reqparse, marshal, Api
 
 from api.common import make_id_response, make_empty_response
 from api.marshalling import environment_fields

@@ -32,14 +32,15 @@ def seed_data():
         session.add(value)
 
 
-app.testing = True
-app.config['database'] = 'sqlite:///:memory:'
+app.register_blueprint(get_pack_api_blueprint())
+app.register_blueprint(get_template_api_blueprint())
+app.register_blueprint(get_environment_api_blueprint())
 
 if __name__ == '__main__':
+    app.testing = True
+    app.config['database'] = 'sqlite:///:memory:'
+
     boot_database(app)
     if app.testing:
         seed_data()
-    app.register_blueprint(get_pack_api_blueprint())
-    app.register_blueprint(get_template_api_blueprint())
-    app.register_blueprint(get_environment_api_blueprint())
     app.run()
