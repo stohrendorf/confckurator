@@ -156,3 +156,5 @@ fabric.properties
 frontend/.build
 frontend/node_modules/
 frontend/bower_components/
+
+!server/static/swagger/*

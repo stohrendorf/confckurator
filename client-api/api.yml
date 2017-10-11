@@ -5,9 +5,10 @@ info:
   title: "Confckurator"
   license:
     name: MIT License
+    url: https://opensource.org/licenses/MIT
   contact:
-    name: GitHub Issue Tracker
-    url: https://github.com/stohrendorf/confckurator/issues
+    name: Steffen Ohrendorf
+    url: https://github.com/stohrendorf/confckurator
 basePath: "/api"
 tags:
 - name: "packs"

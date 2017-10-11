@@ -60,6 +60,8 @@
                     if (window.SwaggerTranslator) {
                         window.SwaggerTranslator.translate();
                     }
+
+                    window.swaggerUi.api.basePath = '/api';
                 },
                 onFailure: function (data) {
                     log("Unable to Load SwaggerUI");
@@ -77,8 +79,6 @@
                     console.log.apply(console, arguments);
                 }
             }
-
-            window.swaggerUi.api.basePath = '/api';
         });
     </script>
 </head>

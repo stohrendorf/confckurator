@@ -5,3 +5,4 @@ sqlalchemy
 setuptools
 wheel
 twine
+typing
