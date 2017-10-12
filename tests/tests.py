@@ -19,43 +19,43 @@ class TestBase(TestCase):
 
 class BasicTemplateTest(TestBase):
     def test_create_delete(self):
-        tpl1 = self.app.post('/api/template', data={
+        tpl1 = self.app.post('/api/template/', data={
             'name': 'test template',
             'text': 'foo'
         })  # type: Response
-        assert tpl1.status_code == 200
-        assert tpl1.mimetype == 'application/json'
+        self.assertEqual(tpl1.status_code, 200)
+        self.assertEqual(tpl1.mimetype, 'application/json')
 
-        tpl1_json = json.loads(tpl1.data)
+        tpl1_json = json.loads(tpl1.data.decode('utf-8'))
 
-        assert 'id' in tpl1_json
+        self.assertTrue('id' in tpl1_json)
         tpl1_id = tpl1_json['id']
-        assert tpl1_id >= 0
+        self.assertGreaterEqual(tpl1_id, 0)
 
         del1 = self.app.delete('/api/template/{}'.format(tpl1_id))  # type: Response
-        assert del1.status_code == 200
-        assert del1.mimetype == 'application/json'
-        assert json.loads(del1.data) == {}
+        self.assertEqual(del1.status_code, 200)
+        self.assertEqual(del1.mimetype, 'application/json')
+        self.assertEqual(json.loads(del1.data.decode('utf-8')), {})
 
         del2 = self.app.delete('/api/template/{}'.format(tpl1_id))  # type: Response
-        assert del2.status_code == 404
+        self.assertEqual(del2.status_code, 404)
 
     def test_duplicate(self):
-        tpl1 = self.app.post('/api/template', data={
+        tpl1 = self.app.post('/api/template/', data={
             'name': 'test template',
             'text': 'foo'
         })  # type: Response
-        assert tpl1.status_code == 200
-        tpl2 = self.app.post('/api/template', data={
+        self.assertEqual(tpl1.status_code, 200)
+        tpl2 = self.app.post('/api/template/', data={
             'name': 'test template',
             'text': 'bar'
         })  # type: Response
         print(tpl2.status_code)
-        assert tpl2.status_code == 409
+        self.assertEqual(tpl2.status_code, 409)
 
     def test_delete_invalid(self):
         del1 = self.app.delete('/api/template/9999999')  # type: Response
-        assert del1.status_code == 404
+        self.assertEqual(del1.status_code, 404)
 
 
 if __name__ == "__main__":

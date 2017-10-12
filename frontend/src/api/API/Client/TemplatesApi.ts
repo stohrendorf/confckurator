@@ -177,7 +177,7 @@ namespace API.Client {
          * 
          */
         public getTemplates (extraHttpRequestParams?: any ) : ng.IHttpPromise<TemplateList> {
-            const localVarPath = this.basePath + '/template';
+            const localVarPath = this.basePath + '/template/';
 
             let queryParameters: any = {};
             let headerParams: any = this.extendObj({}, this.defaultHeaders);
@@ -232,7 +232,7 @@ namespace API.Client {
          * @param postTemplatesBody Template creation properties.
          */
         public postTemplates (postTemplatesBody?: NewTemplate, extraHttpRequestParams?: any ) : ng.IHttpPromise<IdResponse> {
-            const localVarPath = this.basePath + '/template';
+            const localVarPath = this.basePath + '/template/';
 
             let queryParameters: any = {};
             let headerParams: any = this.extendObj({}, this.defaultHeaders);

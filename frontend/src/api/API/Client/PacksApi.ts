@@ -150,7 +150,7 @@ namespace API.Client {
          * 
          */
         public getPacks (extraHttpRequestParams?: any ) : ng.IHttpPromise<PackList> {
-            const localVarPath = this.basePath + '/pack';
+            const localVarPath = this.basePath + '/pack/';
 
             let queryParameters: any = {};
             let headerParams: any = this.extendObj({}, this.defaultHeaders);
@@ -174,7 +174,7 @@ namespace API.Client {
          * @param postPacksBody Pack creation properties.
          */
         public postPacks (postPacksBody?: NewPack, extraHttpRequestParams?: any ) : ng.IHttpPromise<IdResponse> {
-            const localVarPath = this.basePath + '/pack';
+            const localVarPath = this.basePath + '/pack/';
 
             let queryParameters: any = {};
             let headerParams: any = this.extendObj({}, this.defaultHeaders);

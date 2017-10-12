@@ -1,15 +1,14 @@
-from typing import List
-
-import werkzeug.exceptions
 from flask.blueprints import Blueprint
 from flask_restful import Resource, reqparse, marshal, Api
 from sqlalchemy import and_
+from typing import List
+from werkzeug.exceptions import NotFound
 
 from api.common import make_id_response, make_empty_response
 from api.marshalling import pack_fields
 from db import make_session, Pack, Value
 
-pack_blueprint = Blueprint('pack_blueprint', __name__, url_prefix='/api')
+pack_blueprint = Blueprint('pack_blueprint', __name__, url_prefix='/api/pack')
 pack_api = Api(pack_blueprint)
 
 
@@ -19,7 +18,7 @@ class PackResource(Resource):
         with make_session() as session:
             data = session.query(Pack).filter(Pack.id == pack_id).all()  # type: List[Pack]
             if len(data) != 1:
-                return {'error': "Requested pack does not exist"}, werkzeug.exceptions.NotFound.code
+                raise NotFound("Requested pack does not exist")
 
             return marshal(data[0], pack_fields)
 
@@ -28,14 +27,14 @@ class PackResource(Resource):
         with make_session() as session:
             data = session.query(Pack).filter(Pack.id == pack_id).all()  # type: List[Pack]
             if len(data) != 1:
-                return {'error': "Requested pack does not exist"}, werkzeug.exceptions.NotFound.code
+                raise NotFound("Requested pack does not exist")
 
             session.delete(data[0])
             return make_empty_response()
 
 
 # noinspection PyTypeChecker
-pack_api.add_resource(PackResource, '/pack/<int:pack_id>')
+pack_api.add_resource(PackResource, '/<int:pack_id>')
 
 
 class PackList(Resource):
@@ -58,7 +57,7 @@ class PackList(Resource):
 
 
 # noinspection PyTypeChecker
-pack_api.add_resource(PackList, '/pack')
+pack_api.add_resource(PackList, '/')
 
 
 class PackVariableResource(Resource):
@@ -111,15 +110,14 @@ class PackVariableResource(Resource):
                          Value.pack_id == pack_id)).first()
 
             if value is None:
-                return {'error': "Requested variable does not exist in the specified pack"}, \
-                       werkzeug.exceptions.NotFound.code
+                raise NotFound("Requested variable does not exist in the specified pack")
 
             session.delete(value)
             return make_empty_response()
 
 
 # noinspection PyTypeChecker
-pack_api.add_resource(PackVariableResource, '/pack/<int:pack_id>/variable/<int:variable_id>')
+pack_api.add_resource(PackVariableResource, '/<int:pack_id>/variable/<int:variable_id>')
 
 
 def get_pack_api_blueprint():

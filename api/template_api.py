@@ -1,17 +1,14 @@
-import werkzeug.exceptions
 from flask.blueprints import Blueprint
 from flask_restful import Resource, reqparse, marshal, Api
 from sqlalchemy import and_
 from sqlalchemy.exc import IntegrityError
+from werkzeug.exceptions import NotFound, Conflict, InternalServerError
 
 from api.common import make_id_response, make_empty_response
 from api.marshalling import template_fields, variable_fields
 from db import make_session, Template, Variable
 
-import jinja2
-import jinja2.sandbox
-
-template_blueprint = Blueprint('template_blueprint', __name__, url_prefix='/api')
+template_blueprint = Blueprint('template_blueprint', __name__, url_prefix='/api/template')
 template_api = Api(template_blueprint)
 
 
@@ -21,7 +18,7 @@ class TemplateResource(Resource):
         with make_session() as session:
             data = session.query(Template).filter(Template.id == template_id).first()  # type: Template
             if data is None:
-                return {'error': "Requested template does not exist"}, werkzeug.exceptions.NotFound.code
+                raise NotFound("Requested template does not exist")
 
             return marshal(data, template_fields)
 
@@ -30,18 +27,18 @@ class TemplateResource(Resource):
         with make_session() as session:
             data = session.query(Template).filter(Template.id == template_id).first()  # type: Template
             if data is None:
-                return {'error': "Requested template does not exist"}, werkzeug.exceptions.NotFound.code
+                raise NotFound("Requested template does not exist")
 
             for variable in data.variables:
                 if len(variable.values) > 0:
-                    return {'error': "Cannot delete the template because one or more values are referencing it"}, \
-                           werkzeug.exceptions.Conflict.code
+                    raise Conflict("Cannot delete the template because one or more values are referencing it")
+
             session.delete(data)
             return make_empty_response()
 
 
 # noinspection PyTypeChecker
-template_api.add_resource(TemplateResource, '/template/<int:template_id>')
+template_api.add_resource(TemplateResource, '/<int:template_id>')
 
 
 class TemplateList(Resource):
@@ -60,19 +57,18 @@ class TemplateList(Resource):
         try:
             with make_session() as session:
                 if session.query(session.query(Template).filter(Template.name == args['name']).exists()).scalar():
-                    return {'error': "A template with the same name already exists"}, \
-                           werkzeug.exceptions.Conflict.code
+                    raise Conflict("A template with the same name already exists")
 
                 template = Template(name=args['name'], text=args['text'])
                 session.add(template)
                 session.commit()
                 return make_id_response(template.id)
         except IntegrityError:
-            return {'error': "Could not create the requested template"}, werkzeug.exceptions.InternalServerError.code
+            raise InternalServerError("Could not create the requested template")
 
 
 # noinspection PyTypeChecker
-template_api.add_resource(TemplateList, '/template')
+template_api.add_resource(TemplateList, '/')
 
 
 class TemplateVariableList(Resource):
@@ -97,7 +93,7 @@ class TemplateVariableList(Resource):
 
 
 # noinspection PyTypeChecker
-template_api.add_resource(TemplateVariableList, '/template/<int:template_id>/variable')
+template_api.add_resource(TemplateVariableList, '/<int:template_id>/variable')
 
 
 class TemplateVariable(Resource):
@@ -107,46 +103,17 @@ class TemplateVariable(Resource):
             data = session.query(Variable).filter(
                 and_(Variable.template_id == template_id, Variable.id == variable_id)).first()  # type: Variable
             if data is None:
-                return {'error': "Requested variable does not exist in template"}, werkzeug.exceptions.NotFound.code
+                raise NotFound("Requested variable does not exist in template")
 
             if len(data.values) > 0:
-                return {'error': "Cannot delete the variable because one or more values are referencing it"}, \
-                       werkzeug.exceptions.Conflict.code
+                raise Conflict("Cannot delete the variable because one or more values are referencing it")
 
             session.delete(data)
             return make_empty_response()
 
 
 # noinspection PyTypeChecker
-template_api.add_resource(TemplateVariable, '/template/<int:template_id>/variable/<int:variable_id>')
-
-
-class InstanceTemplate(Resource):
-    @staticmethod
-    def get(pack_id, environment_id, template_id):
-        with make_session() as session:
-            template = session.query(Template).filter(Template.id == template_id).first()  # type: Template
-
-            tpl_env = jinja2.sandbox.SandboxedEnvironment(undefined=jinja2.StrictUndefined)
-            tpl = tpl_env.from_string(template.text)  # type: jinja2.Template
-
-            values = {}
-            for variable in template.variables:
-                for value in variable.values:
-                    if value.environment_id != environment_id or value.pack_id != pack_id:
-                        continue
-
-                    values[variable.name] = value.data
-
-            try:
-                return {"instance": tpl.render(values)}
-            except jinja2.exceptions.UndefinedError as e:
-                return {'error': "Could not render the template: {}".format(e.message)}, \
-                       werkzeug.exceptions.InternalServerError.code
-
-
-# noinspection PyTypeChecker
-template_api.add_resource(InstanceTemplate, '/instance/<int:pack_id>/<int:environment_id>/<int:template_id>')
+template_api.add_resource(TemplateVariable, '/<int:template_id>/variable/<int:variable_id>')
 
 
 def get_template_api_blueprint():

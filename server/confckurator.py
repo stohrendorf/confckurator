@@ -1,6 +1,7 @@
 from flask import Flask, redirect
 
-from api import get_pack_api_blueprint, get_template_api_blueprint, get_environment_api_blueprint
+from api import get_pack_api_blueprint, get_template_api_blueprint, get_environment_api_blueprint, \
+    get_instance_api_blueprint
 from db import make_session, Pack, Template, Variable, Value, Environment, boot_database, Tag
 
 app = Flask(__name__)
@@ -35,6 +36,7 @@ def seed_data():
 app.register_blueprint(get_pack_api_blueprint())
 app.register_blueprint(get_template_api_blueprint())
 app.register_blueprint(get_environment_api_blueprint())
+app.register_blueprint(get_instance_api_blueprint())
 
 if __name__ == '__main__':
     app.testing = True

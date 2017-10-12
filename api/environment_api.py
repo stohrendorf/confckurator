@@ -1,14 +1,13 @@
-from typing import List
-
-import werkzeug.exceptions
 from flask.blueprints import Blueprint
 from flask_restful import Resource, reqparse, marshal, Api
+from typing import List
+from werkzeug.exceptions import NotFound
 
 from api.common import make_id_response, make_empty_response
 from api.marshalling import environment_fields
 from db import make_session, Environment
 
-environment_blueprint = Blueprint('environment_blueprint', __name__, url_prefix='/api')
+environment_blueprint = Blueprint('environment_blueprint', __name__, url_prefix='/api/environment')
 environment_api = Api(environment_blueprint)
 
 
@@ -18,7 +17,7 @@ class EnvironmentResource(Resource):
         with make_session() as session:
             data = session.query(Environment).filter(Environment.id == environment_id).all()  # type: List[Environment]
             if len(data) != 1:
-                return {'error': "Requested environment does not exist"}, werkzeug.exceptions.NotFound.code
+                raise NotFound("Requested environment does not exist")
 
             return marshal(data[0], environment_fields)
 
@@ -27,14 +26,14 @@ class EnvironmentResource(Resource):
         with make_session() as session:
             data = session.query(Environment).filter(Environment.id == environment_id).all()  # type: List[Environment]
             if len(data) != 1:
-                return {'error': "Requested environment does not exist"}, werkzeug.exceptions.NotFound.code
+                raise NotFound("Requested environment does not exist")
 
             session.delete(data[0])
             return make_empty_response()
 
 
 # noinspection PyTypeChecker
-environment_api.add_resource(EnvironmentResource, '/environment/<int:environment_id>')
+environment_api.add_resource(EnvironmentResource, '/<int:environment_id>')
 
 
 class EnvironmentList(Resource):
@@ -58,7 +57,7 @@ class EnvironmentList(Resource):
 
 
 # noinspection PyTypeChecker
-environment_api.add_resource(EnvironmentList, '/environment')
+environment_api.add_resource(EnvironmentList, '/')
 
 
 def get_environment_api_blueprint():

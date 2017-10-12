@@ -113,7 +113,7 @@ namespace API.Client {
          * 
          */
         public getEnvironments (extraHttpRequestParams?: any ) : ng.IHttpPromise<EnvironmentList> {
-            const localVarPath = this.basePath + '/environment';
+            const localVarPath = this.basePath + '/environment/';
 
             let queryParameters: any = {};
             let headerParams: any = this.extendObj({}, this.defaultHeaders);
@@ -137,7 +137,7 @@ namespace API.Client {
          * @param postEnvironmentsBody Environment creation properties.
          */
         public postEnvironment (postEnvironmentsBody?: NewEnvironment, extraHttpRequestParams?: any ) : ng.IHttpPromise<IdResponse> {
-            const localVarPath = this.basePath + '/environment';
+            const localVarPath = this.basePath + '/environment/';
 
             let queryParameters: any = {};
             let headerParams: any = this.extendObj({}, this.defaultHeaders);

@@ -18,7 +18,7 @@ tags:
 - name: "environments"
   description: "Everything about Environments"
 paths:
-  /template:
+  /template/:
     get:
       tags:
       - "templates"
@@ -174,7 +174,7 @@ paths:
           description: "conflict"
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /pack:
+  /pack/:
     get:
       tags:
       - "packs"
@@ -296,7 +296,7 @@ paths:
           description: "successful operation"
           schema:
             type: "object"
-  /environment:
+  /environment/:
     get:
       tags:
       - "environments"
