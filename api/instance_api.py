@@ -59,7 +59,7 @@ class InstanceTemplate(Resource):
                     result[template_name] = {'name': template_name,
                                              'text': instantiate(pack, value.variable.template, environment_id)}
 
-        return result
+            return result
 
 
 # noinspection PyTypeChecker
