@@ -456,7 +456,6 @@ definitions:
     required:
       - id
       - name
-      - tags
       - variables
     properties:
       id:
@@ -466,11 +465,6 @@ definitions:
         type: "string"
         minLength: 1
         maxLength: 255
-      tags:
-        type: "array"
-        description: Associated template tags.
-        items:
-          $ref: "#/definitions/Tag"
       variables:
         type: "array"
         items:
@@ -488,20 +482,6 @@ definitions:
         type: "string"
         minLength: 1
         maxLength: 255
-  Tag:
-    type: "object"
-    required:
-      - id
-      - name
-    properties:
-      id:
-        type: "integer"
-        description: Tag ID
-      name:
-        type: "string"
-        minLength: 1
-        maxLength: 255
-        description: Unique tag name.
   Variable:
     type: "object"
     required:
@@ -511,12 +491,12 @@ definitions:
     properties:
       id:
         type: "integer"
-        description: Tag ID
+        description: Variable ID
       name:
         type: "string"
         minLength: 1
         maxLength: 255
-        description: Unique tag name.
+        description: Unique (within its template) variable name.
       description:
         type: "string"
         description: Description of this variable (i.e. constraints).

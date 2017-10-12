@@ -9,7 +9,6 @@
 /// <reference path="NewVariable.ts" />
 /// <reference path="Pack.ts" />
 /// <reference path="PackList.ts" />
-/// <reference path="Tag.ts" />
 /// <reference path="Template.ts" />
 /// <reference path="TemplateList.ts" />
 /// <reference path="Value.ts" />

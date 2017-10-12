@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Sequence, Table, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, Sequence, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, Session
+from sqlalchemy.orm import relationship
 
 Schema = declarative_base()
 
@@ -50,36 +50,11 @@ class Environment(Schema):
         return "<Environment(name='{}', id='{}')>".format(self.name, self.id)
 
 
-template_tags = Table('template_tags', Schema.metadata,
-                      Column('tag_id', ForeignKey('tags.id'), primary_key=True),
-                      Column('template_id', ForeignKey('templates.id'), primary_key=True)
-                      )
-
-
-class Tag(Schema):
-    """
-    :type id: int
-    :type name: str
-    :type templates: list[Template]
-    """
-
-    __tablename__ = 'tags'
-
-    id = Column(Integer, Sequence('tag_id_seq'), primary_key=True)
-    name = Column(String(255), unique=True, nullable=False)
-
-    templates = relationship('Template', secondary=template_tags, back_populates='tags')
-
-    def __repr__(self):
-        return "<Tag(name='{}', id='{}')>".format(self.name, self.id)
-
-
 class Template(Schema):
     """
     :type id: int
     :type name: str
     :type text: str
-    :type tags: list[Tag]
     :type variables: list[Variable]
     """
 
@@ -89,7 +64,6 @@ class Template(Schema):
     name = Column(String(255), unique=True, nullable=False)
     text = Column(Text, nullable=False)
 
-    tags = relationship('Tag', secondary=template_tags, back_populates='templates')
     variables = relationship('Variable', backref='template')
 
     def __repr__(self):

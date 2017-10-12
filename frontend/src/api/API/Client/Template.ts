@@ -33,11 +33,6 @@ namespace API.Client {
 
         "name": string;
 
-        /**
-         * Associated template tags.
-         */
-        "tags": Array<Tag>;
-
         "variables": Array<Variable>;
     }
 

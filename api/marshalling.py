@@ -6,15 +6,9 @@ variable_fields = {
     'description': fields.String
 }
 
-tag_fields = {
-    'id': fields.Integer,
-    'name': fields.String
-}
-
 template_fields = {
     'id': fields.Integer,
     'name': fields.String,
-    'tags': fields.List(fields.Nested(tag_fields)),
     'variables': fields.List(fields.Nested(variable_fields))
 }
 

@@ -4,14 +4,8 @@
             [#{{ template.id }}] {{ template.name }}
         </h4>
         <div class="list-group-item-text">
-            <div class="alert alert-info">
-                <strong>Tags</strong>
-                <span data-ng-show="template.tags && template.tags.length > 0"
-                      data-ng-repeat="tag in template.tags">{{ tag.name }}<span
-                        data-ng-hide="$last">, </span></span>
-                <span data-ng-show="!template.tags || template.tags.length <= 0"><em>None</em></span>
-            </div>
-            <a href="#" data-toggle="collapse" data-target="#template-{{template.id}}-variables" data-ng-click="templateController.templatesVisible[template.id] = !templateController.templatesVisible[template.id]">
+            <a href="#" data-toggle="collapse" data-target="#template-{{template.id}}-variables"
+               data-ng-click="templateController.templatesVisible[template.id] = !templateController.templatesVisible[template.id]">
                 <h4>
                     <span class="fa"
                           data-ng-class="{'fa-plus-square': !templateController.templatesVisible[template.id], 'fa-minus-square': templateController.templatesVisible[template.id]}"></span>

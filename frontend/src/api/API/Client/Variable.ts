@@ -30,12 +30,12 @@ namespace API.Client {
     export interface Variable {
 
         /**
-         * Tag ID
+         * Variable ID
          */
         "id": number;
 
         /**
-         * Unique tag name.
+         * Unique (within its template) variable name.
          */
         "name": string;
 
