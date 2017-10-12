@@ -91,6 +91,7 @@ class Variable(Schema):
     """
     :type id: int
     :type template_id: int
+    :type template: Template
     :type name: str
     :type description: str
     :type values: list[Value]
@@ -116,8 +117,11 @@ class Variable(Schema):
 class Value(Schema):
     """
     :type variable_id: int
+    :type variable: Variable
     :type environment_id: int
+    :type environment: Environment
     :type pack_id: int
+    :type pack: Pack
     :type data: str
     """
 

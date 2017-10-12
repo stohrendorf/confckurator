@@ -8,6 +8,9 @@ from api.common import make_id_response, make_empty_response
 from api.marshalling import template_fields, variable_fields
 from db import make_session, Template, Variable
 
+import jinja2
+import jinja2.sandbox
+
 template_blueprint = Blueprint('template_blueprint', __name__, url_prefix='/api')
 template_api = Api(template_blueprint)
 
@@ -116,6 +119,34 @@ class TemplateVariable(Resource):
 
 # noinspection PyTypeChecker
 template_api.add_resource(TemplateVariable, '/template/<int:template_id>/variable/<int:variable_id>')
+
+
+class InstanceTemplate(Resource):
+    @staticmethod
+    def get(pack_id, environment_id, template_id):
+        with make_session() as session:
+            template = session.query(Template).filter(Template.id == template_id).first()  # type: Template
+
+            tpl_env = jinja2.sandbox.SandboxedEnvironment(undefined=jinja2.StrictUndefined)
+            tpl = tpl_env.from_string(template.text)  # type: jinja2.Template
+
+            values = {}
+            for variable in template.variables:
+                for value in variable.values:
+                    if value.environment_id != environment_id or value.pack_id != pack_id:
+                        continue
+
+                    values[variable.name] = value.data
+
+            try:
+                return {"instance": tpl.render(values)}
+            except jinja2.exceptions.UndefinedError as e:
+                return {'error': "Could not render the template: {}".format(e.message)}, \
+                       werkzeug.exceptions.InternalServerError.code
+
+
+# noinspection PyTypeChecker
+template_api.add_resource(InstanceTemplate, '/instance/<int:pack_id>/<int:environment_id>/<int:template_id>')
 
 
 def get_template_api_blueprint():

@@ -20,7 +20,7 @@ def seed_data():
     with make_session() as session:
         tag = Tag(name="nice")
         session.add(tag)
-        template = Template(name="test", text="whoa", tags=[tag])
+        template = Template(name="test", text="whoa = {{xxx_var}}", tags=[tag])
         session.add(template)
         variable = Variable(name="xxx_var", description="me gusta", template=template)
         session.add(variable)
