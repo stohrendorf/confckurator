@@ -110,7 +110,7 @@ class PackVariableResource(Resource):
                          Value.pack_id == pack_id)).first()
 
             if value is None:
-                raise NotFound("Requested variable does not exist in the specified pack")
+                raise NotFound("Requested value does not exist in the specified pack")
 
             session.delete(value)
             return make_empty_response()
