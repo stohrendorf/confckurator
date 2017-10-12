@@ -54,13 +54,17 @@ class TemplateList(Resource):
         parser.add_argument('text', required=True)
         args = parser.parse_args(strict=True)
 
-        template = Template(name=args['name'], text=args['text'])
         try:
             with make_session() as session:
+                if session.query(session.query(Template).filter(Template.name == args['name']).exists()).scalar():
+                    return {'error': "A template with the same name already exists"}, \
+                           werkzeug.exceptions.Conflict.code
+
+                template = Template(name=args['name'], text=args['text'])
                 session.add(template)
                 session.commit()
                 return make_id_response(template.id)
-        except IntegrityError as e:
+        except IntegrityError:
             return {'error': "Could not create the requested template"}, werkzeug.exceptions.InternalServerError.code
 
 

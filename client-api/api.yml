@@ -52,6 +52,10 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/IdResponse"
+        409:
+          description: "conflict"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /template/{templateId}:
     parameters:
       - in: path

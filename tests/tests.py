@@ -38,7 +38,7 @@ class BasicTemplateTest(TestBase):
         assert json.loads(del1.data) == {}
 
         del2 = self.app.delete('/api/template/{}'.format(tpl1_id))  # type: Response
-        assert del2.status_code >= 300
+        assert del2.status_code == 404
 
     def test_duplicate(self):
         tpl1 = self.app.post('/api/template', data={
@@ -50,11 +50,12 @@ class BasicTemplateTest(TestBase):
             'name': 'test template',
             'text': 'bar'
         })  # type: Response
-        assert tpl2.status_code >= 300
+        print(tpl2.status_code)
+        assert tpl2.status_code == 409
 
     def test_delete_invalid(self):
         del1 = self.app.delete('/api/template/9999999')  # type: Response
-        assert del1.status_code >= 300
+        assert del1.status_code == 404
 
 
 if __name__ == "__main__":
