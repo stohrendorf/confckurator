@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, Sequence, Table, UniqueConstraint
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Session
 
 Schema = declarative_base()
 
@@ -21,6 +21,15 @@ class Pack(Schema):
 
     def __repr__(self):
         return "<Pack(name='{}', id='{}')>".format(self.name, self.id)
+
+    def get_templates(self):
+        """
+        :rtype: Set[Template]
+        """
+        ids = set()
+        for value in self.values:
+            ids.add(value.variable.template)
+        return ids
 
 
 class Environment(Schema):
@@ -112,6 +121,20 @@ class Variable(Schema):
         return "<Variable(name='{}', id='{}', template_id='{}')>".format(self.name,
                                                                          self.id,
                                                                          self.template_id)
+
+    def get_value(self, pack: Pack, environment: Environment):
+        default_value = None
+        for value in pack.values:
+            if value.pack_id != pack.id:
+                continue
+            if value.variable_id != self.id:
+                continue
+            if value.environment_id is None:
+                default_value = value
+            elif value.environment_id == environment.id:
+                return value
+
+        return default_value
 
 
 class Value(Schema):

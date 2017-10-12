@@ -50,7 +50,6 @@ class BasicTemplateTest(TestBase):
             'name': 'test template',
             'text': 'bar'
         })  # type: Response
-        print(tpl2.status_code)
         self.assertEqual(tpl2.status_code, 409)
 
     def test_delete_invalid(self):
