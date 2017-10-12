@@ -1,5 +1,3 @@
-from typing import List
-
 import werkzeug.exceptions
 from flask.blueprints import Blueprint
 from flask_restful import Resource, reqparse, marshal, Api
@@ -18,20 +16,24 @@ class TemplateResource(Resource):
     @staticmethod
     def get(template_id):
         with make_session() as session:
-            data = session.query(Template).filter(Template.id == template_id).all()  # type: List[Template]
-            if len(data) != 1:
+            data = session.query(Template).filter(Template.id == template_id).first()  # type: Template
+            if data is None:
                 return {'error': "Requested template does not exist"}, werkzeug.exceptions.NotFound.code
 
-            return marshal(data[0], template_fields)
+            return marshal(data, template_fields)
 
     @staticmethod
     def delete(template_id):
         with make_session() as session:
-            data = session.query(Template).filter(Template.id == template_id).all()  # type: List[Template]
-            if len(data) != 1:
+            data = session.query(Template).filter(Template.id == template_id).first()  # type: Template
+            if data is None:
                 return {'error': "Requested template does not exist"}, werkzeug.exceptions.NotFound.code
 
-            session.delete(data[0])
+            for variable in data.variables:
+                if len(variable.values) > 0:
+                    return {'error': "Cannot delete the template because one or more values are referencing it"}, \
+                           werkzeug.exceptions.Conflict.code
+            session.delete(data)
             return make_empty_response()
 
 
@@ -96,9 +98,13 @@ class TemplateVariable(Resource):
     def delete(template_id, variable_id):
         with make_session() as session:
             data = session.query(Variable).filter(
-                and_(Variable.template_id == template_id, Variable.id == variable_id)).first()  # type: List[Variable]
+                and_(Variable.template_id == template_id, Variable.id == variable_id)).first()  # type: Variable
             if data is None:
                 return {'error': "Requested variable does not exist in template"}, werkzeug.exceptions.NotFound.code
+
+            if len(data.values) > 0:
+                return {'error': "Cannot delete the variable because one or more values are referencing it"}, \
+                       werkzeug.exceptions.Conflict.code
 
             session.delete(data)
             return make_empty_response()

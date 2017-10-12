@@ -1,6 +1,7 @@
 /// <reference path="DeleteVariableValue.ts" />
 /// <reference path="Environment.ts" />
 /// <reference path="EnvironmentList.ts" />
+/// <reference path="ErrorResponse.ts" />
 /// <reference path="IdResponse.ts" />
 /// <reference path="NewEnvironment.ts" />
 /// <reference path="NewPack.ts" />

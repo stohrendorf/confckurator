@@ -200,7 +200,7 @@ namespace API.Client {
          * @param variableId The variable ID.
          * @param setVariableValue Variable value.
          */
-        public setValue (packId: number, variableId: number, setVariableValue?: VariableValueUpdate, extraHttpRequestParams?: any ) : ng.IHttpPromise<IdResponse> {
+        public setValue (packId: number, variableId: number, setVariableValue?: VariableValueUpdate, extraHttpRequestParams?: any ) : ng.IHttpPromise<any> {
             const localVarPath = this.basePath + '/pack/{packId}/variable/{variableId}'
                 .replace('{' + 'packId' + '}', String(packId))
                 .replace('{' + 'variableId' + '}', String(variableId));
