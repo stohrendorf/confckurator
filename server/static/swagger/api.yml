@@ -364,6 +364,33 @@ paths:
           description: "successful operation"
           schema:
             type: "object"
+  /instance/{packId}/{environmentId}:
+    parameters:
+      - in: path
+        name: packId
+        required: true
+        type: integer
+        minimum: 0
+        description: "The pack ID."
+      - in: path
+        name: environmentId
+        required: true
+        type: integer
+        minimum: 0
+        description: "The environment ID."
+    get:
+      tags:
+      - "packs"
+      summary: "Get an instantiated pack"
+      description: ""
+      operationId: "getInstance"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/PackInstance"
 definitions:
   IdResponse:
     type: "object"
@@ -543,3 +570,19 @@ definitions:
     properties:
       message:
         type: string
+  PackInstance:
+    type: array
+    items:
+      $ref: "#/definitions/TemplateInstance"
+  TemplateInstance:
+    type: object
+    required:
+      - name
+      - text
+    properties:
+      name:
+        type: string
+        description: Name of the instantiated template.
+      text:
+        type: string
+        description: Template text.

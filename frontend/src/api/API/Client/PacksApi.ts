@@ -117,6 +117,41 @@ namespace API.Client {
             return this.$http(httpRequestParams);
         }
         /**
+         * Get an instantiated pack
+         * 
+         * @param packId The pack ID.
+         * @param environmentId The environment ID.
+         */
+        public getInstance (packId: number, environmentId: number, extraHttpRequestParams?: any ) : ng.IHttpPromise<PackInstance> {
+            const localVarPath = this.basePath + '/instance/{packId}/{environmentId}'
+                .replace('{' + 'packId' + '}', String(packId))
+                .replace('{' + 'environmentId' + '}', String(environmentId));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'packId' is not null or undefined
+            if (packId === null || packId === undefined) {
+                throw new Error('Required parameter packId was null or undefined when calling getInstance.');
+            }
+            // verify required parameter 'environmentId' is not null or undefined
+            if (environmentId === null || environmentId === undefined) {
+                throw new Error('Required parameter environmentId was null or undefined when calling getInstance.');
+            }
+            let httpRequestParams: any = {
+                method: 'GET',
+                url: localVarPath,
+                json: true,
+                                                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
          * Get details about a pack
          * 
          * @param packId The pack ID.
