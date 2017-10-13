@@ -11,7 +11,11 @@ instance_api = Api(instance_blueprint)
 
 
 def instantiate(pack: Pack, template: Template, environment: Environment):
-    values = {}
+    values = {'_meta': {
+        'pack': pack.name,
+        'template': template.name,
+        'environment': environment.name
+    }}
     for variable in template.variables:
         value = variable.get_value(pack, environment)
         if value is None:

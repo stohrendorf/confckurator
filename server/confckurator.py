@@ -19,7 +19,10 @@ def home():
 
 def seed_data():
     with make_session() as session:
-        template = Template(name="test", text="whoa = {{xxx_var}}")
+        template = Template(name="test", text="whoa = {{xxx_var}};"
+                                              " template={{_meta.template}};"
+                                              " environment={{_meta.environment}};"
+                                              " pack={{_meta.pack}}")
         session.add(template)
         variable = Variable(name="xxx_var", description="me gusta", template=template)
         session.add(variable)
