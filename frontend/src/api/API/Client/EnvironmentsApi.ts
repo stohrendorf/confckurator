@@ -51,6 +51,31 @@ namespace API.Client {
         }
 
         /**
+         * Create a new environment
+         * 
+         * @param postEnvironmentsBody Environment creation properties.
+         */
+        public createEnvironment (postEnvironmentsBody?: NewEnvironment, extraHttpRequestParams?: any ) : ng.IHttpPromise<IdResponse> {
+            const localVarPath = this.basePath + '/environment/';
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: localVarPath,
+                json: true,
+                data: postEnvironmentsBody,
+                                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
          * Delete an environment
          * 
          * @param environmentId The environment ID.
@@ -122,31 +147,6 @@ namespace API.Client {
                 url: localVarPath,
                 json: true,
                                                 params: queryParameters,
-                headers: headerParams
-            };
-
-            if (extraHttpRequestParams) {
-                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
-            }
-
-            return this.$http(httpRequestParams);
-        }
-        /**
-         * Create a new environment
-         * 
-         * @param postEnvironmentsBody Environment creation properties.
-         */
-        public postEnvironment (postEnvironmentsBody?: NewEnvironment, extraHttpRequestParams?: any ) : ng.IHttpPromise<IdResponse> {
-            const localVarPath = this.basePath + '/environment/';
-
-            let queryParameters: any = {};
-            let headerParams: any = this.extendObj({}, this.defaultHeaders);
-            let httpRequestParams: any = {
-                method: 'POST',
-                url: localVarPath,
-                json: true,
-                data: postEnvironmentsBody,
-                                params: queryParameters,
                 headers: headerParams
             };
 
