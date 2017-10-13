@@ -1,0 +1,17 @@
+<div class="list-group">
+  <div class="list-group-item" *ngFor="let pack of packs">
+    <h4 class="list-group-item-heading">
+      [#{{ pack.id }}] {{ pack.name }}
+    </h4>
+    <div class="list-group-item-text">
+      Values:
+      <ul>
+        <li *ngFor="let value of pack.values">
+          variable_id={{ value.variable_id }},
+          environment_id={{ value.environment_id }},
+          pack_id={{ value.pack_id }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

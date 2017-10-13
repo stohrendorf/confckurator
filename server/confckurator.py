@@ -9,12 +9,12 @@ app = Flask(__name__)
 
 @app.route('/')
 def home_redirect():
-    return redirect('/static/')
+    return redirect('/static/frontend/')
 
 
-@app.route('/static/')
+@app.route('/static/frontend/')
 def home():
-    return app.send_static_file('index.html')
+    return app.send_static_file('frontend/index.html')
 
 
 def seed_data():

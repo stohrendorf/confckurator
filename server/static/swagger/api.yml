@@ -31,7 +31,9 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/TemplateList"
+            type: array
+            items:
+              $ref: "#/definitions/Template"
     post:
       tags:
       - "templates"
@@ -187,7 +189,9 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/PackList"
+            type: array
+            items:
+              $ref: "#/definitions/Pack"
     post:
       tags:
       - "packs"
@@ -351,7 +355,9 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/EnvironmentList"
+            type: "array"
+            items:
+              $ref: "#/definitions/Environment"
     post:
       tags:
       - "environments"
@@ -432,7 +438,9 @@ paths:
         200:
           description: "successful operation"
           schema:
-            $ref: "#/definitions/PackInstance"
+            type: array
+            items:
+              $ref: "#/definitions/TemplateInstance"
 definitions:
   IdResponse:
     type: "object"
@@ -442,18 +450,6 @@ definitions:
       id:
         type: "integer"
         description: An entity ID, the referenced entity type depends on the request context.
-  PackList:
-    type: "array"
-    items:
-      $ref: "#/definitions/Pack"
-  TemplateList:
-    type: "array"
-    items:
-      $ref: "#/definitions/Template"
-  EnvironmentList:
-    type: "array"
-    items:
-      $ref: "#/definitions/Environment"
   Pack:
     type: "object"
     required:
@@ -612,10 +608,6 @@ definitions:
     properties:
       message:
         type: string
-  PackInstance:
-    type: array
-    items:
-      $ref: "#/definitions/TemplateInstance"
   TemplateInstance:
     type: object
     required:

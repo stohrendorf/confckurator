@@ -11,20 +11,19 @@ are made up.
 It's not usable at all, as major points (like a fully implemented API, the frontend and the template retrieval) are not
 implemented at all.
 
-**If you're a frontend developer experienced with node.js and typescript, drop me a note (or even better, a pull request),
-and improve the workflow ;)**
-
 ### Dev Setup
 
 First, grab and set up a node.js environment with `npm`. Then...
 
 ```
-cd frontend
+cd cnfckurator
 npm install
 ```
 
-Now run `./server/confckurator.py` and go to the printed URL.
+Now run `${checkout-root}/server/confckurator.py` and go to the printed URL.
 
-Don't forget to run `./node_modules/.bin/gulp` (or simply `npm install` again) after modifying frontend files; also,
-you need to `cd ${checkout-root}/client-api && python3 generate.py` and then update the frontend files after modifying
+You need to `cd ${checkout-root}/client-api && python3 generate.py` and then update the frontend files after modifying
 the client api swagger file.
+
+For updating the frontend files, go to `${checkout-root}/confckurator` and run `npm run build`, or
+`ng build` if you have installed `@angular/cli` globally.
