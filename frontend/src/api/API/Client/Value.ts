@@ -32,17 +32,17 @@ namespace API.Client {
         /**
          * Variable ID
          */
-        "variableId": number;
+        "variable_id": number;
 
         /**
          * Environment ID
          */
-        "environmentId": number;
+        "environment_id": number;
 
         /**
          * Pack ID
          */
-        "packId": number;
+        "pack_id": number;
 
         /**
          * Value data

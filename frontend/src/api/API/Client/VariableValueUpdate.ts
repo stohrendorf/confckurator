@@ -32,7 +32,7 @@ namespace API.Client {
         /**
          * Optional environment ID
          */
-        "environmentId"?: number;
+        "environment_id"?: number;
 
         /**
          * The variable's value

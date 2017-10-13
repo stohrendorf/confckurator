@@ -27,5 +27,6 @@ environment_fields = {
 
 pack_fields = {
     'id': fields.Integer,
-    'name': fields.String
+    'name': fields.String,
+    'values': fields.List(fields.Nested(value_fields))
 }

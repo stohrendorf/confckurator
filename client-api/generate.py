@@ -8,7 +8,7 @@ shutil.rmtree('../frontend/src/api')
 
 print("Generating client API files from swagger API description...")
 os.system(
-    'java -jar swagger-codegen-cli-2.2.1.jar generate -i api.yml -l typescript-angular -o ../frontend/src/api')
+    'java -jar swagger-codegen-cli-2.2.1.jar generate -i api.yml -l typescript-angular -c config.json -o ../frontend/src/api')
 
 print("Copying swagger API description to frontend...")
 shutil.copy('api.yml', '../server/static/swagger/api.yml')
