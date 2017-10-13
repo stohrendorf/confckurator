@@ -2,11 +2,11 @@ from flask.blueprints import Blueprint
 from flask_restful import Resource, reqparse, marshal, Api
 from sqlalchemy import and_
 from typing import List
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import NotFound, Conflict
 
 from api.common import make_id_response, make_empty_response
 from api.marshalling import pack_fields
-from db import make_session, Pack, Value
+from db import make_session, Pack, Value, Template
 
 pack_blueprint = Blueprint('pack_blueprint', __name__, url_prefix='/api/pack')
 pack_api = Api(pack_blueprint)
@@ -118,6 +118,54 @@ class PackVariableResource(Resource):
 
 # noinspection PyTypeChecker
 pack_api.add_resource(PackVariableResource, '/<int:pack_id>/variable/<int:variable_id>')
+
+
+class PackTemplateResource(Resource):
+    @staticmethod
+    def post(pack_id, template_id):
+        with make_session() as session:
+            pack = session.query(Pack).filter(Pack.id == pack_id).first()
+            if pack is None:
+                raise NotFound("Requested pack not found")
+
+            template = session.query(Template).filter(Template.id == template_id).first()
+            if template is None:
+                raise NotFound("Requested template not found")
+
+            if template in pack.get_templates():
+                raise Conflict("Requested template is already attached to requested pack")
+
+            for variable in template.variables:
+                value = Value(variable=variable, environment=None, pack=pack, data="")
+                session.add(value)
+
+        return make_empty_response()
+
+    @staticmethod
+    def delete(pack_id, template_id):
+        with make_session() as session:
+            pack = session.query(Pack).filter(Pack.id == pack_id).first()
+            if pack is None:
+                raise NotFound("Requested pack not found")
+
+            template = session.query(Template).filter(Template.id == template_id).first()
+            if template is None:
+                raise NotFound("Requested template not found")
+
+            if template not in pack.get_templates():
+                raise NotFound("Requested template is not attached to requested pack")
+
+            for variable in template.variables:
+                for value in pack.values:
+                    if value.variable == variable:
+                        print("Del {}".format(repr(value)))
+                        session.delete(value)
+
+        return make_empty_response()
+
+
+# noinspection PyTypeChecker
+pack_api.add_resource(PackTemplateResource, '/<int:pack_id>/template/<int:template_id>')
 
 
 def get_pack_api_blueprint():

@@ -125,7 +125,7 @@ class Value(Schema):
     __tablename__ = 'values'
 
     variable_id = Column(Integer, ForeignKey('variables.id'), primary_key=True)
-    environment_id = Column(Integer, ForeignKey('environments.id'), primary_key=True)
+    environment_id = Column(Integer, ForeignKey('environments.id'), primary_key=True, nullable=True)
     pack_id = Column(Integer, ForeignKey('packs.id'), primary_key=True)
     data = Column(Text, nullable=False)
 

@@ -296,6 +296,48 @@ paths:
           description: "successful operation"
           schema:
             type: "object"
+  /pack/{packId}/template/{templateId}:
+    parameters:
+      - in: path
+        name: packId
+        required: true
+        type: integer
+        minimum: 0
+        description: "The pack ID."
+      - in: path
+        name: templateId
+        required: true
+        type: integer
+        minimum: 0
+        description: "The template ID."
+    post:
+      tags:
+      - "packs"
+      summary: "Attach a template to a pack"
+      operationId: "attachPackTemplate"
+      consumes:
+        - application/json
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
+    delete:
+      tags:
+      - "packs"
+      summary: "Remove a template from a pack"
+      operationId: "detachPackTemplate"
+      consumes:
+        - application/json
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
   /environment/:
     get:
       tags:

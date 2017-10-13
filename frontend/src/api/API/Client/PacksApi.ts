@@ -51,6 +51,41 @@ namespace API.Client {
         }
 
         /**
+         * Attach a template to a pack
+         * 
+         * @param packId The pack ID.
+         * @param templateId The template ID.
+         */
+        public attachPackTemplate (packId: number, templateId: number, extraHttpRequestParams?: any ) : ng.IHttpPromise<any> {
+            const localVarPath = this.basePath + '/pack/{packId}/template/{templateId}'
+                .replace('{' + 'packId' + '}', String(packId))
+                .replace('{' + 'templateId' + '}', String(templateId));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'packId' is not null or undefined
+            if (packId === null || packId === undefined) {
+                throw new Error('Required parameter packId was null or undefined when calling attachPackTemplate.');
+            }
+            // verify required parameter 'templateId' is not null or undefined
+            if (templateId === null || templateId === undefined) {
+                throw new Error('Required parameter templateId was null or undefined when calling attachPackTemplate.');
+            }
+            let httpRequestParams: any = {
+                method: 'POST',
+                url: localVarPath,
+                json: true,
+                                                params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
          * Create a new pack
          * 
          * @param postPacksBody Pack creation properties.
@@ -132,6 +167,41 @@ namespace API.Client {
                 json: true,
                 data: setVariableValue,
                                 params: queryParameters,
+                headers: headerParams
+            };
+
+            if (extraHttpRequestParams) {
+                httpRequestParams = this.extendObj(httpRequestParams, extraHttpRequestParams);
+            }
+
+            return this.$http(httpRequestParams);
+        }
+        /**
+         * Remove a template from a pack
+         * 
+         * @param packId The pack ID.
+         * @param templateId The template ID.
+         */
+        public detachPackTemplate (packId: number, templateId: number, extraHttpRequestParams?: any ) : ng.IHttpPromise<any> {
+            const localVarPath = this.basePath + '/pack/{packId}/template/{templateId}'
+                .replace('{' + 'packId' + '}', String(packId))
+                .replace('{' + 'templateId' + '}', String(templateId));
+
+            let queryParameters: any = {};
+            let headerParams: any = this.extendObj({}, this.defaultHeaders);
+            // verify required parameter 'packId' is not null or undefined
+            if (packId === null || packId === undefined) {
+                throw new Error('Required parameter packId was null or undefined when calling detachPackTemplate.');
+            }
+            // verify required parameter 'templateId' is not null or undefined
+            if (templateId === null || templateId === undefined) {
+                throw new Error('Required parameter templateId was null or undefined when calling detachPackTemplate.');
+            }
+            let httpRequestParams: any = {
+                method: 'DELETE',
+                url: localVarPath,
+                json: true,
+                                                params: queryParameters,
                 headers: headerParams
             };
 
