@@ -3,6 +3,8 @@
 Don't f\*ck with configuration pipelines across multiple environments anymore. Use this
 instead.
 
+PS: [Have a look at the wiki.](https://github.com/stohrendorf/confckurator/wiki)
+
 ### Why should I use this?
 Because 69% of all people have a dirty mind.  And because 42% of all statistical numbers
 are made up.
