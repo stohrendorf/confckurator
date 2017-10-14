@@ -1386,6 +1386,7 @@ var TemplateInfo = (function () {
         this.formBuilder = formBuilder;
         this.template = template;
         this.code = '';
+        this.variablesToDelete = [];
         this.reload();
     }
     TemplateInfo.prototype.reload = function () {
@@ -1401,7 +1402,7 @@ var TemplateInfo = (function () {
             _this.updateDisplay();
         });
     };
-    TemplateInfo.prototype.createAddress = function (variable) {
+    TemplateInfo.prototype.createVariable = function (variable) {
         if (variable === void 0) { variable = null; }
         return this.formBuilder.group({
             name: [
@@ -1418,7 +1419,7 @@ var TemplateInfo = (function () {
             this.variablesList.removeAt(0);
         }
         this.template.variables.forEach(function (v) {
-            _this.variablesList.push(_this.createAddress(v));
+            _this.variablesList.push(_this.createVariable(v));
         });
         this.code = this.template.text;
     };
@@ -1434,12 +1435,17 @@ var TemplateInfo = (function () {
         tplRequest.subscribe(function (tpl) {
             _this.template.id = tpl.id;
             var requests = _this.saveVariables();
-            __WEBPACK_IMPORTED_MODULE_10_rxjs_Observable__["Observable"].forkJoin(requests).subscribe(function (x) { return _this.reload(); });
+            if (requests.length > 0) {
+                __WEBPACK_IMPORTED_MODULE_10_rxjs_Observable__["Observable"].forkJoin(requests).subscribe(function (x) { return _this.reload(); });
+            }
+            else {
+                _this.reload();
+            }
         });
     };
     TemplateInfo.prototype.saveVariables = function () {
         var _this = this;
-        return this.variablesList.controls.map(function (vc) {
+        var result = this.variablesList.controls.map(function (vc) {
             var id = vc.get('id').value;
             var name = vc.get('name').value;
             var description = vc.get('description').value;
@@ -1455,11 +1461,15 @@ var TemplateInfo = (function () {
                 });
             }
         });
+        result.push.apply(result, this.variablesToDelete.map(function (id) { return _this.api.deleteTemplateVariable(_this.template.id, id); }));
+        this.variablesToDelete = [];
+        return result;
     };
     TemplateInfo.prototype.addVariable = function () {
-        this.variablesList.push(this.createAddress());
+        this.variablesList.push(this.createVariable());
     };
     TemplateInfo.prototype.removeVariable = function (idx) {
+        this.variablesToDelete.push(this.variablesList.controls[idx].get('id').value);
         this.variablesList.removeAt(idx);
     };
     return TemplateInfo;

@@ -19,6 +19,8 @@ class TemplateInfo {
   public variablesList: FormArray;
   public code = '';
 
+  private variablesToDelete: number[] = [];
+
   constructor(private api: TemplatesApi, private formBuilder: FormBuilder, private template: Template) {
     this.reload();
   }
@@ -37,7 +39,7 @@ class TemplateInfo {
     });
   }
 
-  createAddress(variable: Variable = null): FormGroup {
+  createVariable(variable: Variable = null): FormGroup {
     return this.formBuilder.group({
       name: [
         {value: !variable ? '' : variable.name, disabled: variable != null},
@@ -54,7 +56,7 @@ class TemplateInfo {
     }
 
     this.template.variables.forEach(v => {
-      this.variablesList.push(this.createAddress(v));
+      this.variablesList.push(this.createVariable(v));
     });
 
     this.code = this.template.text;
@@ -71,12 +73,16 @@ class TemplateInfo {
     tplRequest.subscribe(tpl => {
       this.template.id = tpl.id;
       const requests = this.saveVariables();
-      Observable.forkJoin(requests).subscribe(x => this.reload());
+      if (requests.length > 0) {
+        Observable.forkJoin(requests).subscribe(x => this.reload());
+      } else {
+        this.reload();
+      }
     });
   }
 
-  private saveVariables() {
-    return this.variablesList.controls.map(vc => {
+  private saveVariables(): Observable<any>[] {
+    let result: Observable<any>[] = this.variablesList.controls.map(vc => {
       const id: number = vc.get('id').value;
       const name: string = vc.get('name').value;
       const description: string = vc.get('description').value;
@@ -92,13 +98,22 @@ class TemplateInfo {
         });
       }
     });
+
+    result.push(
+      ...this.variablesToDelete.map(id => this.api.deleteTemplateVariable(this.template.id, id))
+    );
+
+    this.variablesToDelete = [];
+
+    return result;
   }
 
-  addVariable(): void {
-    this.variablesList.push(this.createAddress());
+  public addVariable(): void {
+    this.variablesList.push(this.createVariable());
   }
 
-  removeVariable(idx: number): void {
+  public removeVariable(idx: number): void {
+    this.variablesToDelete.push(this.variablesList.controls[idx].get('id').value);
     this.variablesList.removeAt(idx);
   }
 }
