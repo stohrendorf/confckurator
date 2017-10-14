@@ -8,6 +8,7 @@ import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {HttpModule} from "@angular/http";
 import {BASE_PATH} from "../api/variables";
 import {ReactiveFormsModule} from "@angular/forms";
+import {CodemirrorModule} from "ng2-codemirror";
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import {ReactiveFormsModule} from "@angular/forms";
     BrowserModule,
     HttpModule,
     NgbModule.forRoot(),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CodemirrorModule
   ],
   providers: [{provide: BASE_PATH, useValue: '/api'}],
   bootstrap: [AppComponent]

@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import NotFound, Conflict, InternalServerError
 
 from api.common import make_id_response, make_empty_response
-from api.marshalling import template_fields, variable_fields
+from api.marshalling import template_fields, variable_fields, template_fields_with_text
 from db import make_session, Template, Variable
 
 template_blueprint = Blueprint('template_blueprint', __name__, url_prefix='/api/template')
@@ -15,12 +15,16 @@ template_api = Api(template_blueprint)
 class TemplateResource(Resource):
     @staticmethod
     def get(template_id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('with_text', required=False, type=bool, default=False, store_missing=True)
+        args = parser.parse_args(strict=True)
+
         with make_session() as session:
             data = session.query(Template).filter(Template.id == template_id).first()  # type: Template
             if data is None:
                 raise NotFound("Requested template does not exist")
 
-            return marshal(data, template_fields)
+            return marshal(data, template_fields_with_text if args['with_text'] else template_fields)
 
     @staticmethod
     def delete(template_id):

@@ -12,6 +12,13 @@ template_fields = {
     'variables': fields.List(fields.Nested(variable_fields))
 }
 
+template_fields_with_text = {
+    'id': fields.Integer,
+    'name': fields.String,
+    'variables': fields.List(fields.Nested(variable_fields)),
+    'text': fields.String
+}
+
 value_fields = {
     'variable_id': fields.Integer,
     'environment_id': fields.Integer,

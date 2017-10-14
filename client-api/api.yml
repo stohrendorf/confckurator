@@ -74,6 +74,12 @@ paths:
       operationId: "getTemplate"
       produces:
       - "application/json"
+      parameters:
+        - name: with_text
+          in: query
+          description: Also deliver the template text when set to "true"; defaults to "false".
+          type: boolean
+
       responses:
         200:
           description: "successful operation"
@@ -534,6 +540,8 @@ definitions:
         type: "array"
         items:
           $ref: "#/definitions/Variable"
+      text:
+        type: string
   Environment:
     type: "object"
     required:

@@ -19,4 +19,6 @@ export interface Template {
 
     variables: Array<models.Variable>;
 
+    text?: string;
+
 }

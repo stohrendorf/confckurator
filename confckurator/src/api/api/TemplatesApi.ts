@@ -111,9 +111,10 @@ export class TemplatesApi {
      * 
      * @summary Get details about a template
      * @param templateId The template ID.
+     * @param withText Also deliver the template text when set to \&quot;true\&quot;; defaults to \&quot;false\&quot;.
      */
-    public getTemplate(templateId: number, extraHttpRequestParams?: any): Observable<models.Template> {
-        return this.getTemplateWithHttpInfo(templateId, extraHttpRequestParams)
+    public getTemplate(templateId: number, withText?: boolean, extraHttpRequestParams?: any): Observable<models.Template> {
+        return this.getTemplateWithHttpInfo(templateId, withText, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -321,8 +322,9 @@ export class TemplatesApi {
      * Get details about a template
      * 
      * @param templateId The template ID.
+     * @param withText Also deliver the template text when set to \&quot;true\&quot;; defaults to \&quot;false\&quot;.
      */
-    public getTemplateWithHttpInfo(templateId: number, extraHttpRequestParams?: any): Observable<Response> {
+    public getTemplateWithHttpInfo(templateId: number, withText?: boolean, extraHttpRequestParams?: any): Observable<Response> {
         const path = this.basePath + '/template/${templateId}'
                     .replace('${' + 'templateId' + '}', String(templateId));
 
@@ -332,6 +334,10 @@ export class TemplatesApi {
         if (templateId === null || templateId === undefined) {
             throw new Error('Required parameter templateId was null or undefined when calling getTemplate.');
         }
+        if (withText !== undefined) {
+            queryParameters.set('with_text', <any>withText);
+        }
+
         // to determine the Content-Type header
         let consumes: string[] = [
         ];
