@@ -23,11 +23,11 @@
           </div>
         </div>
       </div>
-
-      <h4>Template</h4>
       <a (click)="templateInfo.addVariable()" class="btn btn-primary">
         <span class="fa fa-plus-square"></span> Add Variable
       </a>
+
+      <h4>Template</h4>
       <codemirror [config]="{lineNumbers:true, mode:'jinja2'}" [(value)]="templateInfo.code"></codemirror>
     </ng-template>
   </ngb-panel>
