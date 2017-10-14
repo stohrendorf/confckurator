@@ -9,6 +9,8 @@ export * from './NewVariable';
 export * from './Pack';
 export * from './Template';
 export * from './TemplateInstance';
+export * from './UpdateTemplate';
+export * from './UpdateVariable';
 export * from './Value';
 export * from './Variable';
 export * from './VariableValueUpdate';

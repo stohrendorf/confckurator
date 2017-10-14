@@ -28,7 +28,11 @@
       </a>
 
       <h4>Template</h4>
-      <codemirror [config]="{lineNumbers:true, mode:'jinja2'}" [(value)]="templateInfo.code"></codemirror>
+      <codemirror [config]="{lineNumbers:true, mode:'jinja2', matchBrackets:true, highlightSelectionMatches:true}" [(ngModel)]="templateInfo.code"></codemirror>
+
+      <a (click)="templateInfo.save()" class="btn btn-success">
+        <span class="fa fa-save"></span> Save
+      </a>
     </ng-template>
   </ngb-panel>
 </ngb-accordion>

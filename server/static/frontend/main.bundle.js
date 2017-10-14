@@ -728,6 +728,41 @@ var TemplatesApi = (function () {
         });
     };
     /**
+     *
+     * @summary Update a template's text
+     * @param templateId The template ID.
+     * @param updateTemplateBody Template update properties.
+     */
+    TemplatesApi.prototype.updateTemplate = function (templateId, updateTemplateBody, extraHttpRequestParams) {
+        return this.updateTemplateWithHttpInfo(templateId, updateTemplateBody, extraHttpRequestParams)
+            .map(function (response) {
+            if (response.status === 204) {
+                return undefined;
+            }
+            else {
+                return response.json() || {};
+            }
+        });
+    };
+    /**
+     *
+     * @summary Update a variable's description
+     * @param templateId The template ID.
+     * @param variableId The variable ID.
+     * @param updateTemplateVariableBody Variable creation properties.
+     */
+    TemplatesApi.prototype.updateTemplateVariable = function (templateId, variableId, updateTemplateVariableBody, extraHttpRequestParams) {
+        return this.updateTemplateVariableWithHttpInfo(templateId, variableId, updateTemplateVariableBody, extraHttpRequestParams)
+            .map(function (response) {
+            if (response.status === 204) {
+                return undefined;
+            }
+            else {
+                return response.json() || {};
+            }
+        });
+    };
+    /**
      * Create a new template
      *
      * @param postTemplatesBody Template creation properties.
@@ -765,7 +800,7 @@ var TemplatesApi = (function () {
      * @param postTemplateVariablesBody Variable creation properties.
      */
     TemplatesApi.prototype.createTemplateVariableWithHttpInfo = function (templateId, postTemplateVariablesBody, extraHttpRequestParams) {
-        var path = this.basePath + '/template/${templateId}/variable'
+        var path = this.basePath + '/template/${templateId}/variable/'
             .replace('${' + 'templateId' + '}', String(templateId));
         var queryParameters = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["f" /* URLSearchParams */]();
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */](this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -907,7 +942,7 @@ var TemplatesApi = (function () {
      * @param templateId The template ID.
      */
     TemplatesApi.prototype.getTemplateVariablesWithHttpInfo = function (templateId, extraHttpRequestParams) {
-        var path = this.basePath + '/template/${templateId}/variable'
+        var path = this.basePath + '/template/${templateId}/variable/'
             .replace('${' + 'templateId' + '}', String(templateId));
         var queryParameters = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["f" /* URLSearchParams */]();
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */](this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
@@ -950,6 +985,86 @@ var TemplatesApi = (function () {
         var requestOptions = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({
             method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Get,
             headers: headers,
+            search: queryParameters,
+            withCredentials: this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = Object.assign(requestOptions, extraHttpRequestParams);
+        }
+        return this.http.request(path, requestOptions);
+    };
+    /**
+     * Update a template&#39;s text
+     *
+     * @param templateId The template ID.
+     * @param updateTemplateBody Template update properties.
+     */
+    TemplatesApi.prototype.updateTemplateWithHttpInfo = function (templateId, updateTemplateBody, extraHttpRequestParams) {
+        var path = this.basePath + '/template/${templateId}'
+            .replace('${' + 'templateId' + '}', String(templateId));
+        var queryParameters = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["f" /* URLSearchParams */]();
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */](this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'templateId' is not null or undefined
+        if (templateId === null || templateId === undefined) {
+            throw new Error('Required parameter templateId was null or undefined when calling updateTemplate.');
+        }
+        // to determine the Content-Type header
+        var consumes = [
+            'application/json'
+        ];
+        // to determine the Accept header
+        var produces = [
+            'application/json'
+        ];
+        headers.set('Content-Type', 'application/json');
+        var requestOptions = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({
+            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Post,
+            headers: headers,
+            body: updateTemplateBody == null ? '' : JSON.stringify(updateTemplateBody),
+            search: queryParameters,
+            withCredentials: this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = Object.assign(requestOptions, extraHttpRequestParams);
+        }
+        return this.http.request(path, requestOptions);
+    };
+    /**
+     * Update a variable&#39;s description
+     *
+     * @param templateId The template ID.
+     * @param variableId The variable ID.
+     * @param updateTemplateVariableBody Variable creation properties.
+     */
+    TemplatesApi.prototype.updateTemplateVariableWithHttpInfo = function (templateId, variableId, updateTemplateVariableBody, extraHttpRequestParams) {
+        var path = this.basePath + '/template/${templateId}/variable/${variableId}'
+            .replace('${' + 'templateId' + '}', String(templateId))
+            .replace('${' + 'variableId' + '}', String(variableId));
+        var queryParameters = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["f" /* URLSearchParams */]();
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */](this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'templateId' is not null or undefined
+        if (templateId === null || templateId === undefined) {
+            throw new Error('Required parameter templateId was null or undefined when calling updateTemplateVariable.');
+        }
+        // verify required parameter 'variableId' is not null or undefined
+        if (variableId === null || variableId === undefined) {
+            throw new Error('Required parameter variableId was null or undefined when calling updateTemplateVariable.');
+        }
+        // to determine the Content-Type header
+        var consumes = [
+            'application/json'
+        ];
+        // to determine the Accept header
+        var produces = [
+            'application/json'
+        ];
+        headers.set('Content-Type', 'application/json');
+        var requestOptions = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({
+            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Post,
+            headers: headers,
+            body: updateTemplateVariableBody == null ? '' : JSON.stringify(updateTemplateVariableBody),
             search: queryParameters,
             withCredentials: this.configuration.withCredentials
         });
@@ -1110,7 +1225,8 @@ AppModule = __decorate([
             __WEBPACK_IMPORTED_MODULE_6__angular_http__["c" /* HttpModule */],
             __WEBPACK_IMPORTED_MODULE_5__ng_bootstrap_ng_bootstrap__["a" /* NgbModule */].forRoot(),
             __WEBPACK_IMPORTED_MODULE_8__angular_forms__["ReactiveFormsModule"],
-            __WEBPACK_IMPORTED_MODULE_9_ng2_codemirror__["CodemirrorModule"]
+            __WEBPACK_IMPORTED_MODULE_9_ng2_codemirror__["CodemirrorModule"],
+            __WEBPACK_IMPORTED_MODULE_8__angular_forms__["FormsModule"]
         ],
         providers: [{ provide: __WEBPACK_IMPORTED_MODULE_7__api_variables__["a" /* BASE_PATH */], useValue: '/api' }],
         bootstrap: [__WEBPACK_IMPORTED_MODULE_2__app_component__["a" /* AppComponent */]]
@@ -1213,7 +1329,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/templates/templates.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<ngb-accordion #acc=\"ngbAccordion\">\n  <ngb-panel *ngFor=\"let templateInfo of infos\">\n    <ng-template ngbPanelTitle>\n      [#{{ templateInfo.template.id }}] {{ templateInfo.template.name }}\n    </ng-template>\n    <ng-template ngbPanelContent>\n      <h4>Variables</h4>\n      <div [formGroup]=\"templateInfo.variablesForm\">\n        <div formArrayName=\"variables\">\n          <div class=\"row\" *ngFor=\"let variable of templateInfo.variablesList.controls; let i = index\">\n            <div class=\"col-4 form-inline\" [formGroupName]=\"i\">\n              <div (click)=\"templateInfo.removeVariable(i)\" class=\"btn btn-default input-group-addon\">\n                <span class=\"fa fa-trash\"></span>\n              </div>\n              <input type=\"text\" class=\"form-control\" placeholder=\"Name\" formControlName=\"name\" title=\"Name\"\n                     [ngClass]=\"{'is-invalid': variable.controls.name.invalid}\">\n            </div>\n            <div class=\"col\" [formGroupName]=\"i\">\n              <input type=\"text\" class=\"form-control\" placeholder=\"Description\" formControlName=\"description\"\n                     title=\"Description\"\n                     [ngClass]=\"{'is-invalid': variable.controls.description.invalid}\">\n            </div>\n          </div>\n        </div>\n      </div>\n      <a (click)=\"templateInfo.addVariable()\" class=\"btn btn-primary\">\n        <span class=\"fa fa-plus-square\"></span> Add Variable\n      </a>\n\n      <h4>Template</h4>\n      <codemirror [config]=\"{lineNumbers:true, mode:'jinja2'}\" [(value)]=\"templateInfo.code\"></codemirror>\n    </ng-template>\n  </ngb-panel>\n</ngb-accordion>\n"
+module.exports = "<ngb-accordion #acc=\"ngbAccordion\">\n  <ngb-panel *ngFor=\"let templateInfo of infos\">\n    <ng-template ngbPanelTitle>\n      [#{{ templateInfo.template.id }}] {{ templateInfo.template.name }}\n    </ng-template>\n    <ng-template ngbPanelContent>\n      <h4>Variables</h4>\n      <div [formGroup]=\"templateInfo.variablesForm\">\n        <div formArrayName=\"variables\">\n          <div class=\"row\" *ngFor=\"let variable of templateInfo.variablesList.controls; let i = index\">\n            <div class=\"col-4 form-inline\" [formGroupName]=\"i\">\n              <div (click)=\"templateInfo.removeVariable(i)\" class=\"btn btn-default input-group-addon\">\n                <span class=\"fa fa-trash\"></span>\n              </div>\n              <input type=\"text\" class=\"form-control\" placeholder=\"Name\" formControlName=\"name\" title=\"Name\"\n                     [ngClass]=\"{'is-invalid': variable.controls.name.invalid}\">\n            </div>\n            <div class=\"col\" [formGroupName]=\"i\">\n              <input type=\"text\" class=\"form-control\" placeholder=\"Description\" formControlName=\"description\"\n                     title=\"Description\"\n                     [ngClass]=\"{'is-invalid': variable.controls.description.invalid}\">\n            </div>\n          </div>\n        </div>\n      </div>\n      <a (click)=\"templateInfo.addVariable()\" class=\"btn btn-primary\">\n        <span class=\"fa fa-plus-square\"></span> Add Variable\n      </a>\n\n      <h4>Template</h4>\n      <codemirror [config]=\"{lineNumbers:true, mode:'jinja2', matchBrackets:true, highlightSelectionMatches:true}\" [(ngModel)]=\"templateInfo.code\"></codemirror>\n\n      <a (click)=\"templateInfo.save()\" class=\"btn btn-success\">\n        <span class=\"fa fa-save\"></span> Save\n      </a>\n    </ng-template>\n  </ngb-panel>\n</ngb-accordion>\n"
 
 /***/ }),
 
@@ -1227,6 +1343,22 @@ module.exports = "<ngb-accordion #acc=\"ngbAccordion\">\n  <ngb-panel *ngFor=\"l
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_codemirror_mode_jinja2_jinja2__ = __webpack_require__("../../../../codemirror/mode/jinja2/jinja2.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_codemirror_mode_jinja2_jinja2___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_codemirror_mode_jinja2_jinja2__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_codemirror_mode_dockerfile_dockerfile__ = __webpack_require__("../../../../codemirror/mode/dockerfile/dockerfile.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_codemirror_mode_dockerfile_dockerfile___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_codemirror_mode_dockerfile_dockerfile__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_codemirror_addon_dialog_dialog__ = __webpack_require__("../../../../codemirror/addon/dialog/dialog.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_codemirror_addon_dialog_dialog___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_codemirror_addon_dialog_dialog__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_codemirror_addon_search_match_highlighter__ = __webpack_require__("../../../../codemirror/addon/search/match-highlighter.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_codemirror_addon_search_match_highlighter___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6_codemirror_addon_search_match_highlighter__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_codemirror_addon_search_searchcursor__ = __webpack_require__("../../../../codemirror/addon/search/searchcursor.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_codemirror_addon_search_searchcursor___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_codemirror_addon_search_searchcursor__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_codemirror_addon_search_search__ = __webpack_require__("../../../../codemirror/addon/search/search.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_codemirror_addon_search_search___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_codemirror_addon_search_search__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_codemirror_addon_edit_matchbrackets__ = __webpack_require__("../../../../codemirror/addon/edit/matchbrackets.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_codemirror_addon_edit_matchbrackets___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_codemirror_addon_edit_matchbrackets__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10_rxjs_Observable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_rxjs_add_observable_forkJoin__ = __webpack_require__("../../../../rxjs/add/observable/forkJoin.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_rxjs_add_observable_forkJoin___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11_rxjs_add_observable_forkJoin__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1240,21 +1372,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
+
+
+
+
+
+
+
 var TemplateInfo = (function () {
     function TemplateInfo(api, formBuilder, template) {
-        var _this = this;
+        this.api = api;
         this.formBuilder = formBuilder;
         this.template = template;
         this.code = '';
-        this.variablesList = this.formBuilder.array([]);
-        this.variablesForm = this.formBuilder.group({
-            variables: this.variablesList
-        });
-        this.template.variables.forEach(function (v) {
-            _this.variablesList.push(_this.createAddress(v));
-        });
-        api.getTemplate(this.template.id, true).subscribe(function (t) { return _this.code = t.text; });
+        this.reload();
     }
+    TemplateInfo.prototype.reload = function () {
+        var _this = this;
+        if (!this.variablesList) {
+            this.variablesList = this.formBuilder.array([]);
+            this.variablesForm = this.formBuilder.group({
+                variables: this.variablesList
+            });
+        }
+        this.api.getTemplate(this.template.id, true).subscribe(function (t) {
+            _this.template = t;
+            _this.updateDisplay();
+        });
+    };
     TemplateInfo.prototype.createAddress = function (variable) {
         if (variable === void 0) { variable = null; }
         return this.formBuilder.group({
@@ -1264,6 +1410,50 @@ var TemplateInfo = (function () {
             ],
             description: [!variable ? '' : variable.description],
             id: [!variable ? -1 : variable.id]
+        });
+    };
+    TemplateInfo.prototype.updateDisplay = function () {
+        var _this = this;
+        while (this.variablesList.length > 0) {
+            this.variablesList.removeAt(0);
+        }
+        this.template.variables.forEach(function (v) {
+            _this.variablesList.push(_this.createAddress(v));
+        });
+        this.code = this.template.text;
+    };
+    TemplateInfo.prototype.save = function () {
+        var _this = this;
+        var tplRequest;
+        if (this.template.id < 0) {
+            tplRequest = this.api.createTemplate({ name: this.template.name, text: this.code });
+        }
+        else {
+            tplRequest = this.api.updateTemplate(this.template.id, { text: this.code });
+        }
+        tplRequest.subscribe(function (tpl) {
+            _this.template.id = tpl.id;
+            var requests = _this.saveVariables();
+            __WEBPACK_IMPORTED_MODULE_10_rxjs_Observable__["Observable"].forkJoin(requests).subscribe(function (x) { return _this.reload(); });
+        });
+    };
+    TemplateInfo.prototype.saveVariables = function () {
+        var _this = this;
+        return this.variablesList.controls.map(function (vc) {
+            var id = vc.get('id').value;
+            var name = vc.get('name').value;
+            var description = vc.get('description').value;
+            if (id < 0) {
+                return _this.api.createTemplateVariable(_this.template.id, {
+                    name: name,
+                    description: description
+                });
+            }
+            else {
+                return _this.api.updateTemplateVariable(_this.template.id, id, {
+                    description: description
+                });
+            }
         });
     };
     TemplateInfo.prototype.addVariable = function () {

@@ -27,6 +27,21 @@ class TemplateResource(Resource):
             return marshal(data, template_fields_with_text if args['with_text'] else template_fields)
 
     @staticmethod
+    def post(template_id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('text', required=True)
+        args = parser.parse_args(strict=True)
+
+        with make_session() as session:
+            data = session.query(Template).filter(Template.id == template_id).first()  # type: Template
+            if data is None:
+                raise NotFound("Requested template does not exist")
+
+            data.text = args['text']
+
+            return make_id_response(template_id)
+
+    @staticmethod
     def delete(template_id):
         with make_session() as session:
             data = session.query(Template).filter(Template.id == template_id).first()  # type: Template
@@ -97,7 +112,7 @@ class TemplateVariableList(Resource):
 
 
 # noinspection PyTypeChecker
-template_api.add_resource(TemplateVariableList, '/<int:template_id>/variable')
+template_api.add_resource(TemplateVariableList, '/<int:template_id>/variable/')
 
 
 class TemplateVariable(Resource):
@@ -113,6 +128,22 @@ class TemplateVariable(Resource):
                 raise Conflict("Cannot delete the variable because one or more values are referencing it")
 
             session.delete(data)
+            return make_empty_response()
+
+    @staticmethod
+    def post(template_id, variable_id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('description', required=True, trim=True)
+        args = parser.parse_args(strict=True)
+
+        with make_session() as session:
+            data = session.query(Variable).filter(
+                and_(Variable.template_id == template_id, Variable.id == variable_id)).first()  # type: Variable
+            if data is None:
+                raise NotFound("Requested variable does not exist in template")
+
+            data.description = args['description']
+
             return make_empty_response()
 
 

@@ -85,6 +85,26 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/Template"
+    post:
+      tags:
+      - "templates"
+      summary: "Update a template's text"
+      operationId: "updateTemplate"
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: updateTemplateBody
+          description: Template update properties.
+          schema:
+            $ref: "#/definitions/UpdateTemplate"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/IdResponse"
     delete:
       tags:
       - "templates"
@@ -106,7 +126,7 @@ paths:
           description: "conflict"
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /template/{templateId}/variable:
+  /template/{templateId}/variable/:
     parameters:
       - in: path
         name: templateId
@@ -182,6 +202,26 @@ paths:
           description: "conflict"
           schema:
             $ref: "#/definitions/ErrorResponse"
+    post:
+      tags:
+      - "templates"
+      summary: "Update a variable's description"
+      operationId: "updateTemplateVariable"
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: updateTemplateVariableBody
+          description: Variable creation properties.
+          schema:
+            $ref: "#/definitions/UpdateVariable"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/IdResponse"
   /pack/:
     get:
       tags:
@@ -512,6 +552,22 @@ definitions:
       description:
         type: string
         description: Variable description (e.g. constraints).
+  UpdateVariable:
+    type: object
+    required:
+      - description
+    properties:
+      description:
+        type: string
+        description: Variable description (e.g. constraints).
+  UpdateTemplate:
+    type: object
+    required:
+      - text
+    properties:
+      text:
+        type: string
+        description: Template text.
   NewEnvironment:
     type: object
     required:

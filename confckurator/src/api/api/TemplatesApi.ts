@@ -155,6 +155,41 @@ export class TemplatesApi {
             });
     }
 
+    /**
+     * 
+     * @summary Update a template's text
+     * @param templateId The template ID.
+     * @param updateTemplateBody Template update properties.
+     */
+    public updateTemplate(templateId: number, updateTemplateBody?: models.UpdateTemplate, extraHttpRequestParams?: any): Observable<models.IdResponse> {
+        return this.updateTemplateWithHttpInfo(templateId, updateTemplateBody, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json() || {};
+                }
+            });
+    }
+
+    /**
+     * 
+     * @summary Update a variable's description
+     * @param templateId The template ID.
+     * @param variableId The variable ID.
+     * @param updateTemplateVariableBody Variable creation properties.
+     */
+    public updateTemplateVariable(templateId: number, variableId: number, updateTemplateVariableBody?: models.UpdateVariable, extraHttpRequestParams?: any): Observable<models.IdResponse> {
+        return this.updateTemplateVariableWithHttpInfo(templateId, variableId, updateTemplateVariableBody, extraHttpRequestParams)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json() || {};
+                }
+            });
+    }
+
 
     /**
      * Create a new template
@@ -200,7 +235,7 @@ export class TemplatesApi {
      * @param postTemplateVariablesBody Variable creation properties.
      */
     public createTemplateVariableWithHttpInfo(templateId: number, postTemplateVariablesBody?: models.NewVariable, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/template/${templateId}/variable'
+        const path = this.basePath + '/template/${templateId}/variable/'
                     .replace('${' + 'templateId' + '}', String(templateId));
 
         let queryParameters = new URLSearchParams();
@@ -367,7 +402,7 @@ export class TemplatesApi {
      * @param templateId The template ID.
      */
     public getTemplateVariablesWithHttpInfo(templateId: number, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/template/${templateId}/variable'
+        const path = this.basePath + '/template/${templateId}/variable/'
                     .replace('${' + 'templateId' + '}', String(templateId));
 
         let queryParameters = new URLSearchParams();
@@ -420,6 +455,98 @@ export class TemplatesApi {
         let requestOptions: RequestOptionsArgs = new RequestOptions({
             method: RequestMethod.Get,
             headers: headers,
+            search: queryParameters,
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * Update a template&#39;s text
+     * 
+     * @param templateId The template ID.
+     * @param updateTemplateBody Template update properties.
+     */
+    public updateTemplateWithHttpInfo(templateId: number, updateTemplateBody?: models.UpdateTemplate, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/template/${templateId}'
+                    .replace('${' + 'templateId' + '}', String(templateId));
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'templateId' is not null or undefined
+        if (templateId === null || templateId === undefined) {
+            throw new Error('Required parameter templateId was null or undefined when calling updateTemplate.');
+        }
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+
+        headers.set('Content-Type', 'application/json');
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Post,
+            headers: headers,
+            body: updateTemplateBody == null ? '' : JSON.stringify(updateTemplateBody), // https://github.com/angular/angular/issues/10612
+            search: queryParameters,
+            withCredentials:this.configuration.withCredentials
+        });
+        // https://github.com/swagger-api/swagger-codegen/issues/4037
+        if (extraHttpRequestParams) {
+            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
+        }
+
+        return this.http.request(path, requestOptions);
+    }
+
+    /**
+     * Update a variable&#39;s description
+     * 
+     * @param templateId The template ID.
+     * @param variableId The variable ID.
+     * @param updateTemplateVariableBody Variable creation properties.
+     */
+    public updateTemplateVariableWithHttpInfo(templateId: number, variableId: number, updateTemplateVariableBody?: models.UpdateVariable, extraHttpRequestParams?: any): Observable<Response> {
+        const path = this.basePath + '/template/${templateId}/variable/${variableId}'
+                    .replace('${' + 'templateId' + '}', String(templateId))
+                    .replace('${' + 'variableId' + '}', String(variableId));
+
+        let queryParameters = new URLSearchParams();
+        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+        // verify required parameter 'templateId' is not null or undefined
+        if (templateId === null || templateId === undefined) {
+            throw new Error('Required parameter templateId was null or undefined when calling updateTemplateVariable.');
+        }
+        // verify required parameter 'variableId' is not null or undefined
+        if (variableId === null || variableId === undefined) {
+            throw new Error('Required parameter variableId was null or undefined when calling updateTemplateVariable.');
+        }
+        // to determine the Content-Type header
+        let consumes: string[] = [
+            'application/json'
+        ];
+
+        // to determine the Accept header
+        let produces: string[] = [
+            'application/json'
+        ];
+
+        headers.set('Content-Type', 'application/json');
+
+        let requestOptions: RequestOptionsArgs = new RequestOptions({
+            method: RequestMethod.Post,
+            headers: headers,
+            body: updateTemplateVariableBody == null ? '' : JSON.stringify(updateTemplateVariableBody), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
             withCredentials:this.configuration.withCredentials
         });
