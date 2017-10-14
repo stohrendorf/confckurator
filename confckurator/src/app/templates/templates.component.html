@@ -1,34 +1,31 @@
-<div class="list-group">
-  <div class="list-group-item" *ngFor="let template of templates">
-    <h4 class="list-group-item-heading">
-      [#{{ template.id }}] {{ template.name }}
-    </h4>
-    <div class="list-group-item-text">
-      <a href="#" (click)="templatesVisible[template.id] = !templatesVisible[template.id]">
-        <h4>
-          <span class="fa"
-                [ngClass]="{'fa-plus-square': !templatesVisible[template.id], 'fa-minus-square': templatesVisible[template.id]}"></span>
-          Variables
-        </h4>
-      </a>
-      <div [ngbCollapse]="!templatesVisible[template.id]">
-        <table class="table table-bordered">
-          <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Description</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let variable of template.variables">
-            <td>{{ variable.id }}</td>
-            <td>{{ variable.name }}</td>
-            <td>{{ variable.description }}</td>
-          </tr>
-          </tbody>
-        </table>
+<ngb-accordion #acc="ngbAccordion">
+  <ngb-panel *ngFor="let templateInfo of infos">
+    <ng-template ngbPanelTitle>
+      [#{{ templateInfo.template.id }}] {{ templateInfo.template.name }}
+    </ng-template>
+    <ng-template ngbPanelContent>
+      <h4>Variables</h4>
+      <div [formGroup]="templateInfo.variablesForm">
+        <div formArrayName="variables">
+          <div class="row" *ngFor="let variable of templateInfo.variablesList.controls; let i = index">
+            <div class="col-4 form-inline" [formGroupName]="i">
+              <div (click)="templateInfo.removeVariable(i)" class="btn btn-default input-group-addon">
+                <span class="fa fa-trash"></span>
+              </div>
+              <input type="text" class="form-control" placeholder="Name" formControlName="name" title="Name"
+                     [ngClass]="{'is-invalid': variable.controls.name.invalid}">
+            </div>
+            <div class="col" [formGroupName]="i">
+              <input type="text" class="form-control" placeholder="Description" formControlName="description"
+                     title="Description"
+                     [ngClass]="{'is-invalid': variable.controls.description.invalid}">
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</div>
+      <a (click)="templateInfo.addVariable()" class="btn btn-primary">
+        <span class="fa fa-plus-square"></span> Add Variable
+      </a>
+    </ng-template>
+  </ngb-panel>
+</ngb-accordion>

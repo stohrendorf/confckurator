@@ -1009,7 +1009,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "body {\r\n    background: url(" + __webpack_require__("../../../../../src/app/oktoberfest.png") + ") no-repeat top left;\r\n    background-size: 15%;\r\n}\r\n", ""]);
+exports.push([module.i, "", ""]);
 
 // exports
 
@@ -1069,12 +1069,14 @@ AppComponent = __decorate([
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__ng_bootstrap_ng_bootstrap__ = __webpack_require__("../../../../@ng-bootstrap/ng-bootstrap/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__angular_http__ = __webpack_require__("../../../http/@angular/http.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__api_variables__ = __webpack_require__("../../../../../src/api/variables.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -1098,7 +1100,8 @@ AppModule = __decorate([
         imports: [
             __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
             __WEBPACK_IMPORTED_MODULE_6__angular_http__["c" /* HttpModule */],
-            __WEBPACK_IMPORTED_MODULE_5__ng_bootstrap_ng_bootstrap__["a" /* NgbModule */].forRoot()
+            __WEBPACK_IMPORTED_MODULE_5__ng_bootstrap_ng_bootstrap__["a" /* NgbModule */].forRoot(),
+            __WEBPACK_IMPORTED_MODULE_8__angular_forms__["e" /* ReactiveFormsModule */]
         ],
         providers: [{ provide: __WEBPACK_IMPORTED_MODULE_7__api_variables__["a" /* BASE_PATH */], useValue: '/api' }],
         bootstrap: [__WEBPACK_IMPORTED_MODULE_2__app_component__["a" /* AppComponent */]]
@@ -1106,13 +1109,6 @@ AppModule = __decorate([
 ], AppModule);
 
 //# sourceMappingURL=app.module.js.map
-
-/***/ }),
-
-/***/ "../../../../../src/app/oktoberfest.png":
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "oktoberfest.13af4403fd888c4b68b5.png";
 
 /***/ }),
 
@@ -1208,7 +1204,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/templates/templates.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"list-group\">\n  <div class=\"list-group-item\" *ngFor=\"let template of templates\">\n    <h4 class=\"list-group-item-heading\">\n      [#{{ template.id }}] {{ template.name }}\n    </h4>\n    <div class=\"list-group-item-text\">\n      <a href=\"#\" (click)=\"templatesVisible[template.id] = !templatesVisible[template.id]\">\n        <h4>\n          <span class=\"fa\"\n                [ngClass]=\"{'fa-plus-square': !templatesVisible[template.id], 'fa-minus-square': templatesVisible[template.id]}\"></span>\n          Variables\n        </h4>\n      </a>\n      <div [ngbCollapse]=\"!templatesVisible[template.id]\">\n        <table class=\"table table-bordered\">\n          <thead>\n          <tr>\n            <th>#</th>\n            <th>Name</th>\n            <th>Description</th>\n          </tr>\n          </thead>\n          <tbody>\n          <tr *ngFor=\"let variable of template.variables\">\n            <td>{{ variable.id }}</td>\n            <td>{{ variable.name }}</td>\n            <td>{{ variable.description }}</td>\n          </tr>\n          </tbody>\n        </table>\n      </div>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<ngb-accordion #acc=\"ngbAccordion\">\n  <ngb-panel *ngFor=\"let templateInfo of infos\">\n    <ng-template ngbPanelTitle>\n      [#{{ templateInfo.template.id }}] {{ templateInfo.template.name }}\n    </ng-template>\n    <ng-template ngbPanelContent>\n      <h4>Variables</h4>\n      <div [formGroup]=\"templateInfo.variablesForm\">\n        <div formArrayName=\"variables\">\n          <div class=\"row\" *ngFor=\"let variable of templateInfo.variablesList.controls; let i = index\">\n            <div class=\"col-4 form-inline\" [formGroupName]=\"i\">\n              <div (click)=\"templateInfo.removeVariable(i)\" class=\"btn btn-default input-group-addon\">\n                <span class=\"fa fa-trash\"></span>\n              </div>\n              <input type=\"text\" class=\"form-control\" placeholder=\"Name\" formControlName=\"name\" title=\"Name\"\n                     [ngClass]=\"{'is-invalid': variable.controls.name.invalid}\">\n            </div>\n            <div class=\"col\" [formGroupName]=\"i\">\n              <input type=\"text\" class=\"form-control\" placeholder=\"Description\" formControlName=\"description\"\n                     title=\"Description\"\n                     [ngClass]=\"{'is-invalid': variable.controls.description.invalid}\">\n            </div>\n          </div>\n        </div>\n      </div>\n      <a (click)=\"templateInfo.addVariable()\" class=\"btn btn-primary\">\n        <span class=\"fa fa-plus-square\"></span> Add Variable\n      </a>\n    </ng-template>\n  </ngb-panel>\n</ngb-accordion>\n"
 
 /***/ }),
 
@@ -1219,6 +1215,7 @@ module.exports = "<div class=\"list-group\">\n  <div class=\"list-group-item\" *
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TemplatesComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_api_TemplatesApi__ = __webpack_require__("../../../../../src/api/api/TemplatesApi.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_forms__ = __webpack_require__("../../../forms/@angular/forms.es5.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1230,17 +1227,49 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
+var TemplateInfo = (function () {
+    function TemplateInfo(formBuilder, template) {
+        var _this = this;
+        this.formBuilder = formBuilder;
+        this.template = template;
+        this.variablesList = this.formBuilder.array([]);
+        this.variablesForm = this.formBuilder.group({
+            variables: this.variablesList
+        });
+        this.template.variables.forEach(function (v) {
+            _this.variablesList.push(_this.createAddress(v));
+        });
+    }
+    TemplateInfo.prototype.createAddress = function (variable) {
+        if (variable === void 0) { variable = null; }
+        return this.formBuilder.group({
+            name: [
+                { value: !variable ? '' : variable.name, disabled: variable != null },
+                __WEBPACK_IMPORTED_MODULE_2__angular_forms__["f" /* Validators */].pattern(/^[a-zA-Z_][a-zA-Z0-9_]*$/)
+            ],
+            description: [!variable ? '' : variable.description],
+            id: [!variable ? -1 : variable.id]
+        });
+    };
+    TemplateInfo.prototype.addVariable = function () {
+        this.variablesList.push(this.createAddress());
+    };
+    TemplateInfo.prototype.removeVariable = function (idx) {
+        this.variablesList.removeAt(idx);
+    };
+    return TemplateInfo;
+}());
 var TemplatesComponent = (function () {
-    function TemplatesComponent(api) {
+    function TemplatesComponent(formBuilder, api) {
+        this.formBuilder = formBuilder;
         this.api = api;
-        this.templatesVisible = [];
+        this.infos = [];
     }
     TemplatesComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.api.getTemplates().subscribe(function (d) {
-            console.debug(d);
-            _this.templates = d;
-            _this.templates.forEach(function (value) { return _this.templatesVisible[value.id] = false; });
+        this.api.getTemplates().subscribe(function (data) {
+            data.forEach(function (v) { return _this.infos.push(new TemplateInfo(_this.formBuilder, v)); });
         });
     };
     return TemplatesComponent;
@@ -1250,12 +1279,12 @@ TemplatesComponent = __decorate([
         selector: 'app-templates',
         template: __webpack_require__("../../../../../src/app/templates/templates.component.html"),
         styles: [__webpack_require__("../../../../../src/app/templates/templates.component.css")],
-        providers: [__WEBPACK_IMPORTED_MODULE_1__api_api_TemplatesApi__["a" /* TemplatesApi */]]
+        providers: [__WEBPACK_IMPORTED_MODULE_2__angular_forms__["a" /* FormBuilder */], __WEBPACK_IMPORTED_MODULE_1__api_api_TemplatesApi__["a" /* TemplatesApi */]]
     }),
-    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__api_api_TemplatesApi__["a" /* TemplatesApi */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_api_TemplatesApi__["a" /* TemplatesApi */]) === "function" && _a || Object])
+    __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__angular_forms__["a" /* FormBuilder */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__angular_forms__["a" /* FormBuilder */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__api_api_TemplatesApi__["a" /* TemplatesApi */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_api_TemplatesApi__["a" /* TemplatesApi */]) === "function" && _b || Object])
 ], TemplatesComponent);
 
-var _a;
+var _a, _b;
 //# sourceMappingURL=templates.component.js.map
 
 /***/ }),

@@ -7,6 +7,7 @@ import {TemplatesComponent} from './templates/templates.component';
 import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 import {HttpModule} from "@angular/http";
 import {BASE_PATH} from "../api/variables";
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import {BASE_PATH} from "../api/variables";
   imports: [
     BrowserModule,
     HttpModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    ReactiveFormsModule
   ],
   providers: [{provide: BASE_PATH, useValue: '/api'}],
   bootstrap: [AppComponent]
