@@ -2,11 +2,12 @@ from flask.blueprints import Blueprint
 from flask_restful import Resource, reqparse, marshal, Api
 from sqlalchemy import and_
 from sqlalchemy.exc import IntegrityError
-from werkzeug.exceptions import NotFound, Conflict, InternalServerError
+from werkzeug.exceptions import NotFound, Conflict, InternalServerError, BadRequest
 
 from api.common import make_id_response, make_empty_response
 from api.marshalling import template_fields, variable_fields, template_fields_with_text
 from db import make_session, Template, Variable
+import re
 
 template_blueprint = Blueprint('template_blueprint', __name__, url_prefix='/api/template')
 template_api = Api(template_blueprint)
@@ -103,9 +104,13 @@ class TemplateVariableList(Resource):
         parser.add_argument('description', required=False, trim=True, default='')
         args = parser.parse_args(strict=True)
 
+        name = args['name']
+        if len(name) < 1 or re.fullmatch('[a-zA-Z_][a-zA-Z0-9_]*', name) is None:
+            raise BadRequest('name is invalid')
+
         with make_session() as session:
             template = session.query(Template).filter(Template.id == template_id).first()
-            variable = Variable(template=template, name=args['name'], description=args['description'])
+            variable = Variable(template=template, name=name, description=args['description'])
             session.add(variable)
             session.commit()
             return make_id_response(variable.id)

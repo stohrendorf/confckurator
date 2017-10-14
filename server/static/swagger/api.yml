@@ -549,6 +549,7 @@ definitions:
         description: Unique name of the variable.
         minLength: 1
         maxLength: 255
+        pattern: "^[a-zA-Z_][a-zA-Z0-9_]*$"
       description:
         type: string
         description: Variable description (e.g. constraints).
@@ -626,6 +627,7 @@ definitions:
         minLength: 1
         maxLength: 255
         description: Unique (within its template) variable name.
+        pattern: "^[a-zA-Z_][a-zA-Z0-9_]*$"
       description:
         type: "string"
         description: Description of this variable (i.e. constraints).
