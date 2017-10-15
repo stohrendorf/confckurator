@@ -15,6 +15,7 @@ pack_blueprint = Blueprint('pack_blueprint', __name__, url_prefix='/api/pack')
 pack_api = Api(pack_blueprint)
 
 
+@pack_api.resource('/<int:pack_id>')
 class PackResource(Resource):
     @staticmethod
     def get(pack_id):
@@ -36,10 +37,7 @@ class PackResource(Resource):
             return make_empty_response()
 
 
-# noinspection PyTypeChecker
-pack_api.add_resource(PackResource, '/<int:pack_id>')
-
-
+@pack_api.resource('/')
 class PackList(Resource):
     @staticmethod
     def get():
@@ -60,10 +58,7 @@ class PackList(Resource):
             return make_id_response(pack.id)
 
 
-# noinspection PyTypeChecker
-pack_api.add_resource(PackList, '/')
-
-
+@pack_api.resource('/<int:pack_id>/variable/<int:variable_id>')
 class PackVariableResource(Resource):
     update_variable_args = {
         'environment_id': fields.Integer(required=False, missing=None),
@@ -123,10 +118,7 @@ class PackVariableResource(Resource):
             return make_empty_response()
 
 
-# noinspection PyTypeChecker
-pack_api.add_resource(PackVariableResource, '/<int:pack_id>/variable/<int:variable_id>')
-
-
+@pack_api.resource('/<int:pack_id>/template/<int:template_id>')
 class PackTemplateResource(Resource):
     @staticmethod
     def post(pack_id, template_id):
@@ -169,10 +161,6 @@ class PackTemplateResource(Resource):
                         session.delete(value)
 
         return make_empty_response()
-
-
-# noinspection PyTypeChecker
-pack_api.add_resource(PackTemplateResource, '/<int:pack_id>/template/<int:template_id>')
 
 
 def get_pack_api_blueprint():

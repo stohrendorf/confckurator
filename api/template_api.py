@@ -17,6 +17,7 @@ template_blueprint = Blueprint('template_blueprint', __name__, url_prefix='/api/
 template_api = Api(template_blueprint)
 
 
+@template_api.resource('/<int:template_id>')
 class TemplateResource(Resource):
     get_args = {
         'with_text': fields.Boolean(required=False, missing=False, location='query'),
@@ -65,10 +66,7 @@ class TemplateResource(Resource):
             return make_empty_response()
 
 
-# noinspection PyTypeChecker
-template_api.add_resource(TemplateResource, '/<int:template_id>')
-
-
+@template_api.resource('/')
 class TemplateList(Resource):
     @staticmethod
     def get():
@@ -96,10 +94,7 @@ class TemplateList(Resource):
             raise InternalServerError("Could not create the requested template")
 
 
-# noinspection PyTypeChecker
-template_api.add_resource(TemplateList, '/')
-
-
+@template_api.resource('/<int:template_id>/variable/')
 class TemplateVariableList(Resource):
     @staticmethod
     def get(template_id):
@@ -122,10 +117,7 @@ class TemplateVariableList(Resource):
             return make_id_response(variable.id)
 
 
-# noinspection PyTypeChecker
-template_api.add_resource(TemplateVariableList, '/<int:template_id>/variable/')
-
-
+@template_api.resource('/<int:template_id>/variable/<int:variable_id>')
 class TemplateVariable(Resource):
     @staticmethod
     def delete(template_id, variable_id):
@@ -157,10 +149,6 @@ class TemplateVariable(Resource):
             data.description = description.strip()
 
             return make_empty_response()
-
-
-# noinspection PyTypeChecker
-template_api.add_resource(TemplateVariable, '/<int:template_id>/variable/<int:variable_id>')
 
 
 def get_template_api_blueprint():

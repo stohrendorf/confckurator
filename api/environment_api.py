@@ -15,6 +15,7 @@ environment_blueprint = Blueprint('environment_blueprint', __name__, url_prefix=
 environment_api = Api(environment_blueprint)
 
 
+@environment_api.resource('/<int:environment_id>')
 class EnvironmentResource(Resource):
     @staticmethod
     def get(environment_id):
@@ -36,10 +37,7 @@ class EnvironmentResource(Resource):
             return make_empty_response()
 
 
-# noinspection PyTypeChecker
-environment_api.add_resource(EnvironmentResource, '/<int:environment_id>')
-
-
+@environment_api.resource('/')
 class EnvironmentList(Resource):
     @staticmethod
     def get():
@@ -59,10 +57,6 @@ class EnvironmentList(Resource):
             session.add(environment)
             session.commit()
             return make_id_response(environment.id)
-
-
-# noinspection PyTypeChecker
-environment_api.add_resource(EnvironmentList, '/')
 
 
 def get_environment_api_blueprint():

@@ -33,6 +33,7 @@ def instantiate(pack: Pack, template: Template, environment: Environment):
         raise InternalServerError("Could not render the template: {}".format(e.message))
 
 
+@instance_api.resource('/<int:pack_id>/<int:environment_id>')
 class InstanceTemplate(Resource):
     @staticmethod
     def get(pack_id, environment_id):
@@ -53,10 +54,6 @@ class InstanceTemplate(Resource):
                                'text': instantiate(pack, template, environment)})
 
             return result
-
-
-# noinspection PyTypeChecker
-instance_api.add_resource(InstanceTemplate, '/<int:pack_id>/<int:environment_id>')
 
 
 def get_instance_api_blueprint():
