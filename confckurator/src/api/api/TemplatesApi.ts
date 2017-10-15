@@ -214,7 +214,7 @@ export class TemplatesApi {
         headers.set('Content-Type', 'application/json');
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Post,
+            method: RequestMethod.Put,
             headers: headers,
             body: postTemplatesBody == null ? '' : JSON.stringify(postTemplatesBody), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
@@ -257,7 +257,7 @@ export class TemplatesApi {
         headers.set('Content-Type', 'application/json');
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Post,
+            method: RequestMethod.Put,
             headers: headers,
             body: postTemplateVariablesBody == null ? '' : JSON.stringify(postTemplateVariablesBody), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
@@ -495,7 +495,7 @@ export class TemplatesApi {
         headers.set('Content-Type', 'application/json');
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Post,
+            method: RequestMethod.Patch,
             headers: headers,
             body: updateTemplateBody == null ? '' : JSON.stringify(updateTemplateBody), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
@@ -544,7 +544,7 @@ export class TemplatesApi {
         headers.set('Content-Type', 'application/json');
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Post,
+            method: RequestMethod.Patch,
             headers: headers,
             body: updateTemplateVariableBody == null ? '' : JSON.stringify(updateTemplateVariableBody), // https://github.com/angular/angular/issues/10612
             search: queryParameters,

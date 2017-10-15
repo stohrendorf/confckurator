@@ -34,14 +34,14 @@ class TemplateResource(Resource):
 
             return marshal(data, template_fields_with_text if with_text else template_fields)
 
-    post_args = {
+    patch_args = {
         'text': fields.String(required=True),
         'template_id': fields.Integer(location='view_args')
     }
 
     @staticmethod
-    @use_kwargs(post_args)
-    def post(template_id, text):
+    @use_kwargs(patch_args)
+    def patch(template_id, text):
         with make_session() as session:
             data = session.query(Template).filter(Template.id == template_id).first()  # type: Template
             if data is None:
@@ -80,7 +80,7 @@ class TemplateList(Resource):
 
     @staticmethod
     @use_kwargs(post_args)
-    def post(name, text):
+    def put(name, text):
         try:
             with make_session() as session:
                 if session.query(session.query(Template).filter(Template.name == name.strip()).exists()).scalar():
@@ -101,14 +101,14 @@ class TemplateVariableList(Resource):
         with make_session() as session:
             return marshal(session.query(Variable).filter(Variable.template_id == template_id).all(), variable_fields)
 
-    post_args = {
+    put_args = {
         'name': fields.String(required=True, validate=validate.Regexp(re.compile('^[a-zA-Z_][a-zA-Z0-9_]*$'))),
         'description': fields.String(required=False, missing='')
     }
 
     @staticmethod
-    @use_kwargs(post_args)
-    def post(template_id, name, description):
+    @use_kwargs(put_args)
+    def put(template_id, name, description):
         with make_session() as session:
             template = session.query(Template).filter(Template.id == template_id).first()
             variable = Variable(template=template, name=name.strip(), description=description.strip())
@@ -133,13 +133,13 @@ class TemplateVariable(Resource):
             session.delete(data)
             return make_empty_response()
 
-    post_args = {
+    patch_args = {
         'description': fields.String(required=True)
     }
 
     @staticmethod
-    @use_kwargs(post_args)
-    def post(template_id, variable_id, description):
+    @use_kwargs(patch_args)
+    def patch(template_id, variable_id, description):
         with make_session() as session:
             data = session.query(Variable).filter(
                 and_(Variable.template_id == template_id, Variable.id == variable_id)).first()  # type: Variable

@@ -260,7 +260,7 @@ export class PacksApi {
         headers.set('Content-Type', 'application/json');
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Post,
+            method: RequestMethod.Put,
             headers: headers,
             body: postPacksBody == null ? '' : JSON.stringify(postPacksBody), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
@@ -555,7 +555,7 @@ export class PacksApi {
         headers.set('Content-Type', 'application/json');
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Post,
+            method: RequestMethod.Patch,
             headers: headers,
             body: setVariableValue == null ? '' : JSON.stringify(setVariableValue), // https://github.com/angular/angular/issues/10612
             search: queryParameters,

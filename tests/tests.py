@@ -19,7 +19,7 @@ class TestBase(TestCase):
 
 class BasicTemplateTest(TestBase):
     def test_create_delete(self):
-        tpl1 = self.app.post('/api/template/', data={
+        tpl1 = self.app.put('/api/template/', data={
             'name': 'test template',
             'text': 'foo'
         })  # type: Response
@@ -41,12 +41,12 @@ class BasicTemplateTest(TestBase):
         self.assertEqual(del2.status_code, 404)
 
     def test_duplicate(self):
-        tpl1 = self.app.post('/api/template/', data={
+        tpl1 = self.app.put('/api/template/', data={
             'name': 'test template',
             'text': 'foo'
         })  # type: Response
         self.assertEqual(tpl1.status_code, 200)
-        tpl2 = self.app.post('/api/template/', data={
+        tpl2 = self.app.put('/api/template/', data={
             'name': 'test template',
             'text': 'bar'
         })  # type: Response

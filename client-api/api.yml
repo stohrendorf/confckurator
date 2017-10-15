@@ -34,7 +34,7 @@ paths:
             type: array
             items:
               $ref: "#/definitions/Template"
-    post:
+    put:
       tags:
       - "templates"
       summary: "Create a new template"
@@ -85,7 +85,7 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/Template"
-    post:
+    patch:
       tags:
       - "templates"
       summary: "Update a template's text"
@@ -147,7 +147,7 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/Variable"
-    post:
+    put:
       tags:
       - "templates"
       summary: "Create a new variable"
@@ -202,7 +202,7 @@ paths:
           description: "conflict"
           schema:
             $ref: "#/definitions/ErrorResponse"
-    post:
+    patch:
       tags:
       - "templates"
       summary: "Update a variable's description"
@@ -238,7 +238,7 @@ paths:
             type: array
             items:
               $ref: "#/definitions/Pack"
-    post:
+    put:
       tags:
       - "packs"
       summary: "Create a new pack"
@@ -306,7 +306,7 @@ paths:
         type: integer
         minimum: 0
         description: "The variable ID."
-    post:
+    patch:
       tags:
       - "packs"
       summary: "Set a variable's value"
@@ -404,7 +404,7 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/Environment"
-    post:
+    put:
       tags:
       - "environments"
       summary: "Create a new environment"

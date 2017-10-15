@@ -44,13 +44,13 @@ class PackList(Resource):
         with make_session() as session:
             return marshal(session.query(Pack).all(), pack_fields)
 
-    new_pack_args = {
+    put_args = {
         'name': fields.String(required=True, validate=validate.Length(min=1, max=255), trim=True)
     }
 
     @staticmethod
-    @use_kwargs(new_pack_args)
-    def post(name):
+    @use_kwargs(put_args)
+    def put(name):
         pack = Pack(name=name.strip())
         with make_session() as session:
             session.add(pack)
@@ -60,7 +60,7 @@ class PackList(Resource):
 
 @pack_api.resource('/<int:pack_id>/variable/<int:variable_id>')
 class PackVariableResource(Resource):
-    update_variable_args = {
+    patch_args = {
         'environment_id': fields.Integer(required=False, missing=None),
         'data': fields.String(required=True),
         'pack_id': fields.Integer(location='view_args'),
@@ -68,8 +68,8 @@ class PackVariableResource(Resource):
     }
 
     @staticmethod
-    @use_kwargs(update_variable_args)
-    def post(pack_id, variable_id, environment_id, data):
+    @use_kwargs(patch_args)
+    def patch(pack_id, variable_id, environment_id, data):
         with make_session() as session:
             if environment_id is None:
                 value = session.query(Value).filter(
@@ -91,14 +91,14 @@ class PackVariableResource(Resource):
             session.commit()
             return make_empty_response()
 
-    delete_variable_args = {
+    delete_args = {
         'environment_id': fields.Integer(required=False, missing=None),
         'pack_id': fields.Integer(location='view_args'),
         'variable_id': fields.Integer(location='view_args')
     }
 
     @staticmethod
-    @use_kwargs(delete_variable_args)
+    @use_kwargs(delete_args)
     def delete(pack_id, variable_id, environment_id):
         with make_session() as session:
             if environment_id is None:

@@ -45,13 +45,13 @@ class EnvironmentList(Resource):
             print(session.query(Environment).all())
             return marshal(session.query(Environment).all(), environment_fields)
 
-    new_environment_args = {
+    put_args = {
         'name': fields.String(required=True, validate=validate.Length(min=1, max=255), trim=True)
     }
 
     @staticmethod
-    @use_kwargs(new_environment_args)
-    def post(name: str):
+    @use_kwargs(put_args)
+    def put(name: str):
         environment = Environment(name=name.strip())
         with make_session() as session:
             session.add(environment)

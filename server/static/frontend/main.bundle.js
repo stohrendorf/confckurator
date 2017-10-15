@@ -280,7 +280,7 @@ var PacksApi = (function () {
         ];
         headers.set('Content-Type', 'application/json');
         var requestOptions = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({
-            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Post,
+            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Put,
             headers: headers,
             body: postPacksBody == null ? '' : JSON.stringify(postPacksBody),
             search: queryParameters,
@@ -534,7 +534,7 @@ var PacksApi = (function () {
         ];
         headers.set('Content-Type', 'application/json');
         var requestOptions = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({
-            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Post,
+            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Patch,
             headers: headers,
             body: setVariableValue == null ? '' : JSON.stringify(setVariableValue),
             search: queryParameters,
@@ -781,7 +781,7 @@ var TemplatesApi = (function () {
         ];
         headers.set('Content-Type', 'application/json');
         var requestOptions = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({
-            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Post,
+            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Put,
             headers: headers,
             body: postTemplatesBody == null ? '' : JSON.stringify(postTemplatesBody),
             search: queryParameters,
@@ -818,7 +818,7 @@ var TemplatesApi = (function () {
         ];
         headers.set('Content-Type', 'application/json');
         var requestOptions = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({
-            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Post,
+            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Put,
             headers: headers,
             body: postTemplateVariablesBody == null ? '' : JSON.stringify(postTemplateVariablesBody),
             search: queryParameters,
@@ -1019,7 +1019,7 @@ var TemplatesApi = (function () {
         ];
         headers.set('Content-Type', 'application/json');
         var requestOptions = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({
-            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Post,
+            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Patch,
             headers: headers,
             body: updateTemplateBody == null ? '' : JSON.stringify(updateTemplateBody),
             search: queryParameters,
@@ -1062,7 +1062,7 @@ var TemplatesApi = (function () {
         ];
         headers.set('Content-Type', 'application/json');
         var requestOptions = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({
-            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Post,
+            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Patch,
             headers: headers,
             body: updateTemplateVariableBody == null ? '' : JSON.stringify(updateTemplateVariableBody),
             search: queryParameters,

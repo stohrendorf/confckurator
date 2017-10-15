@@ -128,7 +128,7 @@ export class EnvironmentsApi {
         headers.set('Content-Type', 'application/json');
 
         let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Post,
+            method: RequestMethod.Put,
             headers: headers,
             body: postEnvironmentsBody == null ? '' : JSON.stringify(postEnvironmentsBody), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
