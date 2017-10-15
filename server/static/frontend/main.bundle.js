@@ -1159,7 +1159,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/templates/templates.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<ngb-accordion #acc=\"ngbAccordion\">\n  <ngb-panel *ngFor=\"let templateInfo of infos\">\n    <ng-template ngbPanelTitle>\n      [#{{ templateInfo.template.id }}] {{ templateInfo.template.name }}\n    </ng-template>\n    <ng-template ngbPanelContent>\n      <h4>Variables</h4>\n      <div [formGroup]=\"templateInfo.variablesForm\">\n        <div formArrayName=\"variables\">\n          <div class=\"row\" *ngFor=\"let variable of templateInfo.variablesList.controls; let i = index\">\n            <div class=\"col-4 form-inline\" [formGroupName]=\"i\">\n              <div (click)=\"templateInfo.removeVariable(i)\" class=\"btn btn-default input-group-addon\">\n                <span class=\"fa fa-trash\"></span>\n              </div>\n              <input type=\"text\" class=\"form-control\" placeholder=\"Name\" formControlName=\"name\" title=\"Name\"\n                     [ngClass]=\"{'is-invalid': variable.controls.name.invalid}\">\n            </div>\n            <div class=\"col\" [formGroupName]=\"i\">\n              <input type=\"text\" class=\"form-control\" placeholder=\"Description\" formControlName=\"description\"\n                     title=\"Description\"\n                     [ngClass]=\"{'is-invalid': variable.controls.description.invalid}\">\n            </div>\n          </div>\n        </div>\n      </div>\n      <a (click)=\"templateInfo.addVariable()\" class=\"btn btn-primary\">\n        <span class=\"fa fa-plus-square\"></span> Add Variable\n      </a>\n\n      <h4>Template</h4>\n      <codemirror [config]=\"{lineNumbers:true, mode:'jinja2', matchBrackets:true, highlightSelectionMatches:true}\" [(ngModel)]=\"templateInfo.code\"></codemirror>\n\n      <a (click)=\"templateInfo.save()\" class=\"btn btn-success\">\n        <span class=\"fa fa-save\"></span> Save\n      </a>\n    </ng-template>\n  </ngb-panel>\n</ngb-accordion>\n"
+module.exports = "<ngb-accordion #acc=\"ngbAccordion\">\n  <ngb-panel *ngFor=\"let templateInfo of infos\">\n    <ng-template ngbPanelTitle>\n      [#{{ templateInfo.template.id }}] {{ templateInfo.template.name }}\n    </ng-template>\n    <ng-template ngbPanelContent>\n      <ngb-alert type=\"danger\" *ngIf=\"templateInfo.errorMessage != null\" (close)=\"templateInfo.errorMessage = null\">\n        <strong>Whoops.</strong>\n        {{templateInfo.errorMessage}}\n      </ngb-alert>\n\n      <h4>Variables</h4>\n      <div [formGroup]=\"templateInfo.variablesForm\">\n        <div formArrayName=\"variables\">\n          <div class=\"row\" *ngFor=\"let variable of templateInfo.variablesList.controls; let i = index\">\n            <div class=\"col-4 form-inline\" [formGroupName]=\"i\">\n              <div (click)=\"templateInfo.removeVariable(i)\" class=\"btn btn-default input-group-addon\">\n                <span class=\"fa fa-trash\"></span>\n              </div>\n              <input type=\"text\" class=\"form-control\" placeholder=\"Name\" formControlName=\"name\" title=\"Name\"\n                     [ngClass]=\"{'is-invalid': variable.controls.name.invalid}\">\n            </div>\n            <div class=\"col\" [formGroupName]=\"i\">\n              <input type=\"text\" class=\"form-control\" placeholder=\"Description\" formControlName=\"description\"\n                     title=\"Description\"\n                     [ngClass]=\"{'is-invalid': variable.controls.description.invalid}\">\n            </div>\n          </div>\n        </div>\n      </div>\n      <a (click)=\"templateInfo.addVariable()\" class=\"btn btn-primary\">\n        <span class=\"fa fa-plus-square\"></span> Add Variable\n      </a>\n\n      <h4>Template</h4>\n      <codemirror [config]=\"{lineNumbers:true, mode:'jinja2', matchBrackets:true, highlightSelectionMatches:true}\" [(ngModel)]=\"templateInfo.code\"></codemirror>\n\n      <a (click)=\"templateInfo.save()\" class=\"btn btn-success\">\n        <span class=\"fa fa-save\"></span> Save\n      </a>\n    </ng-template>\n  </ngb-panel>\n</ngb-accordion>\n"
 
 /***/ }),
 
@@ -1216,6 +1216,7 @@ var TemplateInfo = (function () {
         this.formBuilder = formBuilder;
         this.template = template;
         this.code = '';
+        this.errorMessage = null;
         this.variablesToDelete = [];
         this.reload();
     }
@@ -1230,7 +1231,7 @@ var TemplateInfo = (function () {
         this.api.getTemplate(this.template.id, true).subscribe(function (t) {
             _this.template = t;
             _this.updateDisplay();
-        });
+        }, function (e) { return _this.errorMessage = e.json().message; });
     };
     TemplateInfo.prototype.createVariable = function (variable) {
         if (variable === void 0) { variable = null; }
@@ -1259,7 +1260,7 @@ var TemplateInfo = (function () {
             this.api.createTemplate({ name: this.template.name, text: '' }).subscribe(function (tpl) {
                 _this.template.id = tpl.id;
                 _this.doUpdate();
-            });
+            }, function (e) { return _this.errorMessage = e.json().message; });
         }
         else {
             this.doUpdate();
@@ -1293,7 +1294,10 @@ var TemplateInfo = (function () {
             }
         });
         this.variablesToDelete = [];
-        request.subscribe(function (x) { return _this.reload(); }, function (e) { return _this.reload(); });
+        request.subscribe(function (x) { return _this.reload(); }, function (e) {
+            _this.errorMessage = e.json().message;
+            _this.reload();
+        });
         return request;
     };
     TemplateInfo.prototype.addVariable = function () {

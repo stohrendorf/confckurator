@@ -81,8 +81,9 @@ class TemplateResource(Resource):
                 if 'create' in variables:
                     for c in variables['create']:
                         if 'description' in c:
-                            session.add(
-                                Variable(template=template, name=c['name'].strip(), description=c['description'].strip()))
+                            session.add(Variable(template=template,
+                                                 name=c['name'].strip(),
+                                                 description=c['description'].strip()))
 
             if text != missing:
                 template.text = text

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Output} from '@angular/core';
 import {TemplatesApi} from '../../api/api/TemplatesApi';
 import {Template} from '../../api/model/Template';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -12,13 +12,15 @@ import 'codemirror/addon/search/search';
 import 'codemirror/addon/edit/matchbrackets';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
-import {IdResponse} from '../../api/model/IdResponse';
 import {List} from 'linqts';
+import {IdResponse} from '../../api/model/IdResponse';
 
 class TemplateInfo {
   public variablesForm: FormGroup;
   public variablesList: FormArray;
   public code = '';
+
+  public errorMessage?: string = null;
 
   private variablesToDelete: number[] = [];
 
@@ -37,7 +39,7 @@ class TemplateInfo {
     this.api.getTemplate(this.template.id, true).subscribe(t => {
       this.template = t;
       this.updateDisplay();
-    });
+    }, e => this.errorMessage = e.json().message);
   }
 
   createVariable(variable: Variable = null): FormGroup {
@@ -68,13 +70,13 @@ class TemplateInfo {
       this.api.createTemplate({name: this.template.name, text: ''}).subscribe(tpl => {
         this.template.id = tpl.id;
         this.doUpdate();
-      });
+      }, e => this.errorMessage = e.json().message);
     } else {
       this.doUpdate();
     }
   }
 
-  private doUpdate(): Observable<any> {
+  private doUpdate(): Observable<IdResponse> {
     const request = this.api
       .updateTemplate(this.template.id, {
         text: this.code,
@@ -102,7 +104,10 @@ class TemplateInfo {
       });
     this.variablesToDelete = [];
 
-    request.subscribe(x => this.reload(), e => this.reload());
+    request.subscribe(x => this.reload(), e => {
+      this.errorMessage = e.json().message;
+      this.reload();
+    });
 
     return request;
   }

@@ -4,6 +4,11 @@
       [#{{ templateInfo.template.id }}] {{ templateInfo.template.name }}
     </ng-template>
     <ng-template ngbPanelContent>
+      <ngb-alert type="danger" *ngIf="templateInfo.errorMessage != null" (close)="templateInfo.errorMessage = null">
+        <strong>Whoops.</strong>
+        {{templateInfo.errorMessage}}
+      </ngb-alert>
+
       <h4>Variables</h4>
       <div [formGroup]="templateInfo.variablesForm">
         <div formArrayName="variables">
