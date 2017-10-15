@@ -2,7 +2,7 @@ import re
 
 from flask.blueprints import Blueprint
 from flask_restful import Resource, marshal, Api
-from marshmallow import fields
+from marshmallow import fields, missing
 from sqlalchemy import and_
 from sqlalchemy.exc import IntegrityError
 from webargs import fields, validate
@@ -17,6 +17,14 @@ template_blueprint = Blueprint('template_blueprint', __name__, url_prefix='/api/
 template_api = Api(template_blueprint)
 
 
+@template_api.resource('/<int:template_id>/variable/')
+class TemplateVariableList(Resource):
+    @staticmethod
+    def get(template_id):
+        with make_session() as session:
+            return marshal(session.query(Variable).filter(Variable.template_id == template_id).all(), variable_fields)
+
+
 @template_api.resource('/<int:template_id>')
 class TemplateResource(Resource):
     get_args = {
@@ -28,41 +36,71 @@ class TemplateResource(Resource):
     @use_kwargs(get_args)
     def get(template_id, with_text):
         with make_session() as session:
-            data = session.query(Template).filter(Template.id == template_id).first()  # type: Template
-            if data is None:
+            template = session.query(Template).filter(Template.id == template_id).first()  # type: Template
+            if template is None:
                 raise NotFound("Requested template does not exist")
 
-            return marshal(data, template_fields_with_text if with_text else template_fields)
+            return marshal(template, template_fields_with_text if with_text else template_fields)
 
     patch_args = {
-        'text': fields.String(required=True),
+        'text': fields.String(required=False),
+        'variables': fields.Nested({
+            'delete': fields.List(fields.Integer(required=True)),
+            'update': fields.List(fields.Nested({
+                'id': fields.Integer(required=True),
+                'description': fields.String(missing='')
+            })),
+            'create': fields.List(fields.Nested({
+                'name': fields.String(required=True, validate=validate.Regexp(re.compile('^[a-zA-Z_][a-zA-Z0-9_]*$'))),
+                'description': fields.String(required=False, missing='')
+            }))
+        }),
         'template_id': fields.Integer(location='view_args')
     }
 
     @staticmethod
     @use_kwargs(patch_args)
-    def patch(template_id, text):
+    def patch(template_id, text, variables):
         with make_session() as session:
-            data = session.query(Template).filter(Template.id == template_id).first()  # type: Template
-            if data is None:
+            template = session.query(Template).filter(Template.id == template_id).first()  # type: Template
+            if template is None:
                 raise NotFound("Requested template does not exist")
 
-            data.text = text
+            if variables != missing:
+                if 'delete' in variables:
+                    for d in variables['delete']:
+                        to_delete = session.query(Variable).filter(Variable.id == d)
+                        if to_delete.first().in_use():
+                            raise Conflict('Cannot delete variable because it is in use')
+                        to_delete.delete()
+                if 'update' in variables:
+                    for u in variables['update']:
+                        if 'description' in u:
+                            session.query(Variable).filter(Variable.id == u['id']).first().description = u[
+                                'description'].strip()
+                if 'create' in variables:
+                    for c in variables['create']:
+                        if 'description' in c:
+                            session.add(
+                                Variable(template=template, name=c['name'].strip(), description=c['description'].strip()))
+
+            if text != missing:
+                template.text = text
 
             return make_id_response(template_id)
 
     @staticmethod
     def delete(template_id):
         with make_session() as session:
-            data = session.query(Template).filter(Template.id == template_id).first()  # type: Template
-            if data is None:
+            template = session.query(Template).filter(Template.id == template_id).first()  # type: Template
+            if template is None:
                 raise NotFound("Requested template does not exist")
 
-            for variable in data.variables:
-                if len(variable.values) > 0:
-                    raise Conflict("Cannot delete the template because one or more values are referencing it")
+            for variable in template.variables:
+                if variable.in_use():
+                    raise Conflict("Cannot delete the template because one or more variables are in use")
 
-            session.delete(data)
+            session.delete(template)
             return make_empty_response()
 
 
@@ -94,43 +132,20 @@ class TemplateList(Resource):
             raise InternalServerError("Could not create the requested template")
 
 
-@template_api.resource('/<int:template_id>/variable/')
-class TemplateVariableList(Resource):
-    @staticmethod
-    def get(template_id):
-        with make_session() as session:
-            return marshal(session.query(Variable).filter(Variable.template_id == template_id).all(), variable_fields)
-
-    put_args = {
-        'name': fields.String(required=True, validate=validate.Regexp(re.compile('^[a-zA-Z_][a-zA-Z0-9_]*$'))),
-        'description': fields.String(required=False, missing='')
-    }
-
-    @staticmethod
-    @use_kwargs(put_args)
-    def put(template_id, name, description):
-        with make_session() as session:
-            template = session.query(Template).filter(Template.id == template_id).first()
-            variable = Variable(template=template, name=name.strip(), description=description.strip())
-            session.add(variable)
-            session.commit()
-            return make_id_response(variable.id)
-
-
 @template_api.resource('/<int:template_id>/variable/<int:variable_id>')
 class TemplateVariable(Resource):
     @staticmethod
     def delete(template_id, variable_id):
         with make_session() as session:
-            data = session.query(Variable).filter(
+            variable = session.query(Variable).filter(
                 and_(Variable.template_id == template_id, Variable.id == variable_id)).first()  # type: Variable
-            if data is None:
+            if variable is None:
                 raise NotFound("Requested variable does not exist in template")
 
-            if len(data.values) > 0:
-                raise Conflict("Cannot delete the variable because one or more values are referencing it")
+            if variable.in_use():
+                raise Conflict("Cannot delete the variable because it is in use")
 
-            session.delete(data)
+            session.delete(variable)
             return make_empty_response()
 
     patch_args = {
@@ -141,12 +156,12 @@ class TemplateVariable(Resource):
     @use_kwargs(patch_args)
     def patch(template_id, variable_id, description):
         with make_session() as session:
-            data = session.query(Variable).filter(
+            variable = session.query(Variable).filter(
                 and_(Variable.template_id == template_id, Variable.id == variable_id)).first()  # type: Variable
-            if data is None:
+            if variable is None:
                 raise NotFound("Requested variable does not exist in template")
 
-            data.description = description.strip()
+            variable.description = description.strip()
 
             return make_empty_response()
 

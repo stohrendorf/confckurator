@@ -88,7 +88,7 @@ paths:
     patch:
       tags:
       - "templates"
-      summary: "Update a template's text"
+      summary: "Update a template and its variables"
       operationId: "updateTemplate"
       consumes:
         - application/json
@@ -147,26 +147,6 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/Variable"
-    put:
-      tags:
-      - "templates"
-      summary: "Create a new variable"
-      operationId: "createTemplateVariable"
-      consumes:
-        - application/json
-      parameters:
-        - in: body
-          name: postTemplateVariablesBody
-          description: Variable creation properties.
-          schema:
-            $ref: "#/definitions/NewVariable"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/IdResponse"
   /template/{templateId}/variable/{variableId}:
     parameters:
       - in: path
@@ -181,47 +161,6 @@ paths:
         type: integer
         minimum: 0
         description: "The variable ID."
-    delete:
-      tags:
-      - "templates"
-      summary: "Delete a variable"
-      description: ""
-      operationId: "deleteTemplateVariable"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "object"
-        404:
-          description: "not found"
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-        409:
-          description: "conflict"
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-    patch:
-      tags:
-      - "templates"
-      summary: "Update a variable's description"
-      operationId: "updateTemplateVariable"
-      consumes:
-        - application/json
-      parameters:
-        - in: body
-          name: updateTemplateVariableBody
-          description: Variable creation properties.
-          schema:
-            $ref: "#/definitions/UpdateVariable"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/IdResponse"
   /pack/:
     get:
       tags:
@@ -563,12 +502,35 @@ definitions:
         description: Variable description (e.g. constraints).
   UpdateTemplate:
     type: object
-    required:
-      - text
     properties:
       text:
         type: string
         description: Template text.
+      variables:
+        type: object
+        properties:
+          delete:
+            type: array
+            description: Variable IDs that should be removed from the template.
+            items:
+              type: integer
+          update:
+            type: array
+            description: Variables to update.
+            items:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: integer
+                description:
+                  type: string
+          create:
+            type: array
+            description: Variables to update.
+            items:
+              $ref: "#/definitions/NewVariable"
   NewEnvironment:
     type: object
     required:

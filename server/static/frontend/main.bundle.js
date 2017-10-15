@@ -631,45 +631,11 @@ var TemplatesApi = (function () {
     };
     /**
      *
-     * @summary Create a new variable
-     * @param templateId The template ID.
-     * @param postTemplateVariablesBody Variable creation properties.
-     */
-    TemplatesApi.prototype.createTemplateVariable = function (templateId, postTemplateVariablesBody, extraHttpRequestParams) {
-        return this.createTemplateVariableWithHttpInfo(templateId, postTemplateVariablesBody, extraHttpRequestParams)
-            .map(function (response) {
-            if (response.status === 204) {
-                return undefined;
-            }
-            else {
-                return response.json() || {};
-            }
-        });
-    };
-    /**
-     *
      * @summary Delete a template
      * @param templateId The template ID.
      */
     TemplatesApi.prototype.deleteTemplate = function (templateId, extraHttpRequestParams) {
         return this.deleteTemplateWithHttpInfo(templateId, extraHttpRequestParams)
-            .map(function (response) {
-            if (response.status === 204) {
-                return undefined;
-            }
-            else {
-                return response.json() || {};
-            }
-        });
-    };
-    /**
-     *
-     * @summary Delete a variable
-     * @param templateId The template ID.
-     * @param variableId The variable ID.
-     */
-    TemplatesApi.prototype.deleteTemplateVariable = function (templateId, variableId, extraHttpRequestParams) {
-        return this.deleteTemplateVariableWithHttpInfo(templateId, variableId, extraHttpRequestParams)
             .map(function (response) {
             if (response.status === 204) {
                 return undefined;
@@ -729,30 +695,12 @@ var TemplatesApi = (function () {
     };
     /**
      *
-     * @summary Update a template's text
+     * @summary Update a template and its variables
      * @param templateId The template ID.
      * @param updateTemplateBody Template update properties.
      */
     TemplatesApi.prototype.updateTemplate = function (templateId, updateTemplateBody, extraHttpRequestParams) {
         return this.updateTemplateWithHttpInfo(templateId, updateTemplateBody, extraHttpRequestParams)
-            .map(function (response) {
-            if (response.status === 204) {
-                return undefined;
-            }
-            else {
-                return response.json() || {};
-            }
-        });
-    };
-    /**
-     *
-     * @summary Update a variable's description
-     * @param templateId The template ID.
-     * @param variableId The variable ID.
-     * @param updateTemplateVariableBody Variable creation properties.
-     */
-    TemplatesApi.prototype.updateTemplateVariable = function (templateId, variableId, updateTemplateVariableBody, extraHttpRequestParams) {
-        return this.updateTemplateVariableWithHttpInfo(templateId, variableId, updateTemplateVariableBody, extraHttpRequestParams)
             .map(function (response) {
             if (response.status === 204) {
                 return undefined;
@@ -794,43 +742,6 @@ var TemplatesApi = (function () {
         return this.http.request(path, requestOptions);
     };
     /**
-     * Create a new variable
-     *
-     * @param templateId The template ID.
-     * @param postTemplateVariablesBody Variable creation properties.
-     */
-    TemplatesApi.prototype.createTemplateVariableWithHttpInfo = function (templateId, postTemplateVariablesBody, extraHttpRequestParams) {
-        var path = this.basePath + '/template/${templateId}/variable/'
-            .replace('${' + 'templateId' + '}', String(templateId));
-        var queryParameters = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["f" /* URLSearchParams */]();
-        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */](this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'templateId' is not null or undefined
-        if (templateId === null || templateId === undefined) {
-            throw new Error('Required parameter templateId was null or undefined when calling createTemplateVariable.');
-        }
-        // to determine the Content-Type header
-        var consumes = [
-            'application/json'
-        ];
-        // to determine the Accept header
-        var produces = [
-            'application/json'
-        ];
-        headers.set('Content-Type', 'application/json');
-        var requestOptions = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({
-            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Put,
-            headers: headers,
-            body: postTemplateVariablesBody == null ? '' : JSON.stringify(postTemplateVariablesBody),
-            search: queryParameters,
-            withCredentials: this.configuration.withCredentials
-        });
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = Object.assign(requestOptions, extraHttpRequestParams);
-        }
-        return this.http.request(path, requestOptions);
-    };
-    /**
      * Delete a template
      *
      * @param templateId The template ID.
@@ -843,44 +754,6 @@ var TemplatesApi = (function () {
         // verify required parameter 'templateId' is not null or undefined
         if (templateId === null || templateId === undefined) {
             throw new Error('Required parameter templateId was null or undefined when calling deleteTemplate.');
-        }
-        // to determine the Content-Type header
-        var consumes = [];
-        // to determine the Accept header
-        var produces = [
-            'application/json'
-        ];
-        var requestOptions = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({
-            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Delete,
-            headers: headers,
-            search: queryParameters,
-            withCredentials: this.configuration.withCredentials
-        });
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = Object.assign(requestOptions, extraHttpRequestParams);
-        }
-        return this.http.request(path, requestOptions);
-    };
-    /**
-     * Delete a variable
-     *
-     * @param templateId The template ID.
-     * @param variableId The variable ID.
-     */
-    TemplatesApi.prototype.deleteTemplateVariableWithHttpInfo = function (templateId, variableId, extraHttpRequestParams) {
-        var path = this.basePath + '/template/${templateId}/variable/${variableId}'
-            .replace('${' + 'templateId' + '}', String(templateId))
-            .replace('${' + 'variableId' + '}', String(variableId));
-        var queryParameters = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["f" /* URLSearchParams */]();
-        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */](this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'templateId' is not null or undefined
-        if (templateId === null || templateId === undefined) {
-            throw new Error('Required parameter templateId was null or undefined when calling deleteTemplateVariable.');
-        }
-        // verify required parameter 'variableId' is not null or undefined
-        if (variableId === null || variableId === undefined) {
-            throw new Error('Required parameter variableId was null or undefined when calling deleteTemplateVariable.');
         }
         // to determine the Content-Type header
         var consumes = [];
@@ -995,7 +868,7 @@ var TemplatesApi = (function () {
         return this.http.request(path, requestOptions);
     };
     /**
-     * Update a template&#39;s text
+     * Update a template and its variables
      *
      * @param templateId The template ID.
      * @param updateTemplateBody Template update properties.
@@ -1022,49 +895,6 @@ var TemplatesApi = (function () {
             method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Patch,
             headers: headers,
             body: updateTemplateBody == null ? '' : JSON.stringify(updateTemplateBody),
-            search: queryParameters,
-            withCredentials: this.configuration.withCredentials
-        });
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = Object.assign(requestOptions, extraHttpRequestParams);
-        }
-        return this.http.request(path, requestOptions);
-    };
-    /**
-     * Update a variable&#39;s description
-     *
-     * @param templateId The template ID.
-     * @param variableId The variable ID.
-     * @param updateTemplateVariableBody Variable creation properties.
-     */
-    TemplatesApi.prototype.updateTemplateVariableWithHttpInfo = function (templateId, variableId, updateTemplateVariableBody, extraHttpRequestParams) {
-        var path = this.basePath + '/template/${templateId}/variable/${variableId}'
-            .replace('${' + 'templateId' + '}', String(templateId))
-            .replace('${' + 'variableId' + '}', String(variableId));
-        var queryParameters = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["f" /* URLSearchParams */]();
-        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */](this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'templateId' is not null or undefined
-        if (templateId === null || templateId === undefined) {
-            throw new Error('Required parameter templateId was null or undefined when calling updateTemplateVariable.');
-        }
-        // verify required parameter 'variableId' is not null or undefined
-        if (variableId === null || variableId === undefined) {
-            throw new Error('Required parameter variableId was null or undefined when calling updateTemplateVariable.');
-        }
-        // to determine the Content-Type header
-        var consumes = [
-            'application/json'
-        ];
-        // to determine the Accept header
-        var produces = [
-            'application/json'
-        ];
-        headers.set('Content-Type', 'application/json');
-        var requestOptions = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({
-            method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Patch,
-            headers: headers,
-            body: updateTemplateVariableBody == null ? '' : JSON.stringify(updateTemplateVariableBody),
             search: queryParameters,
             withCredentials: this.configuration.withCredentials
         });
@@ -1355,10 +1185,10 @@ module.exports = "<ngb-accordion #acc=\"ngbAccordion\">\n  <ngb-panel *ngFor=\"l
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_codemirror_addon_search_search___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8_codemirror_addon_search_search__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_codemirror_addon_edit_matchbrackets__ = __webpack_require__("../../../../codemirror/addon/edit/matchbrackets.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_codemirror_addon_edit_matchbrackets___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_codemirror_addon_edit_matchbrackets__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_rxjs_Observable__ = __webpack_require__("../../../../rxjs/Observable.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_rxjs_Observable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10_rxjs_Observable__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_rxjs_add_observable_forkJoin__ = __webpack_require__("../../../../rxjs/add/observable/forkJoin.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_rxjs_add_observable_forkJoin___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11_rxjs_add_observable_forkJoin__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_rxjs_add_observable_forkJoin__ = __webpack_require__("../../../../rxjs/add/observable/forkJoin.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10_rxjs_add_observable_forkJoin___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10_rxjs_add_observable_forkJoin__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_linqts__ = __webpack_require__("../../../../linqts/dist/linq.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11_linqts___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11_linqts__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1425,45 +1255,46 @@ var TemplateInfo = (function () {
     };
     TemplateInfo.prototype.save = function () {
         var _this = this;
-        var tplRequest;
         if (this.template.id < 0) {
-            tplRequest = this.api.createTemplate({ name: this.template.name, text: this.code });
+            this.api.createTemplate({ name: this.template.name, text: '' }).subscribe(function (tpl) {
+                _this.template.id = tpl.id;
+                _this.doUpdate();
+            });
         }
         else {
-            tplRequest = this.api.updateTemplate(this.template.id, { text: this.code });
+            this.doUpdate();
         }
-        tplRequest.subscribe(function (tpl) {
-            _this.template.id = tpl.id;
-            var requests = _this.saveVariables();
-            if (requests.length > 0) {
-                __WEBPACK_IMPORTED_MODULE_10_rxjs_Observable__["Observable"].forkJoin(requests).subscribe(function (x) { return _this.reload(); });
-            }
-            else {
-                _this.reload();
-            }
-        });
     };
-    TemplateInfo.prototype.saveVariables = function () {
+    TemplateInfo.prototype.doUpdate = function () {
         var _this = this;
-        var result = this.variablesList.controls.map(function (vc) {
-            var id = vc.get('id').value;
-            var name = vc.get('name').value;
-            var description = vc.get('description').value;
-            if (id < 0) {
-                return _this.api.createTemplateVariable(_this.template.id, {
-                    name: name,
-                    description: description
-                });
-            }
-            else {
-                return _this.api.updateTemplateVariable(_this.template.id, id, {
-                    description: description
-                });
+        var request = this.api
+            .updateTemplate(this.template.id, {
+            text: this.code,
+            variables: {
+                create: new __WEBPACK_IMPORTED_MODULE_11_linqts__["List"](this.variablesList.controls)
+                    .Where(function (c) { return c.get('id').value < 0; })
+                    .Select(function (c) {
+                    return {
+                        name: c.get('name').value,
+                        description: c.get('description').value
+                    };
+                })
+                    .ToArray(),
+                delete: this.variablesToDelete,
+                update: new __WEBPACK_IMPORTED_MODULE_11_linqts__["List"](this.variablesList.controls)
+                    .Where(function (c) { return c.get('id').value >= 0; })
+                    .Select(function (c) {
+                    return {
+                        id: c.get('id').value,
+                        description: c.get('description').value
+                    };
+                })
+                    .ToArray()
             }
         });
-        result.push.apply(result, this.variablesToDelete.map(function (id) { return _this.api.deleteTemplateVariable(_this.template.id, id); }));
         this.variablesToDelete = [];
-        return result;
+        request.subscribe(function (x) { return _this.reload(); }, function (e) { return _this.reload(); });
+        return request;
     };
     TemplateInfo.prototype.addVariable = function () {
         this.variablesList.push(this.createVariable());

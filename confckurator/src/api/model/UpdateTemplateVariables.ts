@@ -12,12 +12,20 @@
 
 import * as models from './models';
 
-export interface UpdateTemplate {
+export interface UpdateTemplateVariables {
     /**
-     * Template text.
+     * Variable IDs that should be removed from the template.
      */
-    text?: string;
+    delete?: Array<number>;
 
-    variables?: models.UpdateTemplateVariables;
+    /**
+     * Variables to update.
+     */
+    update?: Array<models.UpdateTemplateVariablesUpdate>;
+
+    /**
+     * Variables to update.
+     */
+    create?: Array<models.NewVariable>;
 
 }

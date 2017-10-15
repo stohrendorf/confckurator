@@ -59,45 +59,11 @@ export class TemplatesApi {
 
     /**
      * 
-     * @summary Create a new variable
-     * @param templateId The template ID.
-     * @param postTemplateVariablesBody Variable creation properties.
-     */
-    public createTemplateVariable(templateId: number, postTemplateVariablesBody?: models.NewVariable, extraHttpRequestParams?: any): Observable<models.IdResponse> {
-        return this.createTemplateVariableWithHttpInfo(templateId, postTemplateVariablesBody, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json() || {};
-                }
-            });
-    }
-
-    /**
-     * 
      * @summary Delete a template
      * @param templateId The template ID.
      */
     public deleteTemplate(templateId: number, extraHttpRequestParams?: any): Observable<any> {
         return this.deleteTemplateWithHttpInfo(templateId, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json() || {};
-                }
-            });
-    }
-
-    /**
-     * 
-     * @summary Delete a variable
-     * @param templateId The template ID.
-     * @param variableId The variable ID.
-     */
-    public deleteTemplateVariable(templateId: number, variableId: number, extraHttpRequestParams?: any): Observable<any> {
-        return this.deleteTemplateVariableWithHttpInfo(templateId, variableId, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -157,30 +123,12 @@ export class TemplatesApi {
 
     /**
      * 
-     * @summary Update a template's text
+     * @summary Update a template and its variables
      * @param templateId The template ID.
      * @param updateTemplateBody Template update properties.
      */
     public updateTemplate(templateId: number, updateTemplateBody?: models.UpdateTemplate, extraHttpRequestParams?: any): Observable<models.IdResponse> {
         return this.updateTemplateWithHttpInfo(templateId, updateTemplateBody, extraHttpRequestParams)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json() || {};
-                }
-            });
-    }
-
-    /**
-     * 
-     * @summary Update a variable's description
-     * @param templateId The template ID.
-     * @param variableId The variable ID.
-     * @param updateTemplateVariableBody Variable creation properties.
-     */
-    public updateTemplateVariable(templateId: number, variableId: number, updateTemplateVariableBody?: models.UpdateVariable, extraHttpRequestParams?: any): Observable<models.IdResponse> {
-        return this.updateTemplateVariableWithHttpInfo(templateId, variableId, updateTemplateVariableBody, extraHttpRequestParams)
             .map((response: Response) => {
                 if (response.status === 204) {
                     return undefined;
@@ -229,49 +177,6 @@ export class TemplatesApi {
     }
 
     /**
-     * Create a new variable
-     * 
-     * @param templateId The template ID.
-     * @param postTemplateVariablesBody Variable creation properties.
-     */
-    public createTemplateVariableWithHttpInfo(templateId: number, postTemplateVariablesBody?: models.NewVariable, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/template/${templateId}/variable/'
-                    .replace('${' + 'templateId' + '}', String(templateId));
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'templateId' is not null or undefined
-        if (templateId === null || templateId === undefined) {
-            throw new Error('Required parameter templateId was null or undefined when calling createTemplateVariable.');
-        }
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-
-        headers.set('Content-Type', 'application/json');
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Put,
-            headers: headers,
-            body: postTemplateVariablesBody == null ? '' : JSON.stringify(postTemplateVariablesBody), // https://github.com/angular/angular/issues/10612
-            search: queryParameters,
-            withCredentials:this.configuration.withCredentials
-        });
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
      * Delete a template
      * 
      * @param templateId The template ID.
@@ -285,50 +190,6 @@ export class TemplatesApi {
         // verify required parameter 'templateId' is not null or undefined
         if (templateId === null || templateId === undefined) {
             throw new Error('Required parameter templateId was null or undefined when calling deleteTemplate.');
-        }
-        // to determine the Content-Type header
-        let consumes: string[] = [
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Delete,
-            headers: headers,
-            search: queryParameters,
-            withCredentials:this.configuration.withCredentials
-        });
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * Delete a variable
-     * 
-     * @param templateId The template ID.
-     * @param variableId The variable ID.
-     */
-    public deleteTemplateVariableWithHttpInfo(templateId: number, variableId: number, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/template/${templateId}/variable/${variableId}'
-                    .replace('${' + 'templateId' + '}', String(templateId))
-                    .replace('${' + 'variableId' + '}', String(variableId));
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'templateId' is not null or undefined
-        if (templateId === null || templateId === undefined) {
-            throw new Error('Required parameter templateId was null or undefined when calling deleteTemplateVariable.');
-        }
-        // verify required parameter 'variableId' is not null or undefined
-        if (variableId === null || variableId === undefined) {
-            throw new Error('Required parameter variableId was null or undefined when calling deleteTemplateVariable.');
         }
         // to determine the Content-Type header
         let consumes: string[] = [
@@ -467,7 +328,7 @@ export class TemplatesApi {
     }
 
     /**
-     * Update a template&#39;s text
+     * Update a template and its variables
      * 
      * @param templateId The template ID.
      * @param updateTemplateBody Template update properties.
@@ -498,55 +359,6 @@ export class TemplatesApi {
             method: RequestMethod.Patch,
             headers: headers,
             body: updateTemplateBody == null ? '' : JSON.stringify(updateTemplateBody), // https://github.com/angular/angular/issues/10612
-            search: queryParameters,
-            withCredentials:this.configuration.withCredentials
-        });
-        // https://github.com/swagger-api/swagger-codegen/issues/4037
-        if (extraHttpRequestParams) {
-            requestOptions = (<any>Object).assign(requestOptions, extraHttpRequestParams);
-        }
-
-        return this.http.request(path, requestOptions);
-    }
-
-    /**
-     * Update a variable&#39;s description
-     * 
-     * @param templateId The template ID.
-     * @param variableId The variable ID.
-     * @param updateTemplateVariableBody Variable creation properties.
-     */
-    public updateTemplateVariableWithHttpInfo(templateId: number, variableId: number, updateTemplateVariableBody?: models.UpdateVariable, extraHttpRequestParams?: any): Observable<Response> {
-        const path = this.basePath + '/template/${templateId}/variable/${variableId}'
-                    .replace('${' + 'templateId' + '}', String(templateId))
-                    .replace('${' + 'variableId' + '}', String(variableId));
-
-        let queryParameters = new URLSearchParams();
-        let headers = new Headers(this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
-        // verify required parameter 'templateId' is not null or undefined
-        if (templateId === null || templateId === undefined) {
-            throw new Error('Required parameter templateId was null or undefined when calling updateTemplateVariable.');
-        }
-        // verify required parameter 'variableId' is not null or undefined
-        if (variableId === null || variableId === undefined) {
-            throw new Error('Required parameter variableId was null or undefined when calling updateTemplateVariable.');
-        }
-        // to determine the Content-Type header
-        let consumes: string[] = [
-            'application/json'
-        ];
-
-        // to determine the Accept header
-        let produces: string[] = [
-            'application/json'
-        ];
-
-        headers.set('Content-Type', 'application/json');
-
-        let requestOptions: RequestOptionsArgs = new RequestOptions({
-            method: RequestMethod.Patch,
-            headers: headers,
-            body: updateTemplateVariableBody == null ? '' : JSON.stringify(updateTemplateVariableBody), // https://github.com/angular/angular/issues/10612
             search: queryParameters,
             withCredentials:this.configuration.withCredentials
         });

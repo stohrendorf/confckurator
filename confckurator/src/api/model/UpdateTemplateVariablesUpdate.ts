@@ -12,12 +12,9 @@
 
 import * as models from './models';
 
-export interface UpdateTemplate {
-    /**
-     * Template text.
-     */
-    text?: string;
+export interface UpdateTemplateVariablesUpdate {
+    id: number;
 
-    variables?: models.UpdateTemplateVariables;
+    description?: string;
 
 }

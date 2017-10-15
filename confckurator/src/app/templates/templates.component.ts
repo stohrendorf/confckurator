@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {TemplatesApi} from '../../api/api/TemplatesApi';
 import {Template} from '../../api/model/Template';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Variable} from '../../api/model/Variable';
 import 'codemirror/mode/jinja2/jinja2';
 import 'codemirror/mode/dockerfile/dockerfile';
@@ -13,6 +13,7 @@ import 'codemirror/addon/edit/matchbrackets';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/forkJoin';
 import {IdResponse} from '../../api/model/IdResponse';
+import {List} from 'linqts';
 
 class TemplateInfo {
   public variablesForm: FormGroup;
@@ -63,49 +64,47 @@ class TemplateInfo {
   }
 
   public save(): void {
-    let tplRequest: Observable<IdResponse>;
     if (this.template.id < 0) {
-      tplRequest = this.api.createTemplate({name: this.template.name, text: this.code});
+      this.api.createTemplate({name: this.template.name, text: ''}).subscribe(tpl => {
+        this.template.id = tpl.id;
+        this.doUpdate();
+      });
     } else {
-      tplRequest = this.api.updateTemplate(this.template.id, {text: this.code});
+      this.doUpdate();
     }
-
-    tplRequest.subscribe(tpl => {
-      this.template.id = tpl.id;
-      const requests = this.saveVariables();
-      if (requests.length > 0) {
-        Observable.forkJoin(requests).subscribe(x => this.reload());
-      } else {
-        this.reload();
-      }
-    });
   }
 
-  private saveVariables(): Observable<any>[] {
-    const result: Observable<any>[] = this.variablesList.controls.map(vc => {
-      const id: number = vc.get('id').value;
-      const name: string = vc.get('name').value;
-      const description: string = vc.get('description').value;
-
-      if (id < 0) {
-        return this.api.createTemplateVariable(this.template.id, {
-          name: name,
-          description: description
-        });
-      } else {
-        return this.api.updateTemplateVariable(this.template.id, id, {
-          description: description
-        });
-      }
-    });
-
-    result.push(
-      ...this.variablesToDelete.map(id => this.api.deleteTemplateVariable(this.template.id, id))
-    );
-
+  private doUpdate(): Observable<any> {
+    const request = this.api
+      .updateTemplate(this.template.id, {
+        text: this.code,
+        variables: {
+          create: new List<AbstractControl>(this.variablesList.controls)
+            .Where(c => c.get('id').value < 0)
+            .Select(c => {
+              return {
+                name: c.get('name').value,
+                description: c.get('description').value
+              };
+            })
+            .ToArray(),
+          delete: this.variablesToDelete,
+          update: new List<AbstractControl>(this.variablesList.controls)
+            .Where(c => c.get('id').value >= 0)
+            .Select(c => {
+              return {
+                id: c.get('id').value,
+                description: c.get('description').value
+              };
+            })
+            .ToArray()
+        }
+      });
     this.variablesToDelete = [];
 
-    return result;
+    request.subscribe(x => this.reload(), e => this.reload());
+
+    return request;
   }
 
   public addVariable(): void {
