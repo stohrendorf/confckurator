@@ -96,7 +96,8 @@ class TemplateInfo {
             .Select(c => {
               return {
                 id: c.get('id').value,
-                description: c.get('description').value
+                description: c.get('description').value,
+                name: c.get('name').value
               };
             })
             .ToArray()

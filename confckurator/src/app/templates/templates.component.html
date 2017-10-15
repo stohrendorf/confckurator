@@ -12,15 +12,17 @@
       <h4>Variables</h4>
       <div [formGroup]="templateInfo.variablesForm">
         <div formArrayName="variables">
-          <div class="row" *ngFor="let variable of templateInfo.variablesList.controls; let i = index">
-            <div class="col-4 form-inline" [formGroupName]="i">
-              <div (click)="templateInfo.removeVariable(i)" class="btn btn-default input-group-addon">
-                <span class="fa fa-trash"></span>
+          <div class="form-row" *ngFor="let variable of templateInfo.variablesList.controls; let i = index">
+            <div class="form-group col-md-4" [formGroupName]="i">
+              <div class="input-group">
+                <div (click)="templateInfo.removeVariable(i)" class="btn btn-default input-group-addon" *ngIf="!variable.controls.name.disabled">
+                  <span class="fa fa-trash"></span>
+                </div>
+                <input type="text" class="form-control" placeholder="Name" formControlName="name" title="Name"
+                       [ngClass]="{'is-invalid': variable.controls.name.invalid}">
               </div>
-              <input type="text" class="form-control" placeholder="Name" formControlName="name" title="Name"
-                     [ngClass]="{'is-invalid': variable.controls.name.invalid}">
             </div>
-            <div class="col" [formGroupName]="i">
+            <div class="form-group col-md-8" [formGroupName]="i">
               <input type="text" class="form-control" placeholder="Description" formControlName="description"
                      title="Description"
                      [ngClass]="{'is-invalid': variable.controls.description.invalid}">
@@ -33,7 +35,8 @@
       </a>
 
       <h4>Template</h4>
-      <codemirror [config]="{lineNumbers:true, mode:'jinja2', matchBrackets:true, highlightSelectionMatches:true}" [(ngModel)]="templateInfo.code"></codemirror>
+      <codemirror [config]="{lineNumbers:true, mode:'jinja2', matchBrackets:true, highlightSelectionMatches:true}"
+                  [(ngModel)]="templateInfo.code"></codemirror>
 
       <a (click)="templateInfo.save()" class="btn btn-success">
         <span class="fa fa-save"></span> Save

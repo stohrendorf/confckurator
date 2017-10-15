@@ -15,6 +15,8 @@ import * as models from './models';
 export interface UpdateTemplateVariablesUpdate {
     id: number;
 
+    name?: string;
+
     description?: string;
 
 }

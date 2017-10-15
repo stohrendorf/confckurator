@@ -48,7 +48,8 @@ class TemplateResource(Resource):
             'delete': fields.List(fields.Integer(required=True)),
             'update': fields.List(fields.Nested({
                 'id': fields.Integer(required=True),
-                'description': fields.String(missing='')
+                'description': fields.String(required=False, missing=''),
+                'name': fields.String(required=False, validate=validate.Regexp(re.compile('^[a-zA-Z_][a-zA-Z0-9_]*$')))
             })),
             'create': fields.List(fields.Nested({
                 'name': fields.String(required=True, validate=validate.Regexp(re.compile('^[a-zA-Z_][a-zA-Z0-9_]*$'))),
@@ -76,8 +77,14 @@ class TemplateResource(Resource):
                 if 'update' in variables:
                     for u in variables['update']:
                         if 'description' in u:
-                            session.query(Variable).filter(Variable.id == u['id']).first().description = u[
-                                'description'].strip()
+                            variable = session.query(Variable)\
+                                .filter(Variable.id == u['id'])\
+                                .first()
+                            variable.description = u['description'].strip()
+                            if 'name' in u:
+                                if variable.name != u['name'] and variable.in_use():
+                                    raise Conflict('Cannot change name of a variable that\'s in use')
+                                variable.name = u['name']
                 if 'create' in variables:
                     for c in variables['create']:
                         if 'description' in c:
