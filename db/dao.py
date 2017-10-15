@@ -110,6 +110,12 @@ class Variable(Schema):
 
         return default_value
 
+    def in_use(self):
+        if len(self.values) == 0:
+            return False
+
+        return True
+
 
 class Value(Schema):
     """

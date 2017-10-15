@@ -28,4 +28,9 @@ export interface Variable {
      */
     description: string;
 
+    /**
+     * Wheter or not this variable is in use.
+     */
+    in_use: boolean;
+
 }

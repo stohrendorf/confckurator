@@ -618,6 +618,7 @@ definitions:
       - id
       - name
       - description
+      - in_use
     properties:
       id:
         type: "integer"
@@ -631,6 +632,9 @@ definitions:
       description:
         type: "string"
         description: Description of this variable (i.e. constraints).
+      in_use:
+        type: "boolean"
+        description: Wheter or not this variable is in use.
   Value:
     type: "object"
     required:

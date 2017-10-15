@@ -3,7 +3,8 @@ from flask_restful import fields
 variable_fields = {
     'id': fields.Integer,
     'name': fields.String,
-    'description': fields.String
+    'description': fields.String,
+    'in_use': fields.Boolean(attribute=lambda v: v.in_use())
 }
 
 template_fields = {

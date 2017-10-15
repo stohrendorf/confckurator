@@ -42,7 +42,7 @@ class TemplateInfo {
   createVariable(variable: Variable = null): FormGroup {
     return this.formBuilder.group({
       name: [
-        {value: !variable ? '' : variable.name, disabled: variable != null},
+        {value: variable == null ? '' : variable.name, disabled: variable != null && variable.in_use},
         Validators.pattern(/^[a-zA-Z_][a-zA-Z0-9_]*$/)
       ],
       description: [!variable ? '' : variable.description],
@@ -82,7 +82,7 @@ class TemplateInfo {
   }
 
   private saveVariables(): Observable<any>[] {
-    let result: Observable<any>[] = this.variablesList.controls.map(vc => {
+    const result: Observable<any>[] = this.variablesList.controls.map(vc => {
       const id: number = vc.get('id').value;
       const name: string = vc.get('name').value;
       const description: string = vc.get('description').value;

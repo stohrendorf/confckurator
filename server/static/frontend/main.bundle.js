@@ -1406,7 +1406,7 @@ var TemplateInfo = (function () {
         if (variable === void 0) { variable = null; }
         return this.formBuilder.group({
             name: [
-                { value: !variable ? '' : variable.name, disabled: variable != null },
+                { value: variable == null ? '' : variable.name, disabled: variable != null && variable.in_use },
                 __WEBPACK_IMPORTED_MODULE_2__angular_forms__["Validators"].pattern(/^[a-zA-Z_][a-zA-Z0-9_]*$/)
             ],
             description: [!variable ? '' : variable.description],
