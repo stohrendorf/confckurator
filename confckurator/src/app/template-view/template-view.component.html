@@ -1,0 +1,39 @@
+<ngb-alert type="danger" *ngIf="errorMessage != null" (close)="errorMessage = null">
+  <strong>Whoops.</strong>
+  {{errorMessage}}
+</ngb-alert>
+
+<h4>Variables</h4>
+<div [formGroup]="variablesForm">
+  <div formArrayName="variables">
+    <div class="form-row" *ngFor="let variable of variablesList.controls; let i = index">
+      <div class="form-group col-md-4" [formGroupName]="i">
+        <div class="input-group">
+          <div (click)="removeVariable(i)" class="btn btn-default input-group-addon"
+               *ngIf="!variable.controls.name.disabled">
+            <span class="fa fa-trash"></span>
+          </div>
+          <input type="text" class="form-control" placeholder="Name" formControlName="name" title="Name"
+                 [ngClass]="{'is-invalid': variable.controls.name.invalid}">
+        </div>
+      </div>
+      <div class="form-group col-md-8" [formGroupName]="i">
+        <input type="text" class="form-control" placeholder="Description" formControlName="description"
+               title="Description"
+               [ngClass]="{'is-invalid': variable.controls.description.invalid}">
+      </div>
+    </div>
+  </div>
+</div>
+<a (click)="addVariable()" class="btn btn-primary">
+  <span class="fa fa-plus-square"></span> Add Variable
+</a>
+
+<h4>Template</h4>
+<codemirror [config]="{lineNumbers:true, mode:'jinja2', matchBrackets:true, highlightSelectionMatches:true}"
+            [(ngModel)]="code"></codemirror>
+
+<a (click)="save()" class="btn btn-success">
+  <span class="fa fa-save"></span> Save
+</a>
+
