@@ -1,6 +1,8 @@
 werkzeug
 flask
 flask-restful
+marshmallow
+webargs
 sqlalchemy
 setuptools
 wheel

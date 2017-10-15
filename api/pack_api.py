@@ -1,8 +1,11 @@
 from flask.blueprints import Blueprint
-from flask_restful import Resource, reqparse, marshal, Api
+from flask_restful import Resource, marshal, Api
 from sqlalchemy import and_
 from typing import List
 from werkzeug.exceptions import NotFound, Conflict
+from marshmallow import fields
+from webargs import fields, validate
+from webargs.flaskparser import use_kwargs
 
 from api.common import make_id_response, make_empty_response
 from api.marshalling import pack_fields
@@ -43,13 +46,14 @@ class PackList(Resource):
         with make_session() as session:
             return marshal(session.query(Pack).all(), pack_fields)
 
-    @staticmethod
-    def post():
-        parser = reqparse.RequestParser()
-        parser.add_argument('name', required=True, trim=True)
-        args = parser.parse_args(strict=True)
+    new_pack_args = {
+        'name': fields.String(required=True, validate=validate.Length(min=1, max=255), trim=True)
+    }
 
-        pack = Pack(name=args['name'])
+    @staticmethod
+    @use_kwargs(new_pack_args)
+    def post(name):
+        pack = Pack(name=name.strip())
         with make_session() as session:
             session.add(pack)
             session.commit()
@@ -61,16 +65,17 @@ pack_api.add_resource(PackList, '/')
 
 
 class PackVariableResource(Resource):
-    @staticmethod
-    def post(pack_id, variable_id):
-        parser = reqparse.RequestParser()
-        parser.add_argument('environment_id', required=False, type=int, nullable=True, store_missing=False)
-        parser.add_argument('data', required=True)
-        args = parser.parse_args(strict=True)
+    update_variable_args = {
+        'environment_id': fields.Integer(required=False, missing=None),
+        'data': fields.String(required=True),
+        'pack_id': fields.Integer(location='view_args'),
+        'variable_id': fields.Integer(location='view_args')
+    }
 
+    @staticmethod
+    @use_kwargs(update_variable_args)
+    def post(pack_id, variable_id, environment_id, data):
         with make_session() as session:
-            environment_id = args['environment_id'] if 'environment_id' in args else None
-            print(environment_id)
             if environment_id is None:
                 value = session.query(Value).filter(
                     and_(Value.variable_id == variable_id,
@@ -83,22 +88,24 @@ class PackVariableResource(Resource):
 
             if value is None:
                 value = Value(pack_id=pack_id, environment_id=environment_id, variable_id=variable_id,
-                              data=args['data'])
+                              data=data)
                 session.add(value)
             else:
-                value.data = args['data']
+                value.data = data
 
             session.commit()
             return make_empty_response()
 
-    @staticmethod
-    def delete(pack_id, variable_id):
-        parser = reqparse.RequestParser()
-        parser.add_argument('environment_id', required=False, type=int, nullable=True)
-        args = parser.parse_args(strict=True)
+    delete_variable_args = {
+        'environment_id': fields.Integer(required=False, missing=None),
+        'pack_id': fields.Integer(location='view_args'),
+        'variable_id': fields.Integer(location='view_args')
+    }
 
+    @staticmethod
+    @use_kwargs(delete_variable_args)
+    def delete(pack_id, variable_id, environment_id):
         with make_session() as session:
-            environment_id = args['environment_id']
             if environment_id is None:
                 value = session.query(Value).filter(
                     and_(Value.variable_id == variable_id,

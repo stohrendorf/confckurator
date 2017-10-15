@@ -1,6 +1,10 @@
 from flask.blueprints import Blueprint
-from flask_restful import Resource, reqparse, marshal, Api
+from flask_restful import Resource, marshal, Api
 from typing import List
+
+from marshmallow import fields
+from webargs import fields, validate
+from webargs.flaskparser import use_kwargs
 from werkzeug.exceptions import NotFound
 
 from api.common import make_id_response, make_empty_response
@@ -43,13 +47,14 @@ class EnvironmentList(Resource):
             print(session.query(Environment).all())
             return marshal(session.query(Environment).all(), environment_fields)
 
-    @staticmethod
-    def post():
-        parser = reqparse.RequestParser()
-        parser.add_argument('name', required=True, trim=True)
-        args = parser.parse_args(strict=True)
+    new_environment_args = {
+        'name': fields.String(required=True, validate=validate.Length(min=1, max=255), trim=True)
+    }
 
-        environment = Environment(name=args['name'], text=args['text'])
+    @staticmethod
+    @use_kwargs(new_environment_args)
+    def post(name: str):
+        environment = Environment(name=name.strip())
         with make_session() as session:
             session.add(environment)
             session.commit()
