@@ -126,7 +126,10 @@ export class TemplateViewComponent implements OnInit {
   }
 
   public removeVariable(idx: number): void {
-    this.variablesToDelete.push(this.variablesList.controls[idx].get('id').value);
+    const id = this.variablesList.controls[idx].get('id').value;
+    if (id >= 0) {
+      this.variablesToDelete.push(id);
+    }
     this.variablesList.removeAt(idx);
   }
 }

@@ -1292,7 +1292,10 @@ var TemplateViewComponent = (function () {
         this.variablesList.push(this.createVariable());
     };
     TemplateViewComponent.prototype.removeVariable = function (idx) {
-        this.variablesToDelete.push(this.variablesList.controls[idx].get('id').value);
+        var id = this.variablesList.controls[idx].get('id').value;
+        if (id >= 0) {
+            this.variablesToDelete.push(id);
+        }
         this.variablesList.removeAt(idx);
     };
     return TemplateViewComponent;
