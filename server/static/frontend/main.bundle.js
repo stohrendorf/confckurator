@@ -1162,7 +1162,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/template-view/template-view.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<ngb-alert type=\"danger\" *ngIf=\"errorMessage != null\" (close)=\"errorMessage = null\">\n  <strong>Whoops.</strong>\n  {{errorMessage}}\n</ngb-alert>\n\n<h4>Variables</h4>\n<div [formGroup]=\"variablesForm\">\n  <div formArrayName=\"variables\">\n    <div class=\"form-row\" *ngFor=\"let variable of variablesList.controls; let i = index\">\n      <div class=\"form-group col-md-4\" [formGroupName]=\"i\">\n        <div class=\"input-group\">\n          <div (click)=\"removeVariable(i)\" class=\"btn btn-default input-group-addon\"\n               *ngIf=\"!variable.controls.name.disabled\">\n            <span class=\"fa fa-trash\"></span>\n          </div>\n          <input type=\"text\" class=\"form-control\" placeholder=\"Name\" formControlName=\"name\" title=\"Name\"\n                 [ngClass]=\"{'is-invalid': variable.controls.name.invalid}\">\n        </div>\n      </div>\n      <div class=\"form-group col-md-8\" [formGroupName]=\"i\">\n        <input type=\"text\" class=\"form-control\" placeholder=\"Description\" formControlName=\"description\"\n               title=\"Description\"\n               [ngClass]=\"{'is-invalid': variable.controls.description.invalid}\">\n      </div>\n    </div>\n  </div>\n</div>\n<a (click)=\"addVariable()\" class=\"btn btn-primary\">\n  <span class=\"fa fa-plus-square\"></span> Add Variable\n</a>\n\n<h4>Template</h4>\n<codemirror [config]=\"{lineNumbers:true, mode:'jinja2', matchBrackets:true, highlightSelectionMatches:true}\"\n            [(ngModel)]=\"code\"></codemirror>\n\n<a (click)=\"save()\" class=\"btn btn-success\">\n  <span class=\"fa fa-save\"></span> Save\n</a>\n\n"
+module.exports = "<ngb-alert type=\"danger\" *ngIf=\"errorMessage != null\" (close)=\"errorMessage = null\">\n  <strong>Whoops.</strong>\n  {{errorMessage}}\n</ngb-alert>\n\n<div *ngIf=\"template\">\n  <h4>Variables</h4>\n  <div [formGroup]=\"variablesForm\">\n    <div formArrayName=\"variables\">\n      <div class=\"form-row\" *ngFor=\"let variable of variablesList.controls; let i = index\">\n        <div class=\"form-group col-md-4\" [formGroupName]=\"i\">\n          <div class=\"input-group\">\n            <div (click)=\"removeVariable(i)\" class=\"btn btn-default input-group-addon\"\n                 *ngIf=\"!variable.controls.name.disabled\">\n              <span class=\"fa fa-trash\"></span>\n            </div>\n            <input type=\"text\" class=\"form-control\" placeholder=\"Name\" formControlName=\"name\" title=\"Name\"\n                   [ngClass]=\"{'is-invalid': variable.controls.name.invalid}\">\n          </div>\n        </div>\n        <div class=\"form-group col-md-8\" [formGroupName]=\"i\">\n          <input type=\"text\" class=\"form-control\" placeholder=\"Description\" formControlName=\"description\"\n                 title=\"Description\"\n                 [ngClass]=\"{'is-invalid': variable.controls.description.invalid}\">\n        </div>\n      </div>\n    </div>\n  </div>\n  <a (click)=\"addVariable()\" class=\"btn btn-primary\">\n    <span class=\"fa fa-plus-square\"></span> Add Variable\n  </a>\n\n  <h4>Template</h4>\n  <codemirror [config]=\"{lineNumbers:true, mode:'jinja2', matchBrackets:true, highlightSelectionMatches:true}\"\n              [(ngModel)]=\"code\"></codemirror>\n\n  <a (click)=\"save()\" class=\"btn btn-success\">\n    <span class=\"fa fa-save\"></span> Save\n  </a>\n</div>\n"
 
 /***/ }),
 
@@ -1196,11 +1196,13 @@ var TemplateViewComponent = (function () {
         this.code = '';
         this.errorMessage = null;
         this.variablesToDelete = [];
+    }
+    TemplateViewComponent.prototype.ngOnInit = function () {
         this.variablesList = this.formBuilder.array([]);
         this.variablesForm = this.formBuilder.group({
             variables: this.variablesList
         });
-    }
+    };
     Object.defineProperty(TemplateViewComponent.prototype, "templateId", {
         set: function (id) {
             this.load(id);
@@ -1210,6 +1212,9 @@ var TemplateViewComponent = (function () {
     });
     TemplateViewComponent.prototype.load = function (id) {
         var _this = this;
+        if (id == null) {
+            return;
+        }
         this.api.getTemplate(id, true).subscribe(function (t) {
             _this.template = t;
             _this.updateDisplay();
@@ -1333,7 +1338,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/templates/templates.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<ngb-accordion #acc=\"ngbAccordion\">\n  <ngb-panel *ngFor=\"let template of templates\">\n    <ng-template ngbPanelTitle>\n      [#{{ template.id }}] {{ template.name }}\n    </ng-template>\n    <ng-template ngbPanelContent>\n      <app-template-view [templateId]=\"template.id\"></app-template-view>\n    </ng-template>\n  </ngb-panel>\n</ngb-accordion>\n"
+module.exports = "<div class=\"form-inline\">\n  <select class=\"form-control custom-select col-4\" title=\"Templates\">\n    <option *ngFor=\"let template of templates\" [value]=\"template.id\" (select)=\"selectedTemplate = template.id\">\n      {{template.name}}\n    </option>\n  </select>\n  <button class=\"form-control btn btn-primary\">\n    <span class=\"fa fa-plus\"></span> New\n  </button>\n  <button class=\"form-control btn\">\n    <span class=\"fa fa-pencil-square-o\"></span> Rename\n  </button>\n  <button class=\"form-control btn btn-danger\">\n    <span class=\"fa fa-trash\"></span> Delete\n  </button>\n</div>\n<app-template-view [templateId]=\"selectedTemplate\"></app-template-view>\n"
 
 /***/ }),
 
@@ -1382,13 +1387,28 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var TemplatesComponent = (function () {
     function TemplatesComponent(api) {
         this.api = api;
+        this.selectedTemplate = null;
     }
     TemplatesComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.api.getTemplates().subscribe(function (data) { return _this.templates = data; });
+        this.api.getTemplates().subscribe(function (data) {
+            _this.templates = data;
+            if (_this.templates.length > 0) {
+                _this.selectedTemplate = _this.templates[0].id;
+            }
+        });
     };
     return TemplatesComponent;
 }());
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Output"])(),
+    __metadata("design:type", Array)
+], TemplatesComponent.prototype, "templates", void 0);
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Output"])(),
+    __metadata("design:type", Number)
+], TemplatesComponent.prototype, "selectedTemplate", void 0);
 TemplatesComponent = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'app-templates',

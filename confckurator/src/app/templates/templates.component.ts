@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output} from '@angular/core';
 import {TemplatesApi} from '../../api/api/TemplatesApi';
 import 'codemirror/mode/jinja2/jinja2';
 import 'codemirror/mode/dockerfile/dockerfile';
@@ -17,12 +17,22 @@ import {Template} from '../../api/model/Template';
   providers: [TemplatesApi]
 })
 export class TemplatesComponent implements OnInit {
-  templates: Template[];
+  @Output()
+  public templates: Template[];
+
+  @Input()
+  @Output()
+  public selectedTemplate?: number = null;
 
   constructor(private api: TemplatesApi) {
   }
 
   ngOnInit() {
-    this.api.getTemplates().subscribe(data => this.templates = data);
+    this.api.getTemplates().subscribe(data => {
+      this.templates = data;
+      if (this.templates.length > 0) {
+        this.selectedTemplate = this.templates[0].id;
+      }
+    });
   }
 }

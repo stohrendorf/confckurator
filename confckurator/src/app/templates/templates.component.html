@@ -1,10 +1,17 @@
-<ngb-accordion #acc="ngbAccordion">
-  <ngb-panel *ngFor="let template of templates">
-    <ng-template ngbPanelTitle>
-      [#{{ template.id }}] {{ template.name }}
-    </ng-template>
-    <ng-template ngbPanelContent>
-      <app-template-view [templateId]="template.id"></app-template-view>
-    </ng-template>
-  </ngb-panel>
-</ngb-accordion>
+<div class="form-inline">
+  <select class="form-control custom-select col-4" title="Templates">
+    <option *ngFor="let template of templates" [value]="template.id" (select)="selectedTemplate = template.id">
+      {{template.name}}
+    </option>
+  </select>
+  <button class="form-control btn btn-primary">
+    <span class="fa fa-plus"></span> New
+  </button>
+  <button class="form-control btn">
+    <span class="fa fa-pencil-square-o"></span> Rename
+  </button>
+  <button class="form-control btn btn-danger">
+    <span class="fa fa-trash"></span> Delete
+  </button>
+</div>
+<app-template-view [templateId]="selectedTemplate"></app-template-view>

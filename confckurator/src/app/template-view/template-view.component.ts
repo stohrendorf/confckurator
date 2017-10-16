@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TemplatesApi} from '../../api/api/TemplatesApi';
 import {Template} from '../../api/model/Template';
@@ -13,7 +13,7 @@ import {List} from 'linqts';
   styleUrls: ['./template-view.component.css'],
   providers: [FormBuilder, TemplatesApi]
 })
-export class TemplateViewComponent {
+export class TemplateViewComponent implements OnInit {
   public variablesForm: FormGroup;
   public variablesList: FormArray;
   public code = '';
@@ -25,6 +25,9 @@ export class TemplateViewComponent {
   private template: Template;
 
   constructor(private api: TemplatesApi, private formBuilder: FormBuilder) {
+  }
+
+  ngOnInit() {
     this.variablesList = this.formBuilder.array([]);
     this.variablesForm = this.formBuilder.group({
       variables: this.variablesList
@@ -37,6 +40,10 @@ export class TemplateViewComponent {
   }
 
   private load(id: number): void {
+    if (id == null) {
+      return;
+    }
+
     this.api.getTemplate(id, true).subscribe(t => {
       this.template = t;
       this.updateDisplay();
