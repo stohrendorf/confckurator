@@ -43,6 +43,7 @@ class TemplateResource(Resource):
             return marshal(template, template_fields_with_text if with_text else template_fields)
 
     patch_args = {
+        'name': fields.String(required=False),
         'text': fields.String(required=False),
         'variables': fields.Nested({
             'delete': fields.List(fields.Integer(required=True)),
@@ -61,7 +62,7 @@ class TemplateResource(Resource):
 
     @staticmethod
     @use_kwargs(patch_args)
-    def patch(template_id, text, variables):
+    def patch(template_id, name, text, variables):
         with make_session() as session:
             template = session.query(Template).filter(Template.id == template_id).first()  # type: Template
             if template is None:
@@ -77,8 +78,8 @@ class TemplateResource(Resource):
                 if 'update' in variables:
                     for u in variables['update']:
                         if 'description' in u:
-                            variable = session.query(Variable)\
-                                .filter(Variable.id == u['id'])\
+                            variable = session.query(Variable) \
+                                .filter(Variable.id == u['id']) \
                                 .first()
                             variable.description = u['description'].strip()
                             if 'name' in u:
@@ -94,6 +95,9 @@ class TemplateResource(Resource):
 
             if text != missing:
                 template.text = text
+
+            if name != missing:
+                template.name = name
 
             return make_id_response(template_id)
 

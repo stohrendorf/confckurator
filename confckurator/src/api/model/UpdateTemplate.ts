@@ -13,6 +13,8 @@
 import * as models from './models';
 
 export interface UpdateTemplate {
+    name?: string;
+
     /**
      * Template text.
      */

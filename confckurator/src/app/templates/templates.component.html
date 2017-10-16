@@ -1,17 +1,36 @@
 <div class="form-inline">
   <select class="form-control custom-select col-4" title="Templates">
-    <option *ngFor="let template of templates" [value]="template.id" (select)="selectedTemplate = template.id">
+    <option *ngFor="let template of templates" (select)="selectedTemplate = template">
       {{template.name}}
     </option>
   </select>
   <button class="form-control btn btn-primary">
     <span class="fa fa-plus"></span> New
   </button>
-  <button class="form-control btn">
+  <button class="form-control btn" (click)="open(renamePopup)">
     <span class="fa fa-pencil-square-o"></span> Rename
   </button>
   <button class="form-control btn btn-danger">
     <span class="fa fa-trash"></span> Delete
   </button>
 </div>
-<app-template-view [templateId]="selectedTemplate"></app-template-view>
+
+<app-template-view [template]="selectedTemplate"></app-template-view>
+
+<ng-template #renamePopup let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Rename Template</h4>
+    <button type="button" class="close" (click)="d()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Template Name" title="Name" [(ngModel)]="editingName">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="c()">Save</button>
+    <button type="button" class="btn btn-danger" (click)="d()">Abort</button>
+  </div>
+</ng-template>

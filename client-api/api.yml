@@ -503,6 +503,8 @@ definitions:
   UpdateTemplate:
     type: object
     properties:
+      name:
+        type: string
       text:
         type: string
         description: Template text.

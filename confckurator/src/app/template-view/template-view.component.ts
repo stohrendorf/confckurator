@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TemplatesApi} from '../../api/api/TemplatesApi';
 import {Template} from '../../api/model/Template';
@@ -22,7 +22,7 @@ export class TemplateViewComponent implements OnInit {
 
   private variablesToDelete: number[] = [];
 
-  private template: Template;
+  private activeTemplate: Template;
 
   constructor(private api: TemplatesApi, private formBuilder: FormBuilder) {
   }
@@ -35,17 +35,24 @@ export class TemplateViewComponent implements OnInit {
   }
 
   @Input()
-  public set templateId(id: number) {
-    this.load(id);
+  public set template(tpl: Template) {
+    this.activeTemplate = tpl;
+    this.load();
   }
 
-  private load(id: number): void {
-    if (id == null) {
+  public get template(): Template {
+    return this.activeTemplate;
+  }
+
+  private load(): void {
+    if (this.activeTemplate == null || this.activeTemplate.id == null) {
       return;
     }
 
-    this.api.getTemplate(id, true).subscribe(t => {
-      this.template = t;
+    this.api.getTemplate(this.activeTemplate.id, true).subscribe(t => {
+      this.activeTemplate.name = t.name;
+      this.activeTemplate.variables = t.variables;
+      this.activeTemplate.text = t.text;
       this.updateDisplay();
     }, e => this.errorMessage = e.json().message);
   }
@@ -57,7 +64,7 @@ export class TemplateViewComponent implements OnInit {
         Validators.pattern(/^[a-zA-Z_][a-zA-Z0-9_]*$/)
       ],
       description: [!variable ? '' : variable.description],
-      id: [!variable ? -1 : variable.id]
+      id: [!variable ? null : variable.id]
     });
   }
 
@@ -66,17 +73,17 @@ export class TemplateViewComponent implements OnInit {
       this.variablesList.removeAt(0);
     }
 
-    this.template.variables.forEach(v => {
+    this.activeTemplate.variables.forEach(v => {
       this.variablesList.push(this.createVariable(v));
     });
 
-    this.code = this.template.text;
+    this.code = this.activeTemplate.text;
   }
 
   public save(): void {
-    if (this.template.id < 0) {
-      this.api.createTemplate({name: this.template.name, text: ''}).subscribe(tpl => {
-        this.template.id = tpl.id;
+    if (this.activeTemplate.id == null) {
+      this.api.createTemplate({name: this.activeTemplate.name, text: ''}).subscribe(tpl => {
+        this.activeTemplate.id = tpl.id;
         this.sendSaveRequest();
       }, e => this.errorMessage = e.json().message);
     } else {
@@ -86,11 +93,12 @@ export class TemplateViewComponent implements OnInit {
 
   private sendSaveRequest(): Observable<IdResponse> {
     const request = this.api
-      .updateTemplate(this.template.id, {
+      .updateTemplate(this.activeTemplate.id, {
+        name: this.activeTemplate.name,
         text: this.code,
         variables: {
           create: new List<AbstractControl>(this.variablesList.controls)
-            .Where(c => c.get('id').value < 0)
+            .Where(c => c.get('id').value == null)
             .Select(c => {
               return {
                 name: c.get('name').value,
@@ -100,7 +108,7 @@ export class TemplateViewComponent implements OnInit {
             .ToArray(),
           delete: this.variablesToDelete,
           update: new List<AbstractControl>(this.variablesList.controls)
-            .Where(c => c.get('id').value >= 0)
+            .Where(c => c.get('id').value != null)
             .Select(c => {
               return {
                 id: c.get('id').value,
@@ -113,7 +121,7 @@ export class TemplateViewComponent implements OnInit {
       });
     this.variablesToDelete = [];
 
-    request.subscribe(x => this.load(this.template.id), e => {
+    request.subscribe(x => this.load(), e => {
       this.errorMessage = 'Sorry, an arbitrary kitten exploded.';
       this.errorMessage = e.json().message;
     });
@@ -127,7 +135,7 @@ export class TemplateViewComponent implements OnInit {
 
   public removeVariable(idx: number): void {
     const id = this.variablesList.controls[idx].get('id').value;
-    if (id >= 0) {
+    if (id != null) {
       this.variablesToDelete.push(id);
     }
     this.variablesList.removeAt(idx);
