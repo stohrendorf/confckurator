@@ -1245,7 +1245,7 @@ var TemplateViewComponent = (function () {
             _this.activeTemplate.variables = t.variables;
             _this.activeTemplate.text = t.text;
             _this.updateDisplay();
-        }, function (e) { return _this.errorMessage = e.json().message; });
+        }, this.onError);
     };
     TemplateViewComponent.prototype.createVariable = function (variable) {
         if (variable === void 0) { variable = null; }
@@ -1274,7 +1274,7 @@ var TemplateViewComponent = (function () {
             this.api.createTemplate({ name: this.activeTemplate.name, text: '' }).subscribe(function (tpl) {
                 _this.activeTemplate.id = tpl.id;
                 _this.sendSaveRequest();
-            }, function (e) { return _this.errorMessage = e.json().message; });
+            }, this.onError);
         }
         else {
             this.sendSaveRequest();
@@ -1310,14 +1310,15 @@ var TemplateViewComponent = (function () {
             }
         });
         this.variablesToDelete = [];
-        request.subscribe(function (x) { return _this.load(); }, function (e) {
-            _this.errorMessage = 'Sorry, an arbitrary kitten exploded.';
-            _this.errorMessage = e.json().message;
-        });
+        request.subscribe(function (x) { return _this.load(); }, this.onError);
         return request;
     };
     TemplateViewComponent.prototype.addVariable = function () {
         this.variablesList.push(this.createVariable());
+    };
+    TemplateViewComponent.prototype.onError = function (e) {
+        this.errorMessage = 'Sorry, an arbitrary kitten exploded.';
+        this.errorMessage = e.json().message;
     };
     TemplateViewComponent.prototype.removeVariable = function (idx) {
         var id = this.variablesList.controls[idx].get('id').value;
@@ -1328,6 +1329,10 @@ var TemplateViewComponent = (function () {
     };
     return TemplateViewComponent;
 }());
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Output"])(),
+    __metadata("design:type", String)
+], TemplateViewComponent.prototype, "errorMessage", void 0);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
     __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_3__api_model_Template__["Template"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__api_model_Template__["Template"]) === "function" && _a || Object),
@@ -1369,7 +1374,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/templates/templates.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"form-inline\">\r\n  <select class=\"form-control custom-select col-4\" title=\"Templates\">\r\n    <option *ngFor=\"let template of templates\" (select)=\"selectedTemplate = template\">\r\n      {{template.name}}\r\n    </option>\r\n  </select>\r\n  <button class=\"form-control btn btn-primary\">\r\n    <span class=\"fa fa-plus\"></span> New\r\n  </button>\r\n  <button class=\"form-control btn\" (click)=\"open(renamePopup)\">\r\n    <span class=\"fa fa-pencil-square-o\"></span> Rename\r\n  </button>\r\n  <button class=\"form-control btn btn-danger\">\r\n    <span class=\"fa fa-trash\"></span> Delete\r\n  </button>\r\n</div>\r\n\r\n<app-template-view [template]=\"selectedTemplate\"></app-template-view>\r\n\r\n<ng-template #renamePopup let-c=\"close\" let-d=\"dismiss\">\r\n  <div class=\"modal-header\">\r\n    <h4 class=\"modal-title\">Rename Template</h4>\r\n    <button type=\"button\" class=\"close\" (click)=\"d()\">\r\n      <span aria-hidden=\"true\">&times;</span>\r\n    </button>\r\n  </div>\r\n  <div class=\"modal-body\">\r\n    <div class=\"form-group\">\r\n      <input type=\"text\" class=\"form-control\" placeholder=\"Template Name\" title=\"Name\" [(ngModel)]=\"editingName\">\r\n    </div>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-success\" (click)=\"c()\">Save</button>\r\n    <button type=\"button\" class=\"btn btn-danger\" (click)=\"d()\">Abort</button>\r\n  </div>\r\n</ng-template>\r\n"
+module.exports = "<ngb-alert type=\"danger\" *ngIf=\"errorMessage != null\" (close)=\"errorMessage = null\">\r\n  <strong>Whoops.</strong>\r\n  {{errorMessage}}\r\n</ngb-alert>\r\n\r\n<div class=\"form-inline\">\r\n  <select class=\"form-control custom-select col-4\" title=\"Templates\">\r\n    <option *ngFor=\"let template of templates\" (select)=\"selectedTemplate = template\" [selected]=\"selectedTemplate === template\">\r\n      {{template.name}}\r\n    </option>\r\n  </select>\r\n  <button class=\"form-control btn btn-primary\" (click)=\"openNewDlg(namePopup)\">\r\n    <span class=\"fa fa-plus\"></span> New\r\n  </button>\r\n  <button class=\"form-control btn\" (click)=\"openRenameDlg(namePopup)\">\r\n    <span class=\"fa fa-pencil-square-o\"></span> Rename\r\n  </button>\r\n  <button class=\"form-control btn btn-danger\" (click)=\"openDeleteDlg(deletePopup)\">\r\n    <span class=\"fa fa-trash\"></span> Delete\r\n  </button>\r\n</div>\r\n\r\n<app-template-view [template]=\"selectedTemplate\"></app-template-view>\r\n\r\n<ng-template #namePopup let-c=\"close\" let-d=\"dismiss\">\r\n  <div class=\"modal-header\">\r\n    <h4 class=\"modal-title\">{{nameDlgTitle}}</h4>\r\n    <button type=\"button\" class=\"close\" (click)=\"d()\">\r\n      <span aria-hidden=\"true\">&times;</span>\r\n    </button>\r\n  </div>\r\n  <div class=\"modal-body\">\r\n    <div class=\"form-group\">\r\n      <input type=\"text\" class=\"form-control\" placeholder=\"Template Name\" title=\"Name\" [(ngModel)]=\"editingName\">\r\n    </div>\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-success\" (click)=\"c()\">Save</button>\r\n    <button type=\"button\" class=\"btn btn-danger\" (click)=\"d()\">Abort</button>\r\n  </div>\r\n</ng-template>\r\n\r\n<ng-template #deletePopup let-c=\"close\" let-d=\"dismiss\">\r\n  <div class=\"modal-header\">\r\n    <h4 class=\"modal-title\">Delete Template</h4>\r\n    <button type=\"button\" class=\"close\" (click)=\"d()\">\r\n      <span aria-hidden=\"true\">&times;</span>\r\n    </button>\r\n  </div>\r\n  <div class=\"modal-body\">\r\n    Do you really want to delete the template {{selectedTemplate.name}}?\r\n  </div>\r\n  <div class=\"modal-footer\">\r\n    <button type=\"button\" class=\"btn btn-success\" (click)=\"c()\">Yes</button>\r\n    <button type=\"button\" class=\"btn btn-danger\" (click)=\"d()\">Abort</button>\r\n  </div>\r\n</ng-template>\r\n"
 
 /***/ }),
 
@@ -1420,36 +1425,76 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var TemplatesComponent = (function () {
+var TemplatesComponent = TemplatesComponent_1 = (function () {
     function TemplatesComponent(api, modalService) {
         this.api = api;
         this.modalService = modalService;
         this.selectedTemplate = null;
         this.editingName = null;
+        this.errorMessage = null;
     }
     TemplatesComponent.prototype.ngOnInit = function () {
+        this.loadTemplates();
+    };
+    TemplatesComponent.prototype.loadTemplates = function (id) {
         var _this = this;
+        if (id === void 0) { id = null; }
         this.api.getTemplates().subscribe(function (data) {
             _this.templates = data;
+            _this.selectedTemplate = null;
             if (_this.templates.length > 0) {
-                _this.selectedTemplate = _this.templates[0];
+                if (id != null) {
+                    for (var _i = 0, _a = _this.templates; _i < _a.length; _i++) {
+                        var tpl = _a[_i];
+                        if (tpl.id === id) {
+                            _this.selectedTemplate = tpl;
+                            break;
+                        }
+                    }
+                }
+                if (_this.selectedTemplate == null) {
+                    _this.selectedTemplate = _this.templates[0];
+                }
             }
-        });
+        }, this.onError);
     };
-    TemplatesComponent.prototype.open = function (content) {
+    TemplatesComponent.prototype.openRenameDlg = function (content) {
         var _this = this;
         var idx = this.templates.findIndex(function (e) { return e === _this.selectedTemplate; });
         this.editingName = this.templates[idx].name;
-        this.modalService.open(content).result.then(function (reason) { return _this.templates[idx].name = _this.editingName; });
+        this.nameDlgTitle = 'Rename Template';
+        this.modalService.open(content).result.then(function (reason) { return _this.templates[idx].name = _this.editingName; }, function () {
+        });
+    };
+    TemplatesComponent.prototype.openNewDlg = function (content) {
+        var _this = this;
+        this.editingName = '';
+        this.nameDlgTitle = 'New Template';
+        this.modalService.open(content).result.then(function (reason) {
+            _this.api.createTemplate({ name: _this.editingName, text: TemplatesComponent_1.templateTemplate })
+                .subscribe(function (d) { return _this.loadTemplates(d.id); }, _this.onError);
+        }, function () {
+        });
+    };
+    TemplatesComponent.prototype.openDeleteDlg = function (content) {
+        var _this = this;
+        this.modalService.open(content).result.then(function (reason) {
+            _this.api.deleteTemplate(_this.selectedTemplate.id).subscribe(function (x) { return _this.loadTemplates(); }, _this.onError);
+        }, function () {
+        });
+    };
+    TemplatesComponent.prototype.onError = function (e) {
+        this.errorMessage = 'Sorry, an arbitrary kitten exploded.';
+        this.errorMessage = e.json().message;
     };
     return TemplatesComponent;
 }());
+TemplatesComponent.templateTemplate = 'template={{_meta.template}};\nenvironment={{_meta.environment}};\npack={{_meta.pack}}';
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Output"])(),
     __metadata("design:type", Array)
 ], TemplatesComponent.prototype, "templates", void 0);
 __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Input"])(),
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Output"])(),
     __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_10__api_model_Template__["Template"] !== "undefined" && __WEBPACK_IMPORTED_MODULE_10__api_model_Template__["Template"]) === "function" && _a || Object)
 ], TemplatesComponent.prototype, "selectedTemplate", void 0);
@@ -1458,7 +1503,11 @@ __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Output"])(),
     __metadata("design:type", String)
 ], TemplatesComponent.prototype, "editingName", void 0);
-TemplatesComponent = __decorate([
+__decorate([
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Output"])(),
+    __metadata("design:type", String)
+], TemplatesComponent.prototype, "errorMessage", void 0);
+TemplatesComponent = TemplatesComponent_1 = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
         selector: 'app-templates',
         template: __webpack_require__("../../../../../src/app/templates/templates.component.html"),
@@ -1468,7 +1517,7 @@ TemplatesComponent = __decorate([
     __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__api_api_TemplatesApi__["a" /* TemplatesApi */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__api_api_TemplatesApi__["a" /* TemplatesApi */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_11__ng_bootstrap_ng_bootstrap__["a" /* NgbModal */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_11__ng_bootstrap_ng_bootstrap__["a" /* NgbModal */]) === "function" && _c || Object])
 ], TemplatesComponent);
 
-var _a, _b, _c;
+var TemplatesComponent_1, _a, _b, _c;
 //# sourceMappingURL=templates.component.js.map
 
 /***/ }),

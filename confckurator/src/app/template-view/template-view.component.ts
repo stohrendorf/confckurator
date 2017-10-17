@@ -18,6 +18,7 @@ export class TemplateViewComponent implements OnInit {
   public variablesList: FormArray;
   public code = '';
 
+  @Output()
   public errorMessage?: string = null;
 
   private variablesToDelete: number[] = [];
