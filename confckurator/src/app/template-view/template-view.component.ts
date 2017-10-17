@@ -54,7 +54,7 @@ export class TemplateViewComponent implements OnInit {
       this.activeTemplate.variables = t.variables;
       this.activeTemplate.text = t.text;
       this.updateDisplay();
-    }, e => this.errorMessage = e.json().message);
+    }, this.onError);
   }
 
   public createVariable(variable: Variable = null): FormGroup {
@@ -85,7 +85,7 @@ export class TemplateViewComponent implements OnInit {
       this.api.createTemplate({name: this.activeTemplate.name, text: ''}).subscribe(tpl => {
         this.activeTemplate.id = tpl.id;
         this.sendSaveRequest();
-      }, e => this.errorMessage = e.json().message);
+      }, this.onError);
     } else {
       this.sendSaveRequest();
     }
@@ -121,16 +121,18 @@ export class TemplateViewComponent implements OnInit {
       });
     this.variablesToDelete = [];
 
-    request.subscribe(x => this.load(), e => {
-      this.errorMessage = 'Sorry, an arbitrary kitten exploded.';
-      this.errorMessage = e.json().message;
-    });
+    request.subscribe(x => this.load(), this.onError);
 
     return request;
   }
 
   public addVariable(): void {
     this.variablesList.push(this.createVariable());
+  }
+
+  private onError(e): void {
+    this.errorMessage = 'Sorry, an arbitrary kitten exploded.';
+    this.errorMessage = e.json().message;
   }
 
   public removeVariable(idx: number): void {

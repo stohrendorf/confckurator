@@ -41,7 +41,7 @@ export class TemplatesComponent implements OnInit {
     });
   }
 
-  open(content) {
+  public openRenameDlg(content) {
     const idx = this.templates.findIndex(e => e === this.selectedTemplate);
     this.editingName = this.templates[idx].name;
     this.modalService.open(content).result.then(reason => this.templates[idx].name = this.editingName);
