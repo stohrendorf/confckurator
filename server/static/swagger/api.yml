@@ -147,20 +147,6 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/Variable"
-  /template/{templateId}/variable/{variableId}:
-    parameters:
-      - in: path
-        name: templateId
-        required: true
-        type: integer
-        minimum: 0
-        description: "The template ID."
-      - in: path
-        name: variableId
-        required: true
-        type: integer
-        minimum: 0
-        description: "The variable ID."
   /pack/:
     get:
       tags:

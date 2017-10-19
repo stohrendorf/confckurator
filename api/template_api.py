@@ -3,7 +3,6 @@ import re
 from flask.blueprints import Blueprint
 from flask_restful import Resource, marshal, Api
 from marshmallow import fields, missing
-from sqlalchemy import and_
 from sqlalchemy.exc import IntegrityError
 from webargs import fields, validate
 from webargs.flaskparser import use_kwargs
@@ -17,12 +16,32 @@ template_blueprint = Blueprint('template_blueprint', __name__, url_prefix='/api/
 template_api = Api(template_blueprint)
 
 
-@template_api.resource('/<int:template_id>/variable/')
-class TemplateVariableList(Resource):
+@template_api.resource('/')
+class TemplateList(Resource):
     @staticmethod
-    def get(template_id):
+    def get():
         with make_session() as session:
-            return marshal(session.query(Variable).filter(Variable.template_id == template_id).all(), variable_fields)
+            return marshal(session.query(Template).all(), template_fields)
+
+    post_args = {
+        'name': fields.String(required=True),
+        'text': fields.String(required=True)
+    }
+
+    @staticmethod
+    @use_kwargs(post_args)
+    def put(name, text):
+        try:
+            with make_session() as session:
+                if session.query(session.query(Template).filter(Template.name == name.strip()).exists()).scalar():
+                    raise Conflict("A template with the same name already exists")
+
+                template = Template(name=name.strip(), text=text)
+                session.add(template)
+                session.commit()
+                return make_id_response(template.id)
+        except IntegrityError:
+            raise InternalServerError("Could not create the requested template")
 
 
 @template_api.resource('/<int:template_id>')
@@ -116,66 +135,12 @@ class TemplateResource(Resource):
             return make_empty_response()
 
 
-@template_api.resource('/')
-class TemplateList(Resource):
+@template_api.resource('/<int:template_id>/variable/')
+class TemplateVariableList(Resource):
     @staticmethod
-    def get():
+    def get(template_id):
         with make_session() as session:
-            return marshal(session.query(Template).all(), template_fields)
-
-    post_args = {
-        'name': fields.String(required=True),
-        'text': fields.String(required=True)
-    }
-
-    @staticmethod
-    @use_kwargs(post_args)
-    def put(name, text):
-        try:
-            with make_session() as session:
-                if session.query(session.query(Template).filter(Template.name == name.strip()).exists()).scalar():
-                    raise Conflict("A template with the same name already exists")
-
-                template = Template(name=name.strip(), text=text)
-                session.add(template)
-                session.commit()
-                return make_id_response(template.id)
-        except IntegrityError:
-            raise InternalServerError("Could not create the requested template")
-
-
-@template_api.resource('/<int:template_id>/variable/<int:variable_id>')
-class TemplateVariable(Resource):
-    @staticmethod
-    def delete(template_id, variable_id):
-        with make_session() as session:
-            variable = session.query(Variable).filter(
-                and_(Variable.template_id == template_id, Variable.id == variable_id)).first()  # type: Variable
-            if variable is None:
-                raise NotFound("Requested variable does not exist in template")
-
-            if variable.in_use():
-                raise Conflict("Cannot delete the variable because it is in use")
-
-            session.delete(variable)
-            return make_empty_response()
-
-    patch_args = {
-        'description': fields.String(required=True)
-    }
-
-    @staticmethod
-    @use_kwargs(patch_args)
-    def patch(template_id, variable_id, description):
-        with make_session() as session:
-            variable = session.query(Variable).filter(
-                and_(Variable.template_id == template_id, Variable.id == variable_id)).first()  # type: Variable
-            if variable is None:
-                raise NotFound("Requested variable does not exist in template")
-
-            variable.description = description.strip()
-
-            return make_empty_response()
+            return marshal(session.query(Variable).filter(Variable.template_id == template_id).all(), variable_fields)
 
 
 def get_template_api_blueprint():
