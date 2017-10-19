@@ -9,3 +9,4 @@ wheel
 twine
 typing
 jinja2
+coverage

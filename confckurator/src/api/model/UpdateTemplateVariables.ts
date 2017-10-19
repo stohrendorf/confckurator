@@ -24,8 +24,8 @@ export interface UpdateTemplateVariables {
     update?: Array<models.UpdateTemplateVariablesUpdate>;
 
     /**
-     * Variables to update.
+     * Variables to create.
      */
-    create?: Array<models.NewVariable>;
+    create?: Array<models.UpdateTemplateVariablesCreate>;
 
 }
