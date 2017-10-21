@@ -33,17 +33,17 @@ def instantiate(pack: Pack, template: Template, environment: Environment):
         raise InternalServerError("Could not render the template: {}".format(e.message))
 
 
-@instance_api.resource('/<int:pack_id>/<int:environment_id>')
+@instance_api.resource('/<string:pack_name>/<string:environment_name>')
 class InstanceTemplate(Resource):
     @staticmethod
-    def get(pack_id, environment_id):
+    def get(pack_name, environment_name):
         with make_session() as session:
-            pack = session.query(Pack).filter(Pack.id == pack_id).first()  # type: Pack
+            pack = session.query(Pack).filter(Pack.name == pack_name).first()  # type: Pack
             if pack is None:
                 raise NotFound('Requested pack not found')
 
             environment = session.query(Environment).filter(
-                Environment.id == environment_id).first()  # type: Environment
+                Environment.name == environment_name).first()  # type: Environment
             if environment is None:
                 raise NotFound('Requested environment not found')
 

@@ -449,6 +449,7 @@ definitions:
         description: Unique name of the pack.
         minLength: 1
         maxLength: 255
+        pattern: "[^/]+"
   NewTemplate:
     type: object
     required:
@@ -468,6 +469,9 @@ definitions:
     properties:
       name:
         type: string
+        minLength: 1
+        maxLength: 255
+        pattern: "[^/]+"
       text:
         type: string
         description: Template text.
@@ -525,6 +529,7 @@ definitions:
         description: Unique name of the environment.
         minLength: 1
         maxLength: 255
+        pattern: "[^/]+"
   Template:
     type: "object"
     required:

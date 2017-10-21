@@ -1,11 +1,12 @@
+from typing import List
+
 from flask.blueprints import Blueprint
 from flask_restful import Resource, marshal, Api
-from sqlalchemy import and_
-from typing import List
-from werkzeug.exceptions import NotFound, Conflict
 from marshmallow import fields
+from sqlalchemy import and_
 from webargs import fields, validate
 from webargs.flaskparser import use_kwargs
+from werkzeug.exceptions import NotFound, Conflict
 
 from api.common import make_id_response, make_empty_response
 from api.marshalling import pack_fields
@@ -45,7 +46,9 @@ class PackList(Resource):
             return marshal(session.query(Pack).all(), pack_fields)
 
     put_args = {
-        'name': fields.String(required=True, validate=validate.Length(min=1, max=255), trim=True)
+        'name': fields.String(required=True,
+                              validate=(validate.Length(min=1, max=255), validate.Regexp('[^/]+')),
+                              trim=True)
     }
 
     @staticmethod

@@ -9,7 +9,9 @@ class Pack(Schema):
     """
     :type id: int
     :type name: str
-    :type values: list[Value]
+    :type values: List[Value]
+    :type parent_id: int
+    :type parent: Pack|None
     """
 
     __tablename__ = 'packs'
@@ -18,6 +20,9 @@ class Pack(Schema):
     name = Column(String(255), unique=True, nullable=False)
 
     values = relationship('Value', backref='pack')
+
+    parent_id = Column(Integer, ForeignKey('packs.id'), nullable=True, default=None)
+    parent = relationship('Pack', remote_side=[id])
 
     def __repr__(self):
         return "<Pack(name='{}', id='{}')>".format(self.name, self.id)
@@ -36,7 +41,7 @@ class Environment(Schema):
     """
     :type id: int
     :type name: str
-    :type values: list[Value]
+    :type values: List[Value]
     """
 
     __tablename__ = 'environments'
@@ -55,7 +60,7 @@ class Template(Schema):
     :type id: int
     :type name: str
     :type text: str
-    :type variables: list[Variable]
+    :type variables: List[Variable]
     """
 
     __tablename__ = 'templates'
@@ -77,7 +82,7 @@ class Variable(Schema):
     :type template: Template
     :type name: str
     :type description: str
-    :type values: list[Value]
+    :type values: List[Value]
     """
 
     __tablename__ = 'variables'
