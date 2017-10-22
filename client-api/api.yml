@@ -370,6 +370,26 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/Environment"
+    patch:
+      tags:
+      - "environments"
+      summary: "Set an environment's name"
+      operationId: "updateEnvironment"
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: updateEnvironmentsBody
+          description: Environment update properties.
+          schema:
+            $ref: "#/definitions/UpdateEnvironment"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "object"
     delete:
       tags:
       - "environments"
@@ -520,6 +540,17 @@ definitions:
                   type: string
                   description: Variable description (e.g. constraints).
   NewEnvironment:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        description: Unique name of the environment.
+        minLength: 1
+        maxLength: 255
+        pattern: "[^/]+"
+  UpdateEnvironment:
     type: object
     required:
       - name

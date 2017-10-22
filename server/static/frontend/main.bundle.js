@@ -144,6 +144,23 @@ webpackEmptyAsyncContext.id = "../../../../../src/$$_gendir lazy recursive";
                     });
             };
             /**
+             *
+             * @summary Set an environment's name
+             * @param environmentId The environment ID.
+             * @param updateEnvironmentsBody Environment update properties.
+             */
+            EnvironmentsApi.prototype.updateEnvironment = function (environmentId, updateEnvironmentsBody, extraHttpRequestParams) {
+                return this.updateEnvironmentWithHttpInfo(environmentId, updateEnvironmentsBody, extraHttpRequestParams)
+                    .map(function (response) {
+                        if (response.status === 204) {
+                            return undefined;
+                        }
+                        else {
+                            return response.json() || {};
+                        }
+                    });
+            };
+            /**
              * Create a new environment
              *
              * @param postEnvironmentsBody Environment creation properties.
@@ -255,6 +272,43 @@ webpackEmptyAsyncContext.id = "../../../../../src/$$_gendir lazy recursive";
                 var requestOptions = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({
                     method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Get,
                     headers: headers,
+                    search: queryParameters,
+                    withCredentials: this.configuration.withCredentials
+                });
+                // https://github.com/swagger-api/swagger-codegen/issues/4037
+                if (extraHttpRequestParams) {
+                    requestOptions = Object.assign(requestOptions, extraHttpRequestParams);
+                }
+                return this.http.request(path, requestOptions);
+            };
+            /**
+             * Set an environment&#39;s name
+             *
+             * @param environmentId The environment ID.
+             * @param updateEnvironmentsBody Environment update properties.
+             */
+            EnvironmentsApi.prototype.updateEnvironmentWithHttpInfo = function (environmentId, updateEnvironmentsBody, extraHttpRequestParams) {
+                var path = this.basePath + '/environment/${environmentId}'
+                    .replace('${' + 'environmentId' + '}', String(environmentId));
+                var queryParameters = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["f" /* URLSearchParams */]();
+                var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */](this.defaultHeaders.toJSON()); // https://github.com/angular/angular/issues/6845
+                // verify required parameter 'environmentId' is not null or undefined
+                if (environmentId === null || environmentId === undefined) {
+                    throw new Error('Required parameter environmentId was null or undefined when calling updateEnvironment.');
+                }
+                // to determine the Content-Type header
+                var consumes = [
+                    'application/json'
+                ];
+                // to determine the Accept header
+                var produces = [
+                    'application/json'
+                ];
+                headers.set('Content-Type', 'application/json');
+                var requestOptions = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["e" /* RequestOptions */]({
+                    method: __WEBPACK_IMPORTED_MODULE_1__angular_http__["d" /* RequestMethod */].Patch,
+                    headers: headers,
+                    body: updateEnvironmentsBody == null ? '' : JSON.stringify(updateEnvironmentsBody),
                     search: queryParameters,
                     withCredentials: this.configuration.withCredentials
                 });
@@ -1376,7 +1430,7 @@ AppModule = __decorate([
     /***/ "../../../../../src/app/environmentslist/environmentslist.component.html":
     /***/ (function (module, exports) {
 
-        module.exports = "<ngb-alert type=\"danger\" *ngIf=\"errorMessage != null\" (close)=\"errorMessage = null\">\n  <strong>Whoops.</strong>\n  {{errorMessage}}\n</ngb-alert>\n\n<div [formGroup]=\"environmentsForm\">\n  <div formArrayName=\"environments\">\n    <div class=\"form-row\" *ngFor=\"let environment of environmentsList.controls; let i = index\">\n      <div class=\"form-group col-md-12\" [formGroupName]=\"i\">\n        <div class=\"input-group\">\n          <div (click)=\"removeEnvironment(i)\" class=\"btn btn-default input-group-addon\"\n               *ngIf=\"!environment.controls.name.disabled\">\n            <span class=\"fa fa-trash\"></span>\n          </div>\n          <input type=\"text\" class=\"form-control\" placeholder=\"Name\" formControlName=\"name\" title=\"Name\"\n                 [ngClass]=\"{'is-invalid': environment.controls.name.invalid}\">\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n<a (click)=\"addEnvironment()\" class=\"btn btn-primary\">\n  <span class=\"fa fa-plus-square\"></span> Add Environment\n</a>\n"
+        module.exports = "<ngb-alert type=\"danger\" *ngIf=\"errorMessage != null\" (close)=\"errorMessage = null\">\n  <strong>Whoops.</strong>\n  {{errorMessage}}\n</ngb-alert>\n\n<ngb-alert type=\"primary\" [dismissible]=\"false\">\n  <span class=\"fa fa-warning\"></span>\n  Names are saved when leaving the input field or pressing enter.\n  <small>Yes, this isn't nice, but it works, and will be improved later.</small>\n</ngb-alert>\n\n<div [formGroup]=\"environmentsForm\">\n  <div formArrayName=\"environments\">\n    <div class=\"form-row\" *ngFor=\"let environment of environmentsList.controls; let i = index\">\n      <div class=\"form-group col-md-12\" [formGroupName]=\"i\">\n        <div class=\"input-group\">\n          <div (click)=\"removeEnvironment(i)\" class=\"btn btn-default input-group-addon\"\n               *ngIf=\"!environment.controls.name.disabled\">\n            <span class=\"fa fa-trash\"></span>\n          </div>\n          <input type=\"text\" class=\"form-control\" placeholder=\"Name\" formControlName=\"name\" title=\"Name\"\n                 (keyup.enter)=\"updateEnvironment(i)\" (focusout)=\"updateEnvironment(i)\"\n                 [ngClass]=\"{'is-invalid': environment.controls.name.invalid}\">\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n<a (click)=\"addEnvironment()\" class=\"btn btn-primary\">\n  <span class=\"fa fa-plus-square\"></span> Add Environment\n</a>\n"
 
         /***/
     }),
@@ -1423,6 +1477,27 @@ AppModule = __decorate([
                 });
                 this.updateDisplay();
             };
+            EnvironmentsListComponent.prototype.addEnvironment = function () {
+                var _this = this;
+                this.api.createEnvironment({name: Object(__WEBPACK_IMPORTED_MODULE_3__random_name__["a" /* default */])()}).subscribe(function (x) {
+                    return _this.updateDisplay();
+                }, this.onError);
+            };
+            EnvironmentsListComponent.prototype.removeEnvironment = function (idx) {
+                var _this = this;
+                var id = this.environmentsList.controls[idx].get('id').value;
+                this.api.deleteEnvironment(id).subscribe(function (x) {
+                    return _this.updateDisplay();
+                }, this.onError);
+            };
+            EnvironmentsListComponent.prototype.updateEnvironment = function (idx) {
+                var _this = this;
+                var id = this.environmentsList.controls[idx].get('id').value;
+                var name = this.environmentsList.controls[idx].get('name').value;
+                this.api.updateEnvironment(id, {name: name}).subscribe(function (x) {
+                    return _this.updateDisplay();
+                }, this.onError);
+            };
             EnvironmentsListComponent.prototype.updateDisplay = function () {
                 var _this = this;
                 while (this.environmentsList.length > 0) {
@@ -1440,19 +1515,6 @@ AppModule = __decorate([
                             id: [e.id]
                         }));
                     });
-                }, this.onError);
-            };
-            EnvironmentsListComponent.prototype.addEnvironment = function () {
-                var _this = this;
-                this.api.createEnvironment({name: Object(__WEBPACK_IMPORTED_MODULE_3__random_name__["a" /* default */])()}).subscribe(function (x) {
-                    return _this.updateDisplay();
-                }, this.onError);
-            };
-            EnvironmentsListComponent.prototype.removeEnvironment = function (idx) {
-                var _this = this;
-                var id = this.environmentsList.controls[idx].get('id').value;
-                this.api.deleteEnvironment(id).subscribe(function (x) {
-                    return _this.updateDisplay();
                 }, this.onError);
             };
             EnvironmentsListComponent.prototype.onError = function (e) {
@@ -1485,6 +1547,9 @@ AppModule = __decorate([
     /***/ (function (module, __webpack_exports__, __webpack_require__) {
 
         "use strict";
+        /*
+         * Copied from: https://github.com/moby/moby/blob/master/pkg/namesgenerator/names-generator.go
+         */
         var left = [
             'admiring',
             'adoring',
@@ -1915,7 +1980,8 @@ AppModule = __decorate([
         __webpack_exports__["a"] = (generate_name);
 //# sourceMappingURL=random_name.js.map
 
-        /***/ }),
+        /***/
+    }),
 
 /***/ "../../../../../src/app/packs/packs.component.css":
 /***/ (function(module, exports, __webpack_require__) {

@@ -3,6 +3,12 @@
   {{errorMessage}}
 </ngb-alert>
 
+<ngb-alert type="primary" [dismissible]="false">
+  <span class="fa fa-warning"></span>
+  Names are saved when leaving the input field or pressing enter.
+  <small>Yes, this isn't nice, but it works, and will be improved later.</small>
+</ngb-alert>
+
 <div [formGroup]="environmentsForm">
   <div formArrayName="environments">
     <div class="form-row" *ngFor="let environment of environmentsList.controls; let i = index">
@@ -13,6 +19,7 @@
             <span class="fa fa-trash"></span>
           </div>
           <input type="text" class="form-control" placeholder="Name" formControlName="name" title="Name"
+                 (keyup.enter)="updateEnvironment(i)" (focusout)="updateEnvironment(i)"
                  [ngClass]="{'is-invalid': environment.controls.name.invalid}">
         </div>
       </div>

@@ -20892,7 +20892,9 @@ exports._do = _do;
         var __extends = (this && this.__extends) || function (d, b) {
             for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 
-            function __() { this.constructor = d; }
+            function __() {
+                this.constructor = d;
+            }
 
             d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
@@ -20948,7 +20950,6 @@ var FilterOperator = (function () {
         this.predicate = predicate;
         this.thisArg = thisArg;
     }
-
     FilterOperator.prototype.call = function (subscriber, source) {
         return source.subscribe(new FilterSubscriber(subscriber, this.predicate, this.thisArg));
     };
@@ -20961,14 +20962,12 @@ var FilterOperator = (function () {
  */
 var FilterSubscriber = (function (_super) {
     __extends(FilterSubscriber, _super);
-
     function FilterSubscriber(destination, predicate, thisArg) {
         _super.call(this, destination);
         this.predicate = predicate;
         this.thisArg = thisArg;
         this.count = 0;
     }
-
     // the try catch block below is left specifically for
     // optimization and perf reasons. a tryCatcher is not necessary here.
     FilterSubscriber.prototype._next = function (value) {
@@ -20988,7 +20987,8 @@ var FilterSubscriber = (function (_super) {
 }(Subscriber_1.Subscriber));
 //# sourceMappingURL=filter.js.map
 
-        /***/ }),
+        /***/
+    }),
 
     /***/ "../../../../rxjs/operators/map.js":
 /***/ (function(module, exports, __webpack_require__) {
@@ -21368,7 +21368,6 @@ exports.mergeAll = mergeAll;
  */
 var MergeMapSubscriber = (function (_super) {
     __extends(MergeMapSubscriber, _super);
-
     function MergeMapSubscriber(destination, project, resultSelector, concurrent) {
         if (concurrent === void 0) {
             concurrent = Number.POSITIVE_INFINITY;
@@ -21382,7 +21381,6 @@ var MergeMapSubscriber = (function (_super) {
         this.active = 0;
         this.index = 0;
     }
-
     MergeMapSubscriber.prototype._next = function (value) {
         if (this.active < this.concurrent) {
             this._tryNext(value);

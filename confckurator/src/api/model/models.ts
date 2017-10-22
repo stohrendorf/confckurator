@@ -8,6 +8,7 @@ export * from './NewTemplate';
 export * from './Pack';
 export * from './Template';
 export * from './TemplateInstance';
+export * from './UpdateEnvironment';
 export * from './UpdateTemplate';
 export * from './UpdateTemplateVariables';
 export * from './UpdateTemplateVariablesCreate';

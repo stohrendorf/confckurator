@@ -40,6 +40,12 @@ export class EnvironmentsListComponent implements OnInit {
     this.api.deleteEnvironment(id).subscribe(x => this.updateDisplay(), this.onError);
   }
 
+  public updateEnvironment(idx: number): void {
+    const id = this.environmentsList.controls[idx].get('id').value;
+    const name = this.environmentsList.controls[idx].get('name').value;
+    this.api.updateEnvironment(id, {name: name}).subscribe(x => this.updateDisplay(), this.onError);
+  }
+
   private updateDisplay(): void {
     while (this.environmentsList.length > 0) {
       this.environmentsList.removeAt(0);

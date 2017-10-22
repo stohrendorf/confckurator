@@ -13,6 +13,30 @@ environment_blueprint = Blueprint('environment_blueprint', __name__, url_prefix=
 environment_api = Api(environment_blueprint)
 
 
+@environment_api.resource('/')
+class EnvironmentList(Resource):
+    @staticmethod
+    def get():
+        with make_session() as session:
+            print(session.query(Environment).all())
+            return marshal(session.query(Environment).all(), environment_fields)
+
+    put_args = {
+        'name': fields.String(required=True,
+                              validate=(validate.Length(min=1, max=255), validate.Regexp('[^/]+')),
+                              trim=True)
+    }
+
+    @staticmethod
+    @use_kwargs(put_args)
+    def put(name: str):
+        environment = Environment(name=name.strip())
+        with make_session() as session:
+            session.add(environment)
+            session.commit()
+            return make_id_response(environment.id)
+
+
 @environment_api.resource('/<int:environment_id>')
 class EnvironmentResource(Resource):
     @staticmethod
@@ -36,29 +60,23 @@ class EnvironmentResource(Resource):
             session.delete(data)
             return make_empty_response()
 
-
-@environment_api.resource('/')
-class EnvironmentList(Resource):
-    @staticmethod
-    def get():
-        with make_session() as session:
-            print(session.query(Environment).all())
-            return marshal(session.query(Environment).all(), environment_fields)
-
-    put_args = {
+    patch_args = {
         'name': fields.String(required=True,
                               validate=(validate.Length(min=1, max=255), validate.Regexp('[^/]+')),
                               trim=True)
     }
 
     @staticmethod
-    @use_kwargs(put_args)
-    def put(name: str):
-        environment = Environment(name=name.strip())
+    @use_kwargs(patch_args)
+    def patch(environment_id, name):
         with make_session() as session:
-            session.add(environment)
-            session.commit()
-            return make_id_response(environment.id)
+            data = session.query(Environment).filter(Environment.id == environment_id).first()  # type: Environment
+            if data is None:
+                raise NotFound("Requested environment does not exist")
+
+            data.name = name
+
+            return make_empty_response()
 
 
 def get_environment_api_blueprint():
