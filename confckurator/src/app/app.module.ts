@@ -9,14 +9,16 @@ import {HttpModule} from '@angular/http';
 import {BASE_PATH} from '../api/variables';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CodemirrorModule} from 'ng2-codemirror';
-import { TemplateViewComponent } from './template-view/template-view.component';
+import {TemplateViewComponent} from './template-view/template-view.component';
+import {EnvironmentsListComponent} from './environmentslist/environmentslist.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PacksComponent,
     TemplatesComponent,
-    TemplateViewComponent
+    TemplateViewComponent,
+    EnvironmentsListComponent
   ],
   imports: [
     BrowserModule,

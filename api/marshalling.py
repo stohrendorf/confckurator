@@ -29,7 +29,8 @@ value_fields = {
 
 environment_fields = {
     'id': fields.Integer,
-    'name': fields.String
+    'name': fields.String,
+    'in_use': fields.Boolean(attribute=lambda v: v.in_use())
 }
 
 pack_fields = {

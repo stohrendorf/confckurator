@@ -54,6 +54,9 @@ class Environment(Schema):
     def __repr__(self):
         return "<Environment(name='{}', id='{}')>".format(self.name, self.id)
 
+    def in_use(self):
+        return len(self.values) != 0
+
 
 class Template(Schema):
     """
@@ -116,10 +119,7 @@ class Variable(Schema):
         return default_value
 
     def in_use(self):
-        if len(self.values) == 0:
-            return False
-
-        return True
+        return len(self.values) != 0
 
 
 class Value(Schema):

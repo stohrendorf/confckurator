@@ -1,11 +1,9 @@
-from typing import List
-
 from flask.blueprints import Blueprint
 from flask_restful import Resource, marshal, Api
 from marshmallow import fields
 from webargs import fields, validate
 from webargs.flaskparser import use_kwargs
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import NotFound, Conflict
 
 from api.common import make_id_response, make_empty_response
 from api.marshalling import environment_fields
@@ -20,8 +18,8 @@ class EnvironmentResource(Resource):
     @staticmethod
     def get(environment_id):
         with make_session() as session:
-            data = session.query(Environment).filter(Environment.id == environment_id).all()  # type: List[Environment]
-            if len(data) != 1:
+            data = session.query(Environment).filter(Environment.id == environment_id).first()  # type: Environment
+            if data is None:
                 raise NotFound("Requested environment does not exist")
 
             return marshal(data[0], environment_fields)
@@ -29,11 +27,13 @@ class EnvironmentResource(Resource):
     @staticmethod
     def delete(environment_id):
         with make_session() as session:
-            data = session.query(Environment).filter(Environment.id == environment_id).all()  # type: List[Environment]
-            if len(data) != 1:
+            data = session.query(Environment).filter(Environment.id == environment_id).first()  # type: Environment
+            if data is None:
                 raise NotFound("Requested environment does not exist")
+            if data.in_use():
+                raise Conflict("Requested environment is in use")
 
-            session.delete(data[0])
+            session.delete(data)
             return make_empty_response()
 
 

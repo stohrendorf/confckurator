@@ -555,6 +555,7 @@ definitions:
     required:
       - id
       - name
+      - in_use
     properties:
       id:
         type: "integer"
@@ -563,6 +564,9 @@ definitions:
         type: "string"
         minLength: 1
         maxLength: 255
+      in_use:
+        type: "boolean"
+        description: Wheter or not this environment is in use.
   Variable:
     type: "object"
     required:

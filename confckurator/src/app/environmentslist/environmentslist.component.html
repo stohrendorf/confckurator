@@ -1,0 +1,24 @@
+<ngb-alert type="danger" *ngIf="errorMessage != null" (close)="errorMessage = null">
+  <strong>Whoops.</strong>
+  {{errorMessage}}
+</ngb-alert>
+
+<div [formGroup]="environmentsForm">
+  <div formArrayName="environments">
+    <div class="form-row" *ngFor="let environment of environmentsList.controls; let i = index">
+      <div class="form-group col-md-12" [formGroupName]="i">
+        <div class="input-group">
+          <div (click)="removeEnvironment(i)" class="btn btn-default input-group-addon"
+               *ngIf="!environment.controls.name.disabled">
+            <span class="fa fa-trash"></span>
+          </div>
+          <input type="text" class="form-control" placeholder="Name" formControlName="name" title="Name"
+                 [ngClass]="{'is-invalid': environment.controls.name.invalid}">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<a (click)="addEnvironment()" class="btn btn-primary">
+  <span class="fa fa-plus-square"></span> Add Environment
+</a>
