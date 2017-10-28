@@ -1,0 +1,65 @@
+name: apache-vhost
+
+variables:
+  dns:
+    description: Domain name, e.g. "dummy-host.example.com"
+  rootDir:
+    description: >
+      Root directory containing public files, e.g. "/srv/www/vhosts".
+      The actual document root is "{{rootDir}}/{{dns}}".
+  listen:
+    description: Virtual Host listening address, e.g. "*:80"
+  serverAdmin:
+    description: Server admin email address
+  logDir:
+    description: Where access logs and error logs are stored ("{{dns}}-error_log" and "{{dns}}-access_log").
+  include:
+    description: Other configuration files to include, e.g. "/etc/apache2/conf.d/*.conf".
+
+text: |
+  <VirtualHost {{listen}}>
+      ServerAdmin {{serverAdmin}}
+      ServerName {{dns}}
+
+      DocumentRoot {{rootDir}}/{{dns}}
+
+      ErrorLog {{logDir}}/{{dns}}-error_log
+      CustomLog {{logDir}}/{{dns}}-access_log combined
+
+      HostnameLookups Off
+
+      UseCanonicalName Off
+
+      ServerSignature On
+
+      {% if include %} Include {{include}} {% endif %}
+
+
+      ScriptAlias /cgi-bin/ "{{rootDir}}/{{dns}}/cgi-bin/"
+
+      <Directory "{{rootDir}}/{{dns}}/cgi-bin">
+        AllowOverride None
+        Options +ExecCGI -Includes
+        <IfModule !mod_access_compat.c>
+            Require all granted
+        </IfModule>
+        <IfModule mod_access_compat.c>
+          Order allow,deny
+          Allow from all
+        </IfModule>
+      </Directory>
+
+
+      <Directory "{{rootDir}}/{{dns}}">
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        <IfModule !mod_access_compat.c>
+          Require all granted
+        </IfModule>
+        <IfModule mod_access_compat.c>
+          Order allow,deny
+          Allow from all
+        </IfModule>
+      </Directory>
+
+  </VirtualHost>

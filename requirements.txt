@@ -10,3 +10,4 @@ twine
 typing
 jinja2
 coverage
+pyyaml

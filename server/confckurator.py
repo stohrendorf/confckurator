@@ -1,3 +1,4 @@
+import yaml
 from flask import Flask, redirect
 
 from api import get_pack_api_blueprint, get_template_api_blueprint, get_environment_api_blueprint, \
@@ -17,7 +18,21 @@ def home():
     return app.send_static_file('frontend/index.html')
 
 
+def load_template(filename: str):
+    with open(filename) as file:
+        template = yaml.load(file)
+
+    tpl = Template(name=template['name'], text=template['text'])
+    for varname, properties in template['variables'].items():
+        tpl.variables.append(Variable(name=varname, description=properties['description']))
+
+    with make_session() as session:
+        session.add(tpl)
+
+
 def seed_data():
+    load_template('seeds/apache-vhost.template.yml')
+
     with make_session() as session:
         template = Template(name="test", text="whoa = {{xxx_var}};"
                                               " template={{_meta.template}};"
