@@ -8,6 +8,7 @@ from werkzeug.exceptions import NotFound, Conflict
 from api.common import make_id_response, make_empty_response
 from api.marshalling import environment_fields
 from db import make_session, Environment
+from audit import audit_log
 
 environment_blueprint = Blueprint('environment_blueprint', __name__, url_prefix='/api/environment')
 environment_api = Api(environment_blueprint)
@@ -18,7 +19,6 @@ class EnvironmentList(Resource):
     @staticmethod
     def get():
         with make_session() as session:
-            print(session.query(Environment).all())
             return marshal(session.query(Environment).all(), environment_fields)
 
     put_args = {
@@ -30,6 +30,8 @@ class EnvironmentList(Resource):
     @staticmethod
     @use_kwargs(put_args)
     def put(name: str):
+        audit_log('Create Environment: {}', name)
+
         environment = Environment(name=name.strip())
         with make_session() as session:
             session.add(environment)
@@ -50,6 +52,8 @@ class EnvironmentResource(Resource):
 
     @staticmethod
     def delete(environment_id):
+        audit_log('Delete Environment: #{}', environment_id)
+
         with make_session() as session:
             data = session.query(Environment).filter(Environment.id == environment_id).first()  # type: Environment
             if data is None:
@@ -69,6 +73,8 @@ class EnvironmentResource(Resource):
     @staticmethod
     @use_kwargs(patch_args)
     def patch(environment_id, name):
+        audit_log('Rename Environment #{}: {}', environment_id, name)
+
         with make_session() as session:
             data = session.query(Environment).filter(Environment.id == environment_id).first()  # type: Environment
             if data is None:

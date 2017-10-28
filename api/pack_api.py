@@ -10,6 +10,7 @@ from werkzeug.exceptions import NotFound, Conflict
 
 from api.common import make_id_response, make_empty_response
 from api.marshalling import pack_fields
+from audit import audit_log
 from db import make_session, Pack, Value, Template
 
 pack_blueprint = Blueprint('pack_blueprint', __name__, url_prefix='/api/pack')
@@ -29,6 +30,7 @@ class PackResource(Resource):
 
     @staticmethod
     def delete(pack_id):
+        audit_log('Delete Pack #{}', pack_id)
         with make_session() as session:
             data = session.query(Pack).filter(Pack.id == pack_id).all()  # type: List[Pack]
             if len(data) != 1:
@@ -54,6 +56,7 @@ class PackList(Resource):
     @staticmethod
     @use_kwargs(put_args)
     def put(name):
+        audit_log('Create Pack: {}', name)
         pack = Pack(name=name.strip())
         with make_session() as session:
             session.add(pack)
@@ -73,6 +76,7 @@ class PackVariableResource(Resource):
     @staticmethod
     @use_kwargs(patch_args)
     def patch(pack_id, variable_id, environment_id, data):
+        audit_log('Update Value of Pack #{}, Variable #{}, Environment #{}', pack_id, variable_id, environment_id)
         with make_session() as session:
             if environment_id is None:
                 value = session.query(Value).filter(
@@ -103,6 +107,7 @@ class PackVariableResource(Resource):
     @staticmethod
     @use_kwargs(delete_args)
     def delete(pack_id, variable_id, environment_id):
+        audit_log('Delete Value of Pack #{}, Variable #{}, Environment #{}', pack_id, variable_id, environment_id)
         with make_session() as session:
             if environment_id is None:
                 value = session.query(Value).filter(
@@ -125,6 +130,7 @@ class PackVariableResource(Resource):
 class PackTemplateResource(Resource):
     @staticmethod
     def post(pack_id, template_id):
+        audit_log('Bind Template #{} to Pack #{}', template_id, pack_id)
         with make_session() as session:
             pack = session.query(Pack).filter(Pack.id == pack_id).first()
             if pack is None:
@@ -145,6 +151,7 @@ class PackTemplateResource(Resource):
 
     @staticmethod
     def delete(pack_id, template_id):
+        audit_log('Unbind Template #{} from Pack #{}', template_id, pack_id)
         with make_session() as session:
             pack = session.query(Pack).filter(Pack.id == pack_id).first()
             if pack is None:
