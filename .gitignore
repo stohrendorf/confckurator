@@ -156,3 +156,4 @@ fabric.properties
 confckurator/node_modules/
 
 !server/static/swagger/*
+server/static/frontend
