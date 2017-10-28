@@ -92,4 +92,8 @@ export class TemplatesComponent implements OnInit {
     this.errorMessage = 'Sorry, an arbitrary kitten exploded.';
     this.errorMessage = e.json().message;
   }
+
+  setSelectedTemplate(event) {
+    this.selectedTemplate = event;
+  }
 }
