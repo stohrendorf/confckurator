@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Sequence, UniqueConstraint
+from sqlalchemy import Column, Integer, String, ForeignKey, Sequence, UniqueConstraint, Unicode
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -9,7 +9,7 @@ class Pack(Schema):
     """
     :type id: int
     :type name: str
-    :type values: List[Value]
+    :type instances: List[Instance]
     :type parent_id: int
     :type parent: Pack|None
     """
@@ -19,7 +19,7 @@ class Pack(Schema):
     id = Column(Integer, Sequence('pack_id_seq'), primary_key=True)
     name = Column(String(255), unique=True, nullable=False)
 
-    values = relationship('Value', backref='pack')
+    instances = relationship('Instance', backref='pack')
 
     parent_id = Column(Integer, ForeignKey('packs.id'), nullable=True, default=None)
     parent = relationship('Pack', remote_side=[id])
@@ -32,8 +32,9 @@ class Pack(Schema):
         :rtype: Set[Template]
         """
         ids = set()
-        for value in self.values:
-            ids.add(value.variable.template)
+        for instance in self.instances:
+            for value in instance.values:
+                ids.add(value.variable.template)
         return ids
 
 
@@ -70,9 +71,10 @@ class Template(Schema):
 
     id = Column(Integer, Sequence('template_id_seq'), primary_key=True)
     name = Column(String(255), unique=True, nullable=False)
-    text = Column(Text, nullable=False)
+    text = Column(Unicode, nullable=False)
 
     variables = relationship('Variable', backref='template')
+    instances = relationship('Instance', backref='template')
 
     def __repr__(self):
         return "<Template(name='{}', id='{}')>".format(self.name, self.id)
@@ -93,7 +95,7 @@ class Variable(Schema):
     id = Column(Integer, Sequence('variable_id_seq'), primary_key=True)
     template_id = Column(Integer, ForeignKey('templates.id'))
     name = Column(String(255), nullable=False)
-    description = Column(Text, nullable=False)
+    description = Column(Unicode, nullable=False)
 
     UniqueConstraint('template_id', 'name')
 
@@ -128,8 +130,8 @@ class Value(Schema):
     :type variable: Variable
     :type environment_id: int
     :type environment: Environment
-    :type pack_id: int
-    :type pack: Pack
+    :type instance_id: int
+    :type instance: Instance
     :type data: str
     """
 
@@ -137,10 +139,37 @@ class Value(Schema):
 
     variable_id = Column(Integer, ForeignKey('variables.id'), primary_key=True)
     environment_id = Column(Integer, ForeignKey('environments.id'), primary_key=True, nullable=True)
-    pack_id = Column(Integer, ForeignKey('packs.id'), primary_key=True)
-    data = Column(Text, nullable=False)
+    instance_id = Column(Integer, ForeignKey('instances.id'), primary_key=True)
+    data = Column(Unicode, nullable=False)
 
     def __repr__(self):
         return "<Value(variable_id='{}', environment_id='{}', pack_id='{}')>".format(self.variable_id,
                                                                                      self.environment_id,
                                                                                      self.pack_id)
+
+
+class Instance(Schema):
+    """
+    :type id: int
+    :type name: str
+    :type values: List[Value]
+    :type pack_id: int
+    :type pack: Pack
+    :type template_id: int
+    :type template: Template
+    """
+
+    __tablename__ = 'instances'
+    __table_args__ = (
+        UniqueConstraint('pack_id', 'name'),
+    )
+
+    id = Column(Integer, Sequence('instance_id_seq'), primary_key=True)
+    name = Column(String(255), nullable=False)
+
+    values = relationship('Value', backref='instance')
+    pack_id = Column(Integer, ForeignKey('packs.id'), nullable=False)
+    template_id = Column(Integer, ForeignKey('templates.id'), nullable=False)
+
+    def __repr__(self):
+        return "<Instance(name='{}', id='{}')>".format(self.name, self.id)

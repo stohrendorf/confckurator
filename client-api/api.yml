@@ -403,35 +403,6 @@ paths:
           description: "successful operation"
           schema:
             type: "object"
-  /instance/{packId}/{environmentId}:
-    parameters:
-      - in: path
-        name: packId
-        required: true
-        type: integer
-        minimum: 0
-        description: "The pack ID."
-      - in: path
-        name: environmentId
-        required: true
-        type: integer
-        minimum: 0
-        description: "The environment ID."
-    get:
-      tags:
-      - "packs"
-      summary: "Get an instantiated pack"
-      description: ""
-      operationId: "getPackInstance"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/TemplateInstance"
 definitions:
   IdResponse:
     type: "object"
@@ -446,7 +417,7 @@ definitions:
     required:
       - id
       - name
-      - values
+      - instances
     properties:
       id:
         type: "integer"
@@ -455,10 +426,10 @@ definitions:
         type: "string"
         minLength: 1
         maxLength: 255
-      values:
+      instances:
         type: "array"
         items:
-          $ref: "#/definitions/Value"
+          $ref: "#/definitions/Instance"
   NewPack:
     type: object
     required:
@@ -625,15 +596,23 @@ definitions:
     type: "object"
     required:
       - variable_id
+      - variable_name
       - environment_id
+      - environment_name
       - pack_id
     properties:
       variable_id:
         type: "integer"
         description: "Variable ID"
+      variable_name:
+        type: "string"
+        description: "Variable name"
       environment_id:
         type: "integer"
         description: "Environment ID"
+      environment_name:
+        type: "string"
+        description: "Environment name"
       pack_id:
         type: "integer"
         description: "Pack ID"
@@ -664,15 +643,29 @@ definitions:
     properties:
       message:
         type: string
-  TemplateInstance:
+  Instance:
     type: object
     required:
+      - id
       - name
-      - text
+      - values
+      - template_name
+      - template_id
     properties:
+      id:
+        type: integer
+        description: Persistent instance ID.
       name:
         type: string
-        description: Name of the instantiated template.
-      text:
+        description: Name of the template instance.
+      values:
+        type: array
+        description: Used values.
+        items:
+          $ref: '#/definitions/Value'
+      template_id:
+        type: integer
+        description: Persistent template ID.
+      template_name:
         type: string
-        description: Template text.
+        description: Name of the used template.

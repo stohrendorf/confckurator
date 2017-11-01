@@ -16,7 +16,6 @@ export class PacksComponent implements OnInit {
 
   ngOnInit() {
     this.api.getPacks().subscribe(d => {
-      console.debug(d);
       this.packs = d;
     });
   }

@@ -1,15 +1,18 @@
 <div class="list-group">
   <div class="list-group-item" *ngFor="let pack of packs">
     <h4 class="list-group-item-heading">
-      [#{{ pack.id }}] {{ pack.name }}
+      Pack #{{ pack.id }} &raquo;{{ pack.name }}&laquo;
     </h4>
     <div class="list-group-item-text">
-      Values:
       <ul>
-        <li *ngFor="let value of pack.values">
-          variable_id={{ value.variable_id }},
-          environment_id={{ value.environment_id }},
-          pack_id={{ value.pack_id }}
+        <li *ngFor="let instance of pack.instances">
+          <h5>Instance #{{instance.id}} &raquo;{{instance.name}}&laquo; (template #{{instance.template_id}} &raquo;{{instance.template_name}}&laquo;)</h5>
+          <ul>
+            <li *ngFor="let value of instance.values">
+              {{value.variable_name}} <span *ngIf="value.environment_name">[environment &raquo;{{value.environment_name}}&laquo;]</span>
+              = {{value.data}}
+            </li>
+          </ul>
         </li>
       </ul>
     </div>

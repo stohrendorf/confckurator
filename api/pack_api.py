@@ -1,5 +1,3 @@
-from typing import List
-
 from flask.blueprints import Blueprint
 from flask_restful import Resource, marshal, Api
 from marshmallow import fields
@@ -22,21 +20,21 @@ class PackResource(Resource):
     @staticmethod
     def get(pack_id):
         with make_session() as session:
-            data = session.query(Pack).filter(Pack.id == pack_id).all()  # type: List[Pack]
-            if len(data) != 1:
+            data = session.query(Pack).filter(Pack.id == pack_id).first()  # type: Pack
+            if data is None:
                 raise NotFound("Requested pack does not exist")
 
-            return marshal(data[0], pack_fields)
+            return marshal(data, pack_fields)
 
     @staticmethod
     def delete(pack_id):
         audit_log('Delete Pack #{}', pack_id)
         with make_session() as session:
-            data = session.query(Pack).filter(Pack.id == pack_id).all()  # type: List[Pack]
-            if len(data) != 1:
+            data = session.query(Pack).filter(Pack.id == pack_id).first()  # type: Pack
+            if data is None:
                 raise NotFound("Requested pack does not exist")
 
-            session.delete(data[0])
+            session.delete(data)
             return make_empty_response()
 
 

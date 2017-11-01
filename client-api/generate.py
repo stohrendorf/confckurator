@@ -4,7 +4,10 @@ import shutil
 os.chdir(os.path.dirname(__file__))
 
 print("Removing old client API files...")
-shutil.rmtree('../confckurator/src/api')
+try:
+    shutil.rmtree('../confckurator/src/api')
+except FileNotFoundError:
+    pass
 
 print("Generating client API files from swagger API description...")
 os.system(
