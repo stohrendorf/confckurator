@@ -11,3 +11,5 @@ typing
 jinja2
 coverage
 pyyaml
+SQLAlchemy-Continuum
+flask-login

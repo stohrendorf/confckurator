@@ -6,23 +6,23 @@ from sqlalchemy.orm import Session
 
 from db.dao import Schema
 
-connection = None
+engine = None
 
 
 def boot_database(app: Flask):
-    global connection
+    global engine
 
-    if connection is not None:
+    if engine is not None:
         return
 
-    connection = create_engine(app.config['database'], echo=app.debug)
-    Schema.metadata.create_all(connection)
+    engine = create_engine(app.config['database'], echo=app.debug)
+    Schema.metadata.create_all(engine)
 
 
 @contextmanager
 def make_session():
-    global connection
-    session = Session(bind=connection)
+    global engine
+    session = Session(bind=engine)
     try:
         yield session
         session.commit()

@@ -1,12 +1,14 @@
 import yaml
 from flask import Flask, redirect
+from flask_login import LoginManager
 
 from api import get_pack_api_blueprint, get_template_api_blueprint, get_environment_api_blueprint, \
     get_instance_api_blueprint
 from db import make_session, Pack, Template, Variable, Value, Environment, boot_database, Instance
 
 app = Flask(__name__)
-
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 @app.route('/')
 def home_redirect():

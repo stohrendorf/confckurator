@@ -1,7 +1,10 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Sequence, UniqueConstraint, Unicode
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, validates
+from sqlalchemy.orm import relationship, validates, configure_mappers
+from sqlalchemy_continuum import make_versioned
+from sqlalchemy_continuum.plugins import FlaskPlugin, PropertyModTrackerPlugin
 
+make_versioned(plugins=[FlaskPlugin(), PropertyModTrackerPlugin()], user_cls=None)
 Schema = declarative_base()
 
 
@@ -15,6 +18,7 @@ class Pack(Schema):
     """
 
     __tablename__ = 'packs'
+    __versioned__ = {}
 
     id = Column(Integer, Sequence('pack_id_seq'), primary_key=True)
     name = Column(String(255), unique=True, nullable=False)
@@ -46,6 +50,7 @@ class Environment(Schema):
     """
 
     __tablename__ = 'environments'
+    __versioned__ = {}
 
     id = Column(Integer, Sequence('environment_id_seq'), primary_key=True)
     name = Column(String(255), unique=True, nullable=False)
@@ -68,6 +73,7 @@ class Template(Schema):
     """
 
     __tablename__ = 'templates'
+    __versioned__ = {}
 
     id = Column(Integer, Sequence('template_id_seq'), primary_key=True)
     name = Column(String(255), unique=True, nullable=False)
@@ -91,6 +97,7 @@ class Variable(Schema):
     """
 
     __tablename__ = 'variables'
+    __versioned__ = {}
 
     id = Column(Integer, Sequence('variable_id_seq'), primary_key=True)
     template_id = Column(Integer, ForeignKey(Template.id))
@@ -138,6 +145,7 @@ class Value(Schema):
     """
 
     __tablename__ = 'values'
+    __versioned__ = {}
 
     variable_id = Column(Integer, ForeignKey(Variable.id), primary_key=True)
     environment_id = Column(Integer, ForeignKey(Environment.id), primary_key=True, nullable=True)
@@ -162,6 +170,7 @@ class Instance(Schema):
     """
 
     __tablename__ = 'instances'
+    __versioned__ = {}
 
     id = Column(Integer, Sequence('instance_id_seq'), primary_key=True)
     name = Column(String(255), nullable=False)
@@ -183,3 +192,6 @@ class Instance(Schema):
         if value.variable.template_id != self.template_id:
             raise ValueError('Non-transitive instance-value-variable-template association')
         return value
+
+
+configure_mappers()

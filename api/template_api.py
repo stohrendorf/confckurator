@@ -10,7 +10,6 @@ from werkzeug.exceptions import NotFound, Conflict, InternalServerError
 
 from api.common import make_id_response, make_empty_response
 from api.marshalling import template_fields, variable_fields, template_fields_with_text
-from audit import audit_log
 from db import make_session, Template, Variable
 
 template_blueprint = Blueprint('template_blueprint', __name__, url_prefix='/api/template')
@@ -32,8 +31,6 @@ class TemplateList(Resource):
     @staticmethod
     @use_kwargs(post_args)
     def put(name, text):
-        audit_log('Create Template: {}', name)
-
         try:
             with make_session() as session:
                 if session.query(session.query(Template).filter(Template.name == name.strip()).exists()).scalar():
@@ -85,8 +82,6 @@ class TemplateResource(Resource):
     @staticmethod
     @use_kwargs(patch_args)
     def patch(template_id, name, text, variables):
-        audit_log('Update Template #{}: {}', template_id, name)
-
         with make_session() as session:
             template = session.query(Template).filter(Template.id == template_id).first()  # type: Template
             if template is None:
@@ -127,8 +122,6 @@ class TemplateResource(Resource):
 
     @staticmethod
     def delete(template_id):
-        audit_log('Delete Template #{}', template_id)
-
         with make_session() as session:
             template = session.query(Template).filter(Template.id == template_id).first()  # type: Template
             if template is None:

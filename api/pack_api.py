@@ -7,7 +7,6 @@ from werkzeug.exceptions import NotFound
 
 from api.common import make_id_response, make_empty_response
 from api.marshalling import pack_fields
-from audit import audit_log
 from db import make_session, Pack
 
 pack_blueprint = Blueprint('pack_blueprint', __name__, url_prefix='/api/pack')
@@ -27,7 +26,6 @@ class PackResource(Resource):
 
     @staticmethod
     def delete(pack_id):
-        audit_log('Delete Pack #{}', pack_id)
         with make_session() as session:
             data = session.query(Pack).filter(Pack.id == pack_id).first()  # type: Pack
             if data is None:
@@ -53,7 +51,6 @@ class PackList(Resource):
     @staticmethod
     @use_kwargs(put_args)
     def put(name):
-        audit_log('Create Pack: {}', name)
         pack = Pack(name=name.strip())
         with make_session() as session:
             session.add(pack)
