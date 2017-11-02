@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Sequence, UniqueConstraint, Unicode
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, validates
 
 Schema = declarative_base()
 
@@ -176,3 +176,10 @@ class Instance(Schema):
 
     def __repr__(self):
         return "<Instance(name='{}', id='{}')>".format(self.name, self.id)
+
+    # noinspection PyUnusedLocal
+    @validates(values)
+    def validate_values(self, key, value: Value):
+        if value.variable.template_id != self.template_id:
+            raise ValueError('Non-transitive instance-value-variable-template association')
+        return value
