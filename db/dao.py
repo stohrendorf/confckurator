@@ -21,7 +21,7 @@ class Pack(Schema):
 
     instances = relationship('Instance', backref='pack')
 
-    parent_id = Column(Integer, ForeignKey('packs.id'), nullable=True, default=None)
+    parent_id = Column(Integer, ForeignKey(id), nullable=True, default=None)
     parent = relationship('Pack', remote_side=[id])
 
     def __repr__(self):
@@ -93,13 +93,15 @@ class Variable(Schema):
     __tablename__ = 'variables'
 
     id = Column(Integer, Sequence('variable_id_seq'), primary_key=True)
-    template_id = Column(Integer, ForeignKey('templates.id'))
+    template_id = Column(Integer, ForeignKey(Template.id))
     name = Column(String(255), nullable=False)
     description = Column(Unicode, nullable=False)
 
-    UniqueConstraint('template_id', 'name')
-
     values = relationship('Value', backref='variable')
+
+    __table_args__ = (
+        UniqueConstraint('template_id', 'name'),
+    )
 
     def __repr__(self):
         return "<Variable(name='{}', id='{}', template_id='{}')>".format(self.name,
@@ -137,8 +139,8 @@ class Value(Schema):
 
     __tablename__ = 'values'
 
-    variable_id = Column(Integer, ForeignKey('variables.id'), primary_key=True)
-    environment_id = Column(Integer, ForeignKey('environments.id'), primary_key=True, nullable=True)
+    variable_id = Column(Integer, ForeignKey(Variable.id), primary_key=True)
+    environment_id = Column(Integer, ForeignKey(Environment.id), primary_key=True, nullable=True)
     instance_id = Column(Integer, ForeignKey('instances.id'), primary_key=True)
     data = Column(Unicode, nullable=False)
 
@@ -160,16 +162,17 @@ class Instance(Schema):
     """
 
     __tablename__ = 'instances'
-    __table_args__ = (
-        UniqueConstraint('pack_id', 'name'),
-    )
 
     id = Column(Integer, Sequence('instance_id_seq'), primary_key=True)
     name = Column(String(255), nullable=False)
 
-    values = relationship('Value', backref='instance')
-    pack_id = Column(Integer, ForeignKey('packs.id'), nullable=False)
-    template_id = Column(Integer, ForeignKey('templates.id'), nullable=False)
+    values = relationship(Value, backref='instance')
+    pack_id = Column(Integer, ForeignKey(Pack.id), nullable=False)
+    template_id = Column(Integer, ForeignKey(Template.id), nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint(pack_id, name),
+    )
 
     def __repr__(self):
         return "<Instance(name='{}', id='{}')>".format(self.name, self.id)
