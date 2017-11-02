@@ -1,4 +1,3 @@
-export * from './DeleteVariableValue';
 export * from './Environment';
 export * from './ErrorResponse';
 export * from './IdResponse';
@@ -15,4 +14,3 @@ export * from './UpdateTemplateVariablesCreate';
 export * from './UpdateTemplateVariablesUpdate';
 export * from './Value';
 export * from './Variable';
-export * from './VariableValueUpdate';

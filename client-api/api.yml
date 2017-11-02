@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: "Confckurator Client/Server API"
-  version: "1.0.0"
+  version: "v1"
   title: "Confckurator"
   license:
     name: MIT License
@@ -231,88 +231,6 @@ paths:
         type: integer
         minimum: 0
         description: "The variable ID."
-    patch:
-      tags:
-      - "packs"
-      summary: "Set a variable's value"
-      operationId: "setPackValue"
-      consumes:
-        - application/json
-      parameters:
-        - in: body
-          name: setVariableValue
-          description: Variable value.
-          schema:
-            $ref: "#/definitions/VariableValueUpdate"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "object"
-    delete:
-      tags:
-      - "packs"
-      summary: "Delete a variable's value"
-      operationId: "deletePackValue"
-      consumes:
-        - application/json
-      parameters:
-        - in: body
-          name: setVariableValue
-          description: Variable value.
-          schema:
-            $ref: "#/definitions/DeleteVariableValue"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "object"
-  /pack/{packId}/template/{templateId}:
-    parameters:
-      - in: path
-        name: packId
-        required: true
-        type: integer
-        minimum: 0
-        description: "The pack ID."
-      - in: path
-        name: templateId
-        required: true
-        type: integer
-        minimum: 0
-        description: "The template ID."
-    post:
-      tags:
-      - "packs"
-      summary: "Attach a template to a pack"
-      operationId: "attachPackTemplate"
-      consumes:
-        - application/json
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "object"
-    delete:
-      tags:
-      - "packs"
-      summary: "Remove a template from a pack"
-      operationId: "detachPackTemplate"
-      consumes:
-        - application/json
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "object"
   /environment/:
     get:
       tags:
@@ -619,23 +537,6 @@ definitions:
       data:
         type: "string"
         description: "Value data"
-  VariableValueUpdate:
-    type: "object"
-    required:
-      - data
-    properties:
-      environment_id:
-        type: "integer"
-        description: "Optional environment ID"
-      data:
-        type: "string"
-        description: "The variable's value"
-  DeleteVariableValue:
-    type: "object"
-    properties:
-      environment:
-        type: "integer"
-        description: "Optional environment ID"
   ErrorResponse:
     type: object
     required:
