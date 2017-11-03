@@ -1,0 +1,26 @@
+<ngb-alert type="danger" *ngIf="errorMessage != null" (close)="errorMessage = null">
+  <strong>Whoops.</strong>
+  {{errorMessage}}
+</ngb-alert>
+
+<div *ngIf="pack">
+  <h4>Instances</h4>
+  <div [formGroup]="instanceForm">
+    <div formArrayName="instances">
+      <div class="form-row" *ngFor="let instance of instanceList.controls; let i = index">
+        <div class="form-group col-md-4" [formGroupName]="i">
+          <div class="input-group">
+            <div (click)="removeInstance(i)" class="btn btn-default input-group-addon">
+              <span class="fa fa-trash"></span>
+            </div>
+            <input type="text" class="form-control" placeholder="Name" formControlName="name" title="Name">
+            <input type="text" class="form-control" placeholder="Template" formControlName="template_name" title="Name">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a (click)="addInstance()" class="btn btn-primary">
+    <span class="fa fa-plus-square"></span> Add Instance
+  </a>
+</div>

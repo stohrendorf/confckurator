@@ -11,6 +11,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CodemirrorModule} from 'ng2-codemirror';
 import {TemplateViewComponent} from './template-view/template-view.component';
 import {EnvironmentsListComponent} from './environmentslist/environmentslist.component';
+import {PackViewComponent} from './pack-view/pack-view.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import {EnvironmentsListComponent} from './environmentslist/environmentslist.com
     PacksComponent,
     TemplatesComponent,
     TemplateViewComponent,
-    EnvironmentsListComponent
+    EnvironmentsListComponent,
+    PackViewComponent
   ],
   imports: [
     BrowserModule,

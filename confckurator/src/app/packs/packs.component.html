@@ -1,20 +1,58 @@
-<div class="list-group">
-  <div class="list-group-item" *ngFor="let pack of packs">
-    <h4 class="list-group-item-heading">
-      Pack #{{ pack.id }} &raquo;{{ pack.name }}&laquo;
-    </h4>
-    <div class="list-group-item-text">
-      <ul>
-        <li *ngFor="let instance of pack.instances">
-          <h5>Instance #{{instance.id}} &raquo;{{instance.name}}&laquo; (template #{{instance.template_id}} &raquo;{{instance.template_name}}&laquo;)</h5>
-          <ul>
-            <li *ngFor="let value of instance.values">
-              {{value.variable_name}} <span *ngIf="value.environment_name">[environment &raquo;{{value.environment_name}}&laquo;]</span>
-              = {{value.data}}
-            </li>
-          </ul>
-        </li>
-      </ul>
+<ngb-alert type="danger" *ngIf="errorMessage != null" (close)="errorMessage = null">
+  <strong>Whoops.</strong>
+  {{errorMessage}}
+</ngb-alert>
+
+<div class="form-inline">
+  <select class="form-control custom-select col-4" title="Packs" [ngModel]="selectedPack"
+          (ngModelChange)="setSelectedPack($event)">
+    <option *ngFor="let pack of packs" [ngValue]="pack" [selected]="selectedPack === pack">
+      {{pack.name}}
+    </option>
+  </select>
+  <button class="form-control btn btn-primary" (click)="openNewDlg(namePopup)">
+    <span class="fa fa-plus"></span> New
+  </button>
+  <button class="form-control btn" (click)="openRenameDlg(namePopup)">
+    <span class="fa fa-pencil-square-o"></span> Rename
+  </button>
+  <button class="form-control btn btn-danger" (click)="openDeleteDlg(deletePopup)">
+    <span class="fa fa-trash"></span> Delete
+  </button>
+</div>
+
+<app-pack-view [pack]="selectedPack"></app-pack-view>
+
+<ng-template #namePopup let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">{{nameDlgTitle}}</h4>
+    <button type="button" class="close" (click)="d()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="Pack Name" title="Name" [(ngModel)]="editingName">
     </div>
   </div>
-</div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="c()">Save</button>
+    <button type="button" class="btn btn-danger" (click)="d()">Abort</button>
+  </div>
+</ng-template>
+
+<ng-template #deletePopup let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Delete Pack</h4>
+    <button type="button" class="close" (click)="d()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Do you really want to delete the pack {{selectedPack.name}}?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="c()">Yes</button>
+    <button type="button" class="btn btn-danger" (click)="d()">Abort</button>
+  </div>
+</ng-template>
