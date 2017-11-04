@@ -23,7 +23,7 @@ class Pack(Schema):
     id = Column(Integer, Sequence('pack_id_seq'), primary_key=True)
     name = Column(String(255), unique=True, nullable=False)
 
-    instances = relationship('Instance', backref='pack')
+    instances = relationship('Instance', backref='pack', cascade="all, delete-orphan")
 
     parent_id = Column(Integer, ForeignKey(id), nullable=True, default=None)
     parent = relationship('Pack', remote_side=[id])
@@ -175,7 +175,7 @@ class Instance(Schema):
     id = Column(Integer, Sequence('instance_id_seq'), primary_key=True)
     name = Column(String(255), nullable=False)
 
-    values = relationship(Value, backref='instance')
+    values = relationship(Value, backref='instance', cascade="all, delete-orphan")
     pack_id = Column(Integer, ForeignKey(Pack.id), nullable=False)
     template_id = Column(Integer, ForeignKey(Template.id), nullable=False)
 
