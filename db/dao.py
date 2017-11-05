@@ -2,9 +2,9 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Sequence, UniqueCons
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, validates, configure_mappers
 from sqlalchemy_continuum import make_versioned
-from sqlalchemy_continuum.plugins import FlaskPlugin, PropertyModTrackerPlugin
+from sqlalchemy_continuum.plugins import FlaskPlugin, PropertyModTrackerPlugin, TransactionChangesPlugin
 
-make_versioned(plugins=[FlaskPlugin(), PropertyModTrackerPlugin()], user_cls=None)
+make_versioned(plugins=[FlaskPlugin(), PropertyModTrackerPlugin(), TransactionChangesPlugin()], user_cls=None)
 Schema = declarative_base()
 
 

@@ -7,7 +7,7 @@ from werkzeug.exceptions import NotFound, Conflict
 
 from api.common import make_id_response, make_empty_response
 from api.marshalling import environment_fields
-from db import make_session, Environment
+from db import make_session, Environment, get_history_for_entity
 
 environment_blueprint = Blueprint('environment_blueprint', __name__, url_prefix='/api/environment')
 environment_api = Api(environment_blueprint)
@@ -76,6 +76,12 @@ class EnvironmentResource(Resource):
             data.name = name
 
             return make_empty_response()
+
+
+@environment_api.resource('/history')
+class EnvironmentHistory(Resource):
+    def get(self):
+        return get_history_for_entity(Environment)
 
 
 def get_environment_api_blueprint():
