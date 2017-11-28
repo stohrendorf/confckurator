@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {NbMenuItem} from "@nebular/theme";
 
 @Component({
   selector: 'app-root',
@@ -6,4 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+  public menuItems: NbMenuItem[] = [
+    {title: 'Packs', link: '/packs'},
+    {title: 'Environments', link: '/environments'},
+    {title: 'Templates', link: '/templates'}
+  ];
 }

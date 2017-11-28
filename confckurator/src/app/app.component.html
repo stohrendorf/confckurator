@@ -1,25 +1,13 @@
-<div class="container">
-  <header class="page-header">
+<nb-layout>
+  <nb-layout-header>
     <h1>Confckurator</h1>
     <a class="btn btn-primary" href="../swagger/index.html">API</a>
-  </header>
-  <article>
-    <ngb-tabset>
-      <ngb-tab title="Packs">
-        <ng-template ngbTabContent>
-          <app-packs></app-packs>
-        </ng-template>
-      </ngb-tab>
-      <ngb-tab title="Templates">
-        <ng-template ngbTabContent>
-          <app-templates></app-templates>
-        </ng-template>
-      </ngb-tab>
-      <ngb-tab title="Environments">
-        <ng-template ngbTabContent>
-          <app-environments-list></app-environments-list>
-        </ng-template>
-      </ngb-tab>
-    </ngb-tabset>
-  </article>
-</div>
+  </nb-layout-header>
+  <nb-sidebar>
+    <nb-menu [items]="menuItems">
+    </nb-menu>
+  </nb-sidebar>
+  <nb-layout-column>
+    <router-outlet></router-outlet>
+  </nb-layout-column>
+</nb-layout>
