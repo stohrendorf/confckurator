@@ -1,30 +1,24 @@
 import {Component, OnInit, Output} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {EnvironmentsApi} from '../../api/api/EnvironmentsApi';
 import generate_name from './random_name';
+import {Environment} from "../../api/model/Environment";
 
 @Component({
   selector: 'app-environments-list',
   templateUrl: './environmentslist.component.html',
   styleUrls: ['./environmentslist.component.css'],
-  providers: [FormBuilder, EnvironmentsApi]
+  providers: [EnvironmentsApi]
 })
 export class EnvironmentsListComponent implements OnInit {
-  public environmentsForm: FormGroup;
-  public environmentsList: FormArray;
+  public environments: Environment[] = [];
 
   @Output()
   public errorMessage?: string = null;
 
-  constructor(private api: EnvironmentsApi, private formBuilder: FormBuilder) {
+  constructor(private api: EnvironmentsApi) {
   }
 
   ngOnInit() {
-    this.environmentsList = this.formBuilder.array([]);
-    this.environmentsForm = this.formBuilder.group({
-      environments: this.environmentsList
-    });
-
     this.updateDisplay();
   }
 
@@ -36,28 +30,21 @@ export class EnvironmentsListComponent implements OnInit {
   }
 
   public removeEnvironment(idx: number): void {
-    const id = this.environmentsList.controls[idx].get('id').value;
+    const id = this.environments[idx].id;
     this.api.deleteEnvironment(id).subscribe(x => this.updateDisplay(), this.onError);
   }
 
   public updateEnvironment(idx: number): void {
-    const id = this.environmentsList.controls[idx].get('id').value;
-    const name = this.environmentsList.controls[idx].get('name').value;
+    const id = this.environments[idx].id;
+    const name = this.environments[idx].name;
     this.api.updateEnvironment(id, {name: name}).subscribe(x => this.updateDisplay(), this.onError);
   }
 
   private updateDisplay(): void {
-    while (this.environmentsList.length > 0) {
-      this.environmentsList.removeAt(0);
-    }
+    this.environments = [];
 
     this.api.getEnvironments().subscribe(
-      d => d.forEach(e => this.environmentsList.push(this.formBuilder.group({
-        name: [
-          {value: e.name, disabled: e.in_use}, Validators.pattern(/[^/]+$/)
-        ],
-        id: [e.id]
-      }))),
+      d => this.environments = d,
       this.onError
     );
   }

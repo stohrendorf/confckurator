@@ -20,6 +20,7 @@ import {
 import {RouterModule, Routes} from "@angular/router";
 import {APP_BASE_HREF} from "@angular/common";
 import {NbMenuInternalService} from "@nebular/theme/components/menu/menu.service";
+import {NgxDatatableModule} from "@swimlane/ngx-datatable";
 
 const appRoutes: Routes = [
   {path: 'packs', component: PacksComponent},
@@ -38,7 +39,7 @@ const appRoutes: Routes = [
     PackViewComponent
   ],
   imports: [
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, {useHash: true}),
     BrowserModule,
     HttpModule,
     NgbModule.forRoot(),
@@ -49,11 +50,12 @@ const appRoutes: Routes = [
     NbLayoutModule,
     NbSidebarModule,
     NbMenuModule,
-    NbActionsModule
+    NbActionsModule,
+    NgxDatatableModule
   ],
   providers: [
     {provide: BASE_PATH, useValue: '/api'},
-    {provide: APP_BASE_HREF, useValue: '/static/frontend'},
+    {provide: APP_BASE_HREF, useValue: '/'},
     NbSidebarService,
     NbMenuService,
     NbMenuInternalService
