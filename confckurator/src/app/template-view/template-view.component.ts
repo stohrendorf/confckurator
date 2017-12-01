@@ -1,11 +1,12 @@
 import {Component, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {TemplatesApi} from '../../api/api/TemplatesApi';
-import {Template} from '../../api/model/Template';
-import {Variable} from '../../api/model/Variable';
+import {TemplatesApi} from '../../api';
+import {Template} from '../../api';
+import {Variable} from '../../api';
 import {Observable} from 'rxjs/Observable';
-import {IdResponse} from '../../api/model/IdResponse';
+import {IdResponse} from '../../api';
 import {List} from 'linqts';
+import {MatSnackBar} from "@angular/material";
 
 @Component({
   selector: 'app-template-view',
@@ -25,7 +26,7 @@ export class TemplateViewComponent implements OnInit {
 
   private activeTemplate: Template;
 
-  constructor(private api: TemplatesApi, private formBuilder: FormBuilder) {
+  constructor(private api: TemplatesApi, private formBuilder: FormBuilder, private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -134,6 +135,7 @@ export class TemplateViewComponent implements OnInit {
   private onError(e): void {
     this.errorMessage = 'Sorry, an arbitrary kitten exploded.';
     this.errorMessage = e.json().message;
+    this.snackBar.open(this.errorMessage, 'OK');
   }
 
   public removeVariable(idx: number): void {

@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, Output} from '@angular/core';
 import {PacksApi} from "../../api/api/PacksApi";
 import {Pack} from "../../api/model/Pack";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {MatSnackBar} from "@angular/material";
 
 @Component({
   selector: 'app-packs',
@@ -25,7 +25,7 @@ export class PacksComponent implements OnInit {
   @Output()
   public errorMessage?: string = null;
 
-  constructor(private api: PacksApi, private modalService: NgbModal) {
+  constructor(private api: PacksApi, private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -36,25 +36,25 @@ export class PacksComponent implements OnInit {
     const idx = this.packs.findIndex(e => e === this.selectedPack);
     this.editingName = this.packs[idx].name;
     this.nameDlgTitle = 'Rename Pack';
-    this.modalService.open(content).result.then(reason => this.packs[idx].name = this.editingName, () => {
-    });
+    // TODO this.modalService.open(content).result.then(reason => this.packs[idx].name = this.editingName, () => {
+    // });
   }
 
   public openNewDlg(content) {
     this.editingName = '';
     this.nameDlgTitle = 'New Pack';
-    this.modalService.open(content).result.then(reason => {
+    /* TODO this.modalService.open(content).result.then(reason => {
       this.api.createPack({name: this.editingName})
         .subscribe(d => this.loadPacks(d.id), this.onError);
     }, () => {
-    });
+    }); */
   }
 
   public openDeleteDlg(content) {
-    this.modalService.open(content).result.then(reason => {
+    /* TODO this.modalService.open(content).result.then(reason => {
       this.api.deletePack(this.selectedPack.id).subscribe(x => this.loadPacks(), this.onError);
     }, () => {
-    });
+    }); */
   }
 
   setSelectedPack(event) {
@@ -85,5 +85,6 @@ export class PacksComponent implements OnInit {
   private onError(e): void {
     this.errorMessage = 'Sorry, an arbitrary kitten exploded.';
     this.errorMessage = e.json().message;
+    this.snackBar.open(this.errorMessage, 'OK');
   }
 }

@@ -1,8 +1,3 @@
-<ngb-alert type="danger" *ngIf="errorMessage != null" (close)="errorMessage = null">
-  <strong>Whoops.</strong>
-  {{errorMessage}}
-</ngb-alert>
-
 <div *ngIf="template">
   <h4>Variables</h4>
   <div [formGroup]="variablesForm">

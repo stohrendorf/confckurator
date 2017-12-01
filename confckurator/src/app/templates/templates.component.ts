@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, Output} from '@angular/core';
-import {TemplatesApi} from '../../api/api/TemplatesApi';
+import {TemplatesApi} from '../../api';
 import 'codemirror/mode/jinja2/jinja2';
 import 'codemirror/mode/dockerfile/dockerfile';
 import 'codemirror/addon/dialog/dialog';
@@ -8,8 +8,8 @@ import 'codemirror/addon/search/searchcursor';
 import 'codemirror/addon/search/search';
 import 'codemirror/addon/edit/matchbrackets';
 import 'rxjs/add/observable/forkJoin';
-import {Template} from '../../api/model/Template';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Template} from '../../api';
+import {MatSnackBar} from "@angular/material";
 
 @Component({
   selector: 'app-templates',
@@ -35,7 +35,7 @@ export class TemplatesComponent implements OnInit {
   @Output()
   public errorMessage?: string = null;
 
-  constructor(private api: TemplatesApi, private modalService: NgbModal) {
+  constructor(private api: TemplatesApi, private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -67,25 +67,25 @@ export class TemplatesComponent implements OnInit {
     const idx = this.templates.findIndex(e => e === this.selectedTemplate);
     this.editingName = this.templates[idx].name;
     this.nameDlgTitle = 'Rename Template';
-    this.modalService.open(content).result.then(reason => this.templates[idx].name = this.editingName, () => {
-    });
+    /* TODO this.modalService.open(content).result.then(reason => this.templates[idx].name = this.editingName, () => {
+    }); */
   }
 
   public openNewDlg(content) {
     this.editingName = '';
     this.nameDlgTitle = 'New Template';
-    this.modalService.open(content).result.then(reason => {
+    /* TODO this.modalService.open(content).result.then(reason => {
       this.api.createTemplate({name: this.editingName, text: TemplatesComponent.templateTemplate})
         .subscribe(d => this.loadTemplates(d.id), this.onError);
     }, () => {
-    });
+    }); */
   }
 
   public openDeleteDlg(content) {
-    this.modalService.open(content).result.then(reason => {
+    /* TODO this.modalService.open(content).result.then(reason => {
       this.api.deleteTemplate(this.selectedTemplate.id).subscribe(x => this.loadTemplates(), this.onError);
     }, () => {
-    });
+    }); */
   }
 
   private onError(e): void {

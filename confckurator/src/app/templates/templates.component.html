@@ -1,8 +1,3 @@
-<ngb-alert type="danger" *ngIf="errorMessage != null" (close)="errorMessage = null">
-  <strong>Whoops.</strong>
-  {{errorMessage}}
-</ngb-alert>
-
 <div class="form-inline">
   <select class="form-control custom-select col-4" title="Templates" [ngModel]="selectedTemplate" (ngModelChange)="setSelectedTemplate($event)">
     <option *ngFor="let template of templates" [ngValue]="template" [selected]="selectedTemplate === template">

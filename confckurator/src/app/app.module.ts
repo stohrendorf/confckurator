@@ -4,9 +4,8 @@ import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {PacksComponent} from './packs/packs.component';
 import {TemplatesComponent} from './templates/templates.component';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {HttpModule} from '@angular/http';
-import {BASE_PATH} from '../api/variables';
+import {BASE_PATH} from '../api';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CodemirrorModule} from 'ng2-codemirror';
 import {TemplateViewComponent} from './template-view/template-view.component';
@@ -21,6 +20,8 @@ import {RouterModule, Routes} from "@angular/router";
 import {APP_BASE_HREF} from "@angular/common";
 import {NbMenuInternalService} from "@nebular/theme/components/menu/menu.service";
 import {NgxDatatableModule} from "@swimlane/ngx-datatable";
+import {MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSnackBarModule} from "@angular/material";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 const appRoutes: Routes = [
   {path: 'packs', component: PacksComponent},
@@ -39,10 +40,10 @@ const appRoutes: Routes = [
     PackViewComponent
   ],
   imports: [
+    BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes, {useHash: true}),
     BrowserModule,
     HttpModule,
-    NgbModule.forRoot(),
     ReactiveFormsModule,
     CodemirrorModule,
     FormsModule,
@@ -51,7 +52,12 @@ const appRoutes: Routes = [
     NbSidebarModule,
     NbMenuModule,
     NbActionsModule,
-    NgxDatatableModule
+    NgxDatatableModule,
+    MatCardModule,
+    MatSnackBarModule,
+    MatButtonModule,
+    MatInputModule,
+    MatFormFieldModule
   ],
   providers: [
     {provide: BASE_PATH, useValue: '/api'},

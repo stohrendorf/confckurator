@@ -3,6 +3,7 @@ import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {PacksApi} from '../../api/api/PacksApi';
 import {Pack} from '../../api/model/Pack';
 import {Instance} from '../../api/model/Instance';
+import {MatSnackBar} from "@angular/material";
 
 @Component({
   selector: 'app-pack-view',
@@ -21,7 +22,7 @@ export class PackViewComponent implements OnInit {
 
   private activePack: Pack;
 
-  constructor(private api: PacksApi, private formBuilder: FormBuilder) {
+  constructor(private api: PacksApi, private formBuilder: FormBuilder, private snackBar: MatSnackBar) {
   }
 
   public get pack(): Pack {
@@ -99,5 +100,6 @@ export class PackViewComponent implements OnInit {
   private onError(e): void {
     this.errorMessage = 'Sorry, an arbitrary kitten exploded.';
     this.errorMessage = e.json().message;
+    this.snackBar.open(this.errorMessage, 'OK');
   }
 }

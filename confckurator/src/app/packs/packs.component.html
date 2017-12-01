@@ -1,8 +1,3 @@
-<ngb-alert type="danger" *ngIf="errorMessage != null" (close)="errorMessage = null">
-  <strong>Whoops.</strong>
-  {{errorMessage}}
-</ngb-alert>
-
 <div class="form-inline">
   <select class="form-control custom-select col-4" title="Packs" [ngModel]="selectedPack"
           (ngModelChange)="setSelectedPack($event)">

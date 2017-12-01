@@ -1,29 +1,28 @@
-<ngb-alert type="danger" *ngIf="errorMessage != null" (close)="errorMessage = null">
-  <strong>Whoops.</strong>
-  {{errorMessage}}
-</ngb-alert>
-
-<ngb-alert type="primary" [dismissible]="false">
-  <span class="fa fa-warning"></span>
-  Names are saved when leaving the input field or pressing enter.
-  <small>Yes, this isn't nice, but it works, and will be improved later.</small>
-</ngb-alert>
-
-<ngx-datatable [rows]="environments" [rowHeight]="'auto'" class="bootstrap">
-  <ngx-datatable-column name="">
+<ngx-datatable [rows]="environments" [rowHeight]="'auto'" headerHeight="0" [footerHeight]="50" [columnMode]="'flex'"
+               class="material">
+  <ngx-datatable-column [flexGrow]="1">
     <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-      <span *ngIf="!row.in_use" class="fa fa-trash" (click)="removeEnvironment(rowIndex)"></span>
+      <mat-form-field style="width:100%">
+        <button mat-icon-button matPrefix color="warn" (click)="removeEnvironment(rowIndex)" [disabled]="row.in_use">
+          <span class="fa fa-trash"></span>
+        </button>
+        <input matInput
+               [(ngModel)]="row.name"
+               [formControl]="nameValidators[rowIndex]">
+        <mat-error *ngIf="!nameValidators[rowIndex].valid">
+          Please make sure that the environment name is not empty and contains no slashes.
+        </mat-error>
+        <button mat-icon-button matSuffix (click)="updateEnvironment(rowIndex)" *ngIf="nameValidators[rowIndex].dirty && nameValidators[rowIndex].valid">
+          <span class="fa fa-save"></span>
+        </button>
+      </mat-form-field>
     </ng-template>
   </ngx-datatable-column>
-  <ngx-datatable-column name="Name">
-    <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-      <input type="text" placeholder="Name" title="Name"
-             (keyup.enter)="updateEnvironment(rowIndex)" (focusout)="updateEnvironment(rowIndex)"
-             [(ngModel)]="row.name">
+  <ngx-datatable-footer>
+    <ng-template ngx-datatable-footer-template>
+      <button mat-raised-button color="primary" (click)="addEnvironment()">
+        <span class="fa fa-plus-square"></span> Add Environment
+      </button>
     </ng-template>
-  </ngx-datatable-column>
+  </ngx-datatable-footer>
 </ngx-datatable>
-
-<a (click)="addEnvironment()" class="btn btn-primary">
-  <span class="fa fa-plus-square"></span> Add Environment
-</a>
