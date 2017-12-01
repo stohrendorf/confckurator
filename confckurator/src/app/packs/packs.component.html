@@ -1,20 +1,20 @@
-<div class="form-inline">
-  <select class="form-control custom-select col-4" title="Packs" [ngModel]="selectedPack"
-          (ngModelChange)="setSelectedPack($event)">
-    <option *ngFor="let pack of packs" [ngValue]="pack" [selected]="selectedPack === pack">
+<mat-form-field>
+  <mat-select [(value)]="selectedPack" placeholder="Pack">
+    <mat-option *ngFor="let pack of packs" [value]="pack">
       {{pack.name}}
-    </option>
-  </select>
-  <button class="form-control btn btn-primary" (click)="openNewDlg(namePopup)">
-    <span class="fa fa-plus"></span> New
-  </button>
-  <button class="form-control btn" (click)="openRenameDlg(namePopup)">
-    <span class="fa fa-pencil-square-o"></span> Rename
-  </button>
-  <button class="form-control btn btn-danger" (click)="openDeleteDlg(deletePopup)">
-    <span class="fa fa-trash"></span> Delete
-  </button>
-</div>
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<button mat-raised-button color="primary" (click)="openNewDlg(namePopup)">
+  <span class="fa fa-plus"></span> New
+</button>
+<button mat-raised-button (click)="openRenameDlg(namePopup)">
+  <span class="fa fa-pencil-square-o"></span> Rename
+</button>
+<button mat-raised-button color="warn" (click)="openDeleteDlg(deletePopup)">
+  <span class="fa fa-trash"></span> Delete
+</button>
 
 <app-pack-view [pack]="selectedPack"></app-pack-view>
 

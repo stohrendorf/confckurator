@@ -57,10 +57,6 @@ export class PacksComponent implements OnInit {
     }); */
   }
 
-  setSelectedPack(event) {
-    this.selectedPack = event;
-  }
-
   private loadPacks(id: number = null): void {
     this.api.getPacks().subscribe(data => {
       this.packs = data;

@@ -1,21 +1,26 @@
 <div *ngIf="pack">
   <h4>Instances</h4>
-  <div [formGroup]="instanceForm">
-    <div formArrayName="instances">
-      <div class="form-row" *ngFor="let instance of instanceList.controls; let i = index">
-        <div class="form-group col-md-4" [formGroupName]="i">
-          <div class="input-group">
-            <div (click)="removeInstance(i)" class="btn btn-default input-group-addon">
-              <span class="fa fa-trash"></span>
-            </div>
-            <input type="text" class="form-control" placeholder="Name" formControlName="name" title="Name">
-            <input type="text" class="form-control" placeholder="Template" formControlName="template_name" title="Name">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <a (click)="addInstance()" class="btn btn-primary">
-    <span class="fa fa-plus-square"></span> Add Instance
-  </a>
+  <ngx-datatable class="material" [rows]="pack.instances" headerHeight="0" [columnMode]="'flex'" [rowHeight]="'auto'"
+                 [footerHeight]="50">
+    <ngx-datatable-column [flexGrow]="1">
+      <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+        <mat-form-field>
+          <button mat-icon-button matPrefix color="warn" (click)="removeInstance(rowIndex)">
+            <span class="fa fa-trash"></span>
+          </button>
+          <input matInput type="text" placeholder="Name" [(ngModel)]="row.name" title="Name">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Template" [(ngModel)]="row.template_name" title="Name">
+        </mat-form-field>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-footer>
+      <ng-template ngx-datatable-footer-template>
+        <button mat-raised-button color="primary" (click)="addInstance()">
+          <span class="fa fa-plus-square"></span> Add Instance
+        </button>
+      </ng-template>
+    </ngx-datatable-footer>
+  </ngx-datatable>
 </div>

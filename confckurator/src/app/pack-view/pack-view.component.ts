@@ -1,20 +1,15 @@
 import {Component, Input, OnInit, Output} from '@angular/core';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
-import {PacksApi} from '../../api/api/PacksApi';
-import {Pack} from '../../api/model/Pack';
-import {Instance} from '../../api/model/Instance';
+import {PacksApi} from '../../api';
+import {Pack} from '../../api';
 import {MatSnackBar} from "@angular/material";
 
 @Component({
   selector: 'app-pack-view',
   templateUrl: './pack-view.component.html',
   styleUrls: ['./pack-view.component.css'],
-  providers: [FormBuilder, PacksApi]
+  providers: [PacksApi]
 })
 export class PackViewComponent implements OnInit {
-  public instanceForm: FormGroup;
-  public instanceList: FormArray;
-
   @Output()
   public errorMessage?: string = null;
 
@@ -22,7 +17,7 @@ export class PackViewComponent implements OnInit {
 
   private activePack: Pack;
 
-  constructor(private api: PacksApi, private formBuilder: FormBuilder, private snackBar: MatSnackBar) {
+  constructor(private api: PacksApi, private snackBar: MatSnackBar) {
   }
 
   public get pack(): Pack {
@@ -36,19 +31,6 @@ export class PackViewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.instanceList = this.formBuilder.array([]);
-    this.instanceForm = this.formBuilder.group({
-      instances: this.instanceList
-    });
-  }
-
-  public createInstance(instance: Instance = null): FormGroup {
-    return this.formBuilder.group({
-      name: [!instance ? '' : instance.name],
-      id: [!instance ? null : instance.id],
-      template_id: [!instance ? null : instance.template_id],
-      template_name: [!instance ? '' : instance.template_name]
-    });
   }
 
   public save(): void {
@@ -63,15 +45,15 @@ export class PackViewComponent implements OnInit {
   }
 
   public addInstance(): void {
-    this.instanceList.push(this.createInstance());
+    this.activePack.instances.push({id: null, name: '', template_id: null, template_name: '', values: []});
   }
 
   public removeInstance(idx: number): void {
-    const id = this.instanceList.controls[idx].get('id').value;
+    const id = this.activePack.instances[idx].id;
     if (id != null) {
       this.instancesToDelete.push(id);
     }
-    this.instanceList.removeAt(idx);
+    delete this.activePack.instances[idx];
   }
 
   private load(): void {
@@ -83,18 +65,7 @@ export class PackViewComponent implements OnInit {
       this.activePack.name = t.name;
       this.activePack.name = t.name;
       this.activePack.instances = t.instances;
-      this.updateDisplay();
     }, this.onError);
-  }
-
-  private updateDisplay(): void {
-    while (this.instanceList.length > 0) {
-      this.instanceList.removeAt(0);
-    }
-
-    this.activePack.instances.forEach(v => {
-      this.instanceList.push(this.createInstance(v));
-    });
   }
 
   private onError(e): void {
