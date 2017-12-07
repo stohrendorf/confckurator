@@ -21,7 +21,7 @@ import {APP_BASE_HREF} from "@angular/common";
 import {NbMenuInternalService} from "@nebular/theme/components/menu/menu.service";
 import {NgxDatatableModule} from "@swimlane/ngx-datatable";
 import {
-  MatButtonModule, MatCardModule, MatFormFieldModule, MatInputModule, MatSelectModule,
+  MatButtonModule, MatCardModule, MatExpansionModule, MatFormFieldModule, MatInputModule, MatSelectModule,
   MatSnackBarModule
 } from "@angular/material";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -61,7 +61,8 @@ const appRoutes: Routes = [
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
-    MatSelectModule
+    MatSelectModule,
+    MatExpansionModule
   ],
   providers: [
     {provide: BASE_PATH, useValue: '/api'},
