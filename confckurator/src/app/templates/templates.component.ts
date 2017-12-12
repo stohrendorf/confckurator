@@ -23,7 +23,6 @@ export class TemplatesComponent implements OnInit {
   @Output()
   public templates: Template[];
 
-  @Output()
   public selectedTemplate?: Template = null;
 
   @Input()
@@ -91,9 +90,5 @@ export class TemplatesComponent implements OnInit {
   private onError(e): void {
     this.errorMessage = 'Sorry, an arbitrary kitten exploded.';
     this.errorMessage = e.json().message;
-  }
-
-  setSelectedTemplate(event) {
-    this.selectedTemplate = event;
   }
 }

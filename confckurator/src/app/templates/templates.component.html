@@ -1,19 +1,20 @@
-<div class="form-inline">
-  <select class="form-control custom-select col-4" title="Templates" [ngModel]="selectedTemplate" (ngModelChange)="setSelectedTemplate($event)">
-    <option *ngFor="let template of templates" [ngValue]="template" [selected]="selectedTemplate === template">
+<mat-form-field>
+  <mat-select [(value)]="selectedTemplate" title="Template">
+    <mat-option *ngFor="let template of templates" [value]="template">
       {{template.name}}
-    </option>
-  </select>
-  <button class="form-control btn btn-primary" (click)="openNewDlg(namePopup)">
-    <span class="fa fa-plus"></span> New
-  </button>
-  <button class="form-control btn" (click)="openRenameDlg(namePopup)">
-    <span class="fa fa-pencil-square-o"></span> Rename
-  </button>
-  <button class="form-control btn btn-danger" (click)="openDeleteDlg(deletePopup)">
-    <span class="fa fa-trash"></span> Delete
-  </button>
-</div>
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<button mat-raised-button color="primary" (click)="openNewDlg(namePopup)">
+  <span class="fa fa-plus"></span> New
+</button>
+<button mat-raised-button (click)="openRenameDlg(namePopup)">
+  <span class="fa fa-pencil-square-o"></span> Rename
+</button>
+<button mat-raised-button color="warning" (click)="openDeleteDlg(deletePopup)">
+  <span class="fa fa-trash"></span> Delete
+</button>
 
 <app-template-view [template]="selectedTemplate"></app-template-view>
 
