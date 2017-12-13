@@ -12,7 +12,11 @@
         </mat-panel-title>
         <mat-panel-description>
           <mat-form-field>
-            <input matInput type="text" [(ngModel)]="instance.template_name" title="Template">
+            <mat-select title="Template" [(value)]="instance.template_id">
+              <mat-option *ngFor="let template of templates" [value]="template.id">
+                {{template.name}}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
         </mat-panel-description>
       </mat-expansion-panel-header>
@@ -25,7 +29,14 @@
         </ngx-datatable-column>
         <ngx-datatable-column name="Environment">
           <ng-template let-value="row" ngx-datatable-cell-template>
-            {{value.environment_name}}
+            <mat-select title="Environment" [(value)]="value.environment_id">
+              <mat-option [value]="-1">
+                <span style="font-style: italic;">None</span>
+              </mat-option>
+              <mat-option *ngFor="let environment of environments" [value]="environment.id">
+                {{environment.name}}
+              </mat-option>
+            </mat-select>
           </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column name="Data">

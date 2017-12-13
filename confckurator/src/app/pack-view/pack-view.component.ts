@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, Output} from '@angular/core';
-import {PacksApi} from '../../api';
+import {Environment, EnvironmentsApi, PacksApi, Template, TemplatesApi} from '../../api';
 import {Pack} from '../../api';
 import {MatSnackBar} from "@angular/material";
 
@@ -7,7 +7,7 @@ import {MatSnackBar} from "@angular/material";
   selector: 'app-pack-view',
   templateUrl: './pack-view.component.html',
   styleUrls: ['./pack-view.component.css'],
-  providers: [PacksApi]
+  providers: [PacksApi, TemplatesApi, EnvironmentsApi]
 })
 export class PackViewComponent implements OnInit {
   @Output()
@@ -17,7 +17,11 @@ export class PackViewComponent implements OnInit {
 
   private activePack: Pack;
 
-  constructor(private api: PacksApi, private snackBar: MatSnackBar) {
+  public templates: Template[];
+
+  public environments: Environment[];
+
+  constructor(private api: PacksApi, private templateApi: TemplatesApi, private environmentsApi: EnvironmentsApi, private snackBar: MatSnackBar) {
   }
 
   public get pack(): Pack {
@@ -31,6 +35,14 @@ export class PackViewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.templateApi.getTemplates().subscribe(
+      tpls => this.templates = tpls,
+      this.onError
+    );
+    this.environmentsApi.getEnvironments().subscribe(
+      envs => this.environments = envs,
+      this.onError
+    );
   }
 
   public save(): void {
