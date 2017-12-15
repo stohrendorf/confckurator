@@ -52,23 +52,6 @@ export class TemplateViewComponent implements OnInit {
     }, this.onError);
   }
 
-  public createVariable(variable: Variable = null): Variable {
-    if (variable != null) {
-      this.activeTemplate.variables.push(variable);
-      return variable;
-    }
-    else {
-      let v: Variable = {
-        name: '',
-        in_use: false,
-        description: '',
-        id: null
-      };
-      this.activeTemplate.variables.push(v);
-      return v;
-    }
-  }
-
   private updateDisplay(): void {
     this.code = this.activeTemplate.text;
   }
@@ -120,7 +103,13 @@ export class TemplateViewComponent implements OnInit {
   }
 
   public addVariable(): void {
-    this.createVariable();
+    let v: Variable = {
+      name: '',
+      in_use: false,
+      description: '',
+      id: -1
+    };
+    this.activeTemplate.variables.push(v);
   }
 
   private onError(e): void {
@@ -134,6 +123,12 @@ export class TemplateViewComponent implements OnInit {
     if (id != null) {
       this.variablesToDelete.push(id);
     }
-    delete this.activeTemplate.variables[idx];
+    this.activeTemplate.variables = this.activeTemplate.variables.filter((v, i) => i != idx);
+  }
+
+  public invalidVariable(name: string): boolean {
+    let m = name.match(/^[a-zA-Z_][a-zA-Z0-9_]*$/);
+    console.log(m);
+    return m == null || m.length == 0;
   }
 }

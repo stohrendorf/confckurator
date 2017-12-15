@@ -3,13 +3,21 @@
   <mat-accordion>
     <mat-expansion-panel *ngFor="let variable of template.variables; let i = index">
       <mat-expansion-panel-header>
-        <button mat-icon-button matPrefix color="warning" [disabled]="!variable.in_use" (click)="removeVariable(i)">
-          <span class="fa fa-trash"></span>
-        </button>
-        <input matInput type="text" placeholder="Name" title="Name" [(ngModel)]="variable.name">
+        <mat-form-field style="width: 100%">
+          <button mat-icon-button matPrefix color="warn" [disabled]="variable.in_use" (click)="removeVariable(i)">
+            <span class="fa fa-trash"></span>
+          </button>
+          <input matInput type="text" title="Name" [(ngModel)]="variable.name" required>
+          <mat-error *ngIf="invalidVariable(variable.name)">
+            The variable name may only have a letter or an underscore at the beginning. Numbers are allowed after that, too.
+            (In other words, make sure it matches the regular expression ^[a-zA-Z_][a-zA-Z0-9_]*$.)
+          </mat-error>
+        </mat-form-field>
       </mat-expansion-panel-header>
       <mat-panel-description>
-        <input matInput type="text" placeholder="Description" title="Description" [(ngModel)]="variable.description">
+        <mat-form-field style="width: 100%">
+          <input matInput type="text" placeholder="Description" title="Description" [(ngModel)]="variable.description">
+        </mat-form-field>
       </mat-panel-description>
     </mat-expansion-panel>
   </mat-accordion>
@@ -26,4 +34,3 @@
     <span class="fa fa-save"></span> Save
   </button>
 </div>
-
